@@ -12,4 +12,4 @@ services:
     environment:
       - TZ=Asia/Bangkok
     ports:
-      - '3002:8080'
+      - '3003:8080'
