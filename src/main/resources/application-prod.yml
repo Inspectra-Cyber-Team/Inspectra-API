@@ -46,10 +46,10 @@ sonar:
 
 
 my-app:
-  state: dev
+  state: prod
 
 git:
-  clone_directory: /git_clone_repos/
+  clone_directory: /clone_repos/
 
 file_storage:
   image_location: "filestorage/images/"
