@@ -1,7 +1,10 @@
 # Builder stage
 FROM gradle:8.4-jdk17-alpine AS builder
+
 WORKDIR /app
 COPY . .
+
+# Install required dependencies and build the project
 RUN gradle build --no-daemon -x test
 
 # Install Sonar Scanner CLI
@@ -15,12 +18,22 @@ RUN apk add --no-cache curl zip unzip \
 
 # Final stage
 FROM openjdk:17-alpine
+
 WORKDIR /app
 
-# Copy built JAR and Sonar Scanner from builder
+# Copy the JAR file built in the builder stage
 COPY --from=builder /app/build/libs/*.jar app.jar
+
+# Copy Gradle and Sonar Scanner from builder stage
+COPY --from=builder /opt/gradle /opt/gradle
 COPY --from=builder /opt/sonar-scanner /opt/sonar-scanner
+
+# Make Gradle and Sonar Scanner available in the final image
+RUN ln -s /opt/gradle/bin/gradle /usr/local/bin/gradle
 RUN ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
+
+# Install OpenJDK (necessary for Sonar Scanner and Gradle to work correctly)
+RUN apk add --no-cache openjdk17
 
 # Expose port and mount volumes
 EXPOSE 8080
