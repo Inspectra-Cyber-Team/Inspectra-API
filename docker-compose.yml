@@ -1,15 +1,34 @@
+#version: '3.8'
+#services:
+#  cyber-api:
+#    container_name: 'cyber_api'
+#    volumes:
+#      - /clone_repos:/app/clone_repos
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    restart: always
+#    environment:
+#      - TZ=Asia/Bangkok
+#    ports:
+#      - '3003:8080'
+
 version: '3.8'
 services:
-  cyber-api:
-    container_name: 'cyber_api'
+  api:
+    image: cyber_api:latest
     volumes:
-      - /clone_repos:/app/clone_repos
+      - ./clone_repos:/app/clone_repos
       - /var/run/docker.sock:/var/run/docker.sock
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    environment:
-      - TZ=Asia/Bangkok
+    privileged: true  # Grant additional privileges for Docker-in-Docker
     ports:
-      - '3003:8080'
+      - "3003:8081"
+    networks:
+      - cyber_network
+    # Define environment variables or additional settings here if needed
+
+
+networks:
+  cyber_network:
+    driver: bridge
