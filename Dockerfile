@@ -32,8 +32,8 @@ COPY --from=builder /opt/sonar-scanner /opt/sonar-scanner
 RUN ln -s /opt/gradle/bin/gradle /usr/local/bin/gradle
 RUN ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
 
-# Install OpenJDK (necessary for Sonar Scanner and Gradle to work correctly)
-RUN apk add --no-cache openjdk17
+# Install OpenJDK (latest available version)
+RUN apk add --no-cache openjdk
 
 # Expose port and mount volumes
 EXPOSE 8080
