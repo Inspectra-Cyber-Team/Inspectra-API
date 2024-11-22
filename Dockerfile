@@ -88,7 +88,7 @@
 
 
 
-FROM openjdk:21-jdk-slim
+FROM openjdk:21-jdk-slim  AS builder
 COPY . .
 RUN gradle build --no-daemon -x test
 
@@ -147,4 +147,4 @@ COPY src/main/resources/application-prod.yml /app/config/
 EXPOSE 8081
 
 # Define the command to run your application
-ENTRYPOINT ["java", "-jar", "your-app.jar", "--spring.config.location=file:/app/config/application.yml"]
+ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod", "app.jar", "--spring.config.location=file:/app/config/application-prod.yml"]
