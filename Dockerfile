@@ -17,7 +17,7 @@ RUN apk add --no-cache curl zip unzip \
     && ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
 
 # Final stage
-FROM openjdk:17-alpine
+FROM openjdk:17-alpine3.18
 
 WORKDIR /app
 
@@ -31,9 +31,6 @@ COPY --from=builder /opt/sonar-scanner /opt/sonar-scanner
 # Make Gradle and Sonar Scanner available in the final image
 RUN ln -s /opt/gradle/bin/gradle /usr/local/bin/gradle
 RUN ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
-
-# Install OpenJDK (latest available version)
-RUN apk add --no-cache openjdk
 
 # Expose port and mount volumes
 EXPOSE 8080
