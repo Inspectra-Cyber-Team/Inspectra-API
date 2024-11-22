@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Completed Notification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Additional inline styling for better email compatibility */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px 6px 0 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        .footer {
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        .footer a {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h2>Scan Completed Successfully</h2>
+    </div>
+
+    <!-- Body Content -->
+    <div class="my-3">
+        <div class="alert alert-info" role="alert">
+            <strong>Scan Status:</strong> Your recent scan has completed successfully! Below is a summary of the results.
+        </div>
+
+        <!-- Scan Summary Table -->
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>File</th>
+                <th>Scan Status</th>
+                <th>Detected Issues</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>file1.js</td>
+                <td><span class="badge bg-success">Success</span></td>
+                <td th:text="${message}"></td>
+            </tr>
+            <tr>
+                <td>file2.js</td>
+                <td><span class="badge bg-warning text-dark">Warnings</span></td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>file3.js</td>
+                <td><span class="badge bg-danger">Failed</span></td>
+                <td>1</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Next Steps Button -->
+        <div class="text-center mt-4">
+            <a href="http://yourapp.com/scans/details" class="btn btn-primary">View Scan Details</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>You received this email because a scan was completed in your project. <br>
+            <a href="http://yourapp.com/settings">Manage your notification settings</a>.
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

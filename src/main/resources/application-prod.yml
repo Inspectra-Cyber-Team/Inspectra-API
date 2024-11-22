@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://35.213.179.239:3002/cyber-db
+    username: postgres
+    password: lyhou123
+    driver-class-name: org.postgresql.Driver
+
+  servlet:
+    multipart:
+      max-request-size: 5MB
+      max-file-size: 5MB
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+
+
+  # mail client configuration
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "lyhou282@gmail.com"
+    password: "nizm fijt ltqk mtfi"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+springdoc:
+  swagger-ui:
+    path: '/'
+
+sonar:
+  token:  squ_1e3de797cb64c4ab682051d94c3ee7b3fc40ea33    #squ_fb8b910e970a8269272808486bfb0f111636083e(server)
+  url: http://35.213.179.239:3389
+
+
+my-app:
+  state: dev
+
+git:
+  clone_directory: /git_clone_repos/
+
+file_storage:
+  image_location: "filestorage/images/"
+  client_path: "/images/**"
+
+
+# This is for the access token
+ACCESS_TOKEN_PRIVATE_KEY_PATH: access-refresh-token-keys/access-token-private.key
+ACCESS_TOKEN_PUBLIC_KEY_PATH: access-refresh-token-keys/access-token-public.key
+# This is for the refresh token
+REFRESH_TOKEN_PRIVATE_KEY_PATH: access-refresh-token-keys/refresh-token-private.key
+REFRESH_TOKEN_PUBLIC_KEY_PATH: access-refresh-token-keys/refresh-token-public.key
