@@ -3,10 +3,11 @@ package co.istad.inspectra.features.blog;
 import co.istad.inspectra.base.BaseRestResponse;
 import co.istad.inspectra.features.blog.dto.BlogRequestDto;
 import co.istad.inspectra.features.blog.dto.BlogResponseDto;
+import co.istad.inspectra.features.blog.dto.BlogUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class BlogController {
     public BaseRestResponse<BlogResponseDto> createBlog(@Valid @RequestBody BlogRequestDto blogRequestDto)
     {
         return BaseRestResponse.<BlogResponseDto>builder()
+                .status(HttpStatus.CREATED.value())
                 .data(blogService.createBlog(blogRequestDto))
                 .message("Blog created successfully")
                 .build();
@@ -36,21 +38,19 @@ public class BlogController {
     @Operation(summary = "Get all blogs")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<List<BlogResponseDto>> getAllBlogs()
+    public Page<BlogResponseDto> getAllBlogs(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "25") int size)
     {
-        return BaseRestResponse.<List<BlogResponseDto>>builder()
-                .data(blogService.getAllBlogs())
-                .message("Blogs fetched successfully")
-                .build();
+        return blogService.getAllBlogs(page, size);
     }
 
     @Operation(summary = "Unlike a blog")
     @DeleteMapping("/{blogUuid}/unlike")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseRestResponse<String> unlikeBlog(@PathVariable String blogUuid)
     {
         blogService.unlikeBlog(blogUuid);
         return BaseRestResponse.<String>builder()
+                .status(HttpStatus.NOT_FOUND.value())
                 .message("Blog unliked successfully")
                 .build();
     }
@@ -62,8 +62,63 @@ public class BlogController {
     public BaseRestResponse<String> likeBlog(@PathVariable String blogUuid)
     {
         return BaseRestResponse.<String>builder()
+                .status(HttpStatus.OK.value())
                 .data(blogService.likeBlog(blogUuid))
                 .message("Blog liked successfully")
+                .build();
+    }
+
+
+    @Operation(summary = "Get a blog")
+    @GetMapping("/{blogUuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<BlogResponseDto> getBlog(@PathVariable String blogUuid)
+    {
+        return BaseRestResponse.<BlogResponseDto>builder()
+                .status(HttpStatus.OK.value())
+                .data(blogService.getBlog(blogUuid))
+                .message("Blog retrieved successfully")
+                .build();
+    }
+
+
+    @Operation(summary = "Update a blog")
+    @PutMapping("/{blogUuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<BlogResponseDto> updateBlog(@PathVariable String blogUuid, @Valid @RequestBody BlogUpdateRequest blogUpdateRequest)
+    {
+        return BaseRestResponse.<BlogResponseDto>builder()
+                .status(HttpStatus.OK.value())
+                .data(blogService.updateBlog(blogUuid, blogUpdateRequest))
+                .message("Blog updated successfully")
+                .build();
+    }
+
+
+    @Operation(summary = "Get all blogs by user")
+    @GetMapping("/user/{userUuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<List<BlogResponseDto>> getBlogsByUser(@PathVariable String userUuid)
+    {
+        return BaseRestResponse.<List<BlogResponseDto>>builder()
+                .status(HttpStatus.OK.value())
+                .data(blogService.getBlogByUserUuid(userUuid))
+                .message("Blogs retrieved successfully")
+                .build();
+    }
+
+
+
+
+    @Operation(summary = "Delete a blog")
+    @DeleteMapping("/{blogUuid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public BaseRestResponse<String> deleteBlog(@PathVariable String blogUuid)
+    {
+        blogService.deleteBlog(blogUuid);
+        return BaseRestResponse.<String>builder()
+                .status(HttpStatus.NO_CONTENT.value())
+                .message("Blog deleted successfully")
                 .build();
     }
 

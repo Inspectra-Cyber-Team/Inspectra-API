@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "blogs")
@@ -29,8 +29,9 @@ public class Blog extends Auditable {
     @Column(nullable = false, length = 100)
     private String title;
 
-    private int likesCount;
+    private int viewsCount;
 
+    private int likesCount;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -45,6 +46,15 @@ public class Blog extends Auditable {
 
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies ;
+
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
+    public int getTotalInteractions() {
+        int commentsCount = (comments != null) ? comments.size() : 0;
+        int repliesCount =  (comments != null) ? comments.stream().mapToInt(comment -> comment.getReplies().size()).sum() : 0;
+        return commentsCount + repliesCount;
+    }
 
 
 }

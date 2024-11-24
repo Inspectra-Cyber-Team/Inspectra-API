@@ -9,6 +9,8 @@ public record BlogResponseDto(
         String uuid,
     String title,
     int likesCount,
+    int viewsCount,
+    int countComments,
     String description,
     List<String> thumbnail,
     UserDto user,

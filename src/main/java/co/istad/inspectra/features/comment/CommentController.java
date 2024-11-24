@@ -63,6 +63,37 @@ public class CommentController {
                 .build();
     }
 
+    @Operation(summary = "Update a comment")
+    @PutMapping("/{uuid}")
+    public BaseRestResponse<CommentResponse> updateComment(@PathVariable String uuid, @RequestBody String content)
+    {
+        return BaseRestResponse.<CommentResponse>
+                builder()
+                .data(commentService.updateComment(uuid, content))
+                .message("Comment updated successfully")
+                .build();
+    }
 
 
+    @Operation(summary = "Get comments by blog uuid")
+    @GetMapping("/{uuid}")
+    public BaseRestResponse<CommentResponse> getCommentsByBlogUuid(@PathVariable String uuid)
+    {
+        return BaseRestResponse.<CommentResponse>
+                builder()
+                .data(commentService.getCommentsByBlogUuid(uuid))
+                .message("Comments retrieved successfully")
+                .build();
+    }
+
+    @Operation(summary = "Delete a comment")
+    @DeleteMapping("/{uuid}")
+    public BaseRestResponse<String> deleteComment(@PathVariable String uuid)
+    {
+        commentService.deleteComment(uuid);
+        return BaseRestResponse.<String>
+                builder()
+                .message("Comment deleted successfully")
+                .build();
+    }
 }

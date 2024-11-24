@@ -1,9 +1,10 @@
+#build file jar file here
 FROM openjdk:21-jdk-slim  AS builder
 COPY . .
 # Ensure Gradle Wrapper is executable
 RUN chmod +x ./gradlew
 
-# Build the project
+# Build the project and ignore tests
 RUN ./gradlew build --no-daemon -x test
 
 
@@ -44,6 +45,7 @@ RUN curl -LO https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/son
     && mv sonar-scanner-${SONAR_SCANNER_VERSION}-linux /opt/sonar-scanner \
     && rm sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip \
     && ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
+
 
 # Set the working directory in the container
 WORKDIR /app

@@ -16,7 +16,7 @@ public record BlogRequestDto(
         @NotBlank(message = "Title is required")
         String title,
 
-        String content,
+        String description,
         List<String> thumbnail
 
 ) {

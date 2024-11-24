@@ -23,6 +23,13 @@ public interface CommentService {
       CommentResponse createComment(CommentRequest commentRequest);
 
       /**
+       * get al comments by blog comment id
+       * @see CommentServiceImpl#getCommentsByBlogUuid
+       */
+
+      CommentResponse getCommentsByBlogUuid(String blogUuid);
+
+      /**
        * Get all comments
        * @see CommentServiceImpl#getAllComments
        * @return {@link  List<CommentResponse>}
@@ -30,8 +37,37 @@ public interface CommentService {
 
       List<CommentResponse> getAllComments();
 
+      /**
+       * Get a comment by uuid
+       * @see CommentServiceImpl
+       * @param commentUuid the comment uuid
+       * @return {@link CommentResponse}
+       */
+
       String likeComment(String commentUuid);
+
+        /**
+         * Delete a comment by uuid
+         * @see CommentServiceImpl
+         * @param commentUuid the comment uuid
+         */
 
       void deleteLikeComment(String commentUuid);
 
+
+      /**
+       * Delete a comment by uuid
+       * @see CommentServiceImpl
+       * @param uuid the comment uuid
+       */
+      void deleteComment(String uuid);
+
+        /**
+         * Update a comment by uuid
+         * @see CommentServiceImpl
+         * @param uuid the comment uuid
+         * @param content the comment request
+         * @return {@link CommentResponse}
+         */
+        CommentResponse updateComment(String uuid, String content);
 }

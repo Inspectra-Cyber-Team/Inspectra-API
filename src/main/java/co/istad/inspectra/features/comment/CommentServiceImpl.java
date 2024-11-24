@@ -51,6 +51,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public CommentResponse getCommentsByBlogUuid(String blogUuid) {
+
+        Comment comment = commentRepository.findByUuid(blogUuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+
+        return commentMapper.toCommentResponse(comment);
+    }
+
+    @Override
     public List<CommentResponse> getAllComments() {
 
         return commentRepository.findAll().stream()
@@ -83,5 +92,27 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.save(comment);
 
+    }
+
+    @Override
+    public void deleteComment(String uuid) {
+
+            Comment comment = commentRepository.findByUuid(uuid)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+
+            commentRepository.delete(comment);
+    }
+
+    @Override
+    public CommentResponse updateComment(String uuid, String content) {
+
+        Comment comment = commentRepository.findByUuid(uuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+
+        comment.setContent(content);
+
+        commentRepository.save(comment);
+
+        return commentMapper.toCommentResponse(comment);
     }
 }
