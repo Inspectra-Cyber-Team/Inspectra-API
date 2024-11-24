@@ -7,13 +7,15 @@ import java.util.List;
 @Builder
 public record BlogResponseDto(
         String uuid,
-    String title,
-    int likesCount,
-    int viewsCount,
-    int countComments,
-    String description,
-    List<String> thumbnail,
-    UserDto user,
-    String createdAt
+        String title,
+        int likesCount,
+       int viewsCount,
+       int countComments,
+       String description,
+       List<String> thumbnail,
+       UserDto user,
+        String createdAt,
+        String lastModifiedAt
+
 ) {
 }

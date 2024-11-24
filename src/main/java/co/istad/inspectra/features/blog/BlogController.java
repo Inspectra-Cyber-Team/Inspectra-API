@@ -4,11 +4,13 @@ import co.istad.inspectra.base.BaseRestResponse;
 import co.istad.inspectra.features.blog.dto.BlogRequestDto;
 import co.istad.inspectra.features.blog.dto.BlogResponseDto;
 import co.istad.inspectra.features.blog.dto.BlogUpdateRequest;
+import co.istad.inspectra.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,11 +61,11 @@ public class BlogController {
     @Operation(summary = "Like a blog")
     @PostMapping("/{blogUuid}/like")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<String> likeBlog(@PathVariable String blogUuid)
+    public BaseRestResponse<String> likeBlog(@PathVariable String blogUuid,@AuthenticationPrincipal CustomUserDetails customUserDetails)
     {
         return BaseRestResponse.<String>builder()
                 .status(HttpStatus.OK.value())
-                .data(blogService.likeBlog(blogUuid))
+                .data(blogService.likeBlog(blogUuid,customUserDetails))
                 .message("Blog liked successfully")
                 .build();
     }

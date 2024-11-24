@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -43,6 +44,18 @@ public class ReplyController {
                 .build();
     }
 
+    @Operation(summary = "Get a reply by uuid")
+    @GetMapping("/{replyUuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<ReplyResponse> getReplyByUuid(@PathVariable String replyUuid) {
+        return BaseRestResponse.<ReplyResponse>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
+                .data(replyService.getReplyByUuid(replyUuid))
+                .message("Reply retrieved successfully")
+                .build();
+    }
+
 
     @Operation(summary = "Get a reply by comment id")
     @GetMapping("/{commentId}")
@@ -71,6 +84,29 @@ public class ReplyController {
         replyService.unlikeReply(replyUuid);
         return BaseRestResponse.<String>builder()
                 .message("Reply unliked successfully")
+                .build();
+    }
+
+
+    @Operation(summary = "Delete a reply")
+    @DeleteMapping("/{replyUuid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public BaseRestResponse<String> deleteReply(@PathVariable String replyUuid) {
+        replyService.deleteReply(replyUuid);
+        return BaseRestResponse.<String>builder()
+                .status(HttpStatus.NO_CONTENT.value())
+                .message("Reply deleted successfully")
+                .build();
+    }
+
+    @Operation(summary = "Update a reply")
+    @PutMapping("/{replyUuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<ReplyResponse> updateReply(@PathVariable String replyUuid, @RequestBody String content) {
+
+        return BaseRestResponse.<ReplyResponse>builder()
+                .message("Reply updated successfully")
+                .data( replyService.updateReply(replyUuid, content))
                 .build();
     }
 

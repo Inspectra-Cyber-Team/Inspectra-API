@@ -2,21 +2,27 @@ package co.istad.inspectra.features.blog;
 
 import co.istad.inspectra.domain.Blog;
 import co.istad.inspectra.domain.BlogImages;
+import co.istad.inspectra.domain.LikeBlog;
 import co.istad.inspectra.domain.User;
 import co.istad.inspectra.features.blog.dto.BlogRequestDto;
 import co.istad.inspectra.features.blog.dto.BlogResponseDto;
 import co.istad.inspectra.features.blog.dto.BlogUpdateRequest;
 import co.istad.inspectra.features.user.UserRepository;
+import co.istad.inspectra.features.userlikeblog.UserLikeBlogRepository;
 import co.istad.inspectra.mapper.BlogMapper;
+import co.istad.inspectra.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,6 +36,8 @@ public class BlogServiceImpl implements BlogService {
     private final BlogRepository blogRepository;
 
     private final UserRepository userRepository;
+
+    private final UserLikeBlogRepository userLikeBlogRepository;
 
 
     @Override
@@ -70,16 +78,62 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public String likeBlog(String blogUuid) {
+    public String likeBlog(String blogUuid, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+
+        if(customUserDetails == null)
+        {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
+        }
+
+        if(blogUuid == null || blogUuid.isEmpty())
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid blog uuid is provided");
+        }
+
+        String uuid = customUserDetails.getUserUuid();
+
+        User user = userRepository.findUserByUuid(uuid);
+
+        if(user == null)
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+
+        Optional<LikeBlog> likeBlogOptional = userLikeBlogRepository.findByBlogUuidAndUserUuid(blogUuid, uuid);
+
+        System.out.println("this is the like blog optional" + likeBlogOptional);
+
 
         Blog blog = blogRepository.findByUuid(blogUuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Blog not found"));
 
-        blog.setLikesCount(blog.getLikesCount() + 1);
 
-        blogRepository.save(blog);
+        if(likeBlogOptional.isPresent()) {
 
-        return " Blog liked successfully";
+            userLikeBlogRepository.delete(likeBlogOptional.get());
+
+            blog.setLikesCount(blog.getLikesCount() - 1);
+            blogRepository.save(blog);
+
+            return "Blog unliked successfully";
+        }else {
+
+            LikeBlog likeBlog = new LikeBlog();
+            likeBlog.setUuid(UUID.randomUUID().toString());
+            likeBlog.setBlog(blog);
+            likeBlog.setUser(user);
+
+            userLikeBlogRepository.save(likeBlog);
+
+            blog.setLikesCount(blog.getLikesCount() + 1);
+            blogRepository.save(blog);
+
+            return "Blog liked successfully";
+
+
+        }
     }
 
     @Override

@@ -106,6 +106,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentResponse updateComment(String uuid, String content) {
 
+        if(content == null || content.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Content cannot be empty");
+        }
+
         Comment comment = commentRepository.findByUuid(uuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 

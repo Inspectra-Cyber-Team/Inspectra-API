@@ -54,6 +54,17 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
+    public ReplyResponse getReplyByUuid(String replyUuid) {
+
+        Reply reply = replyRepository.findByUuid(replyUuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reply not found"));
+
+        return replyMapper.mapToReplyResponse(reply);
+
+
+    }
+
+    @Override
     public List<ReplyResponse> getAllReplies() {
 
         return replyRepository.findAll().stream()
@@ -97,5 +108,30 @@ public class ReplyServiceImpl implements ReplyService {
             reply.setCountLikes(reply.getCountLikes() - 1);
 
             replyRepository.save(reply);
+    }
+
+    @Override
+    public void deleteReply(String replyUuid) {
+
+            Reply reply = replyRepository.findByUuid(replyUuid)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reply not found"));
+
+            replyRepository.delete(reply);
+    }
+
+    @Override
+    public ReplyResponse updateReply(String replyUuid, String content) {
+
+        if(content.isBlank()) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Content cannot be empty");
+        }
+
+        Reply reply = replyRepository.findByUuid(replyUuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reply not found"));
+
+        reply.setContent(content);
+
+       return replyMapper.mapToReplyResponse(replyRepository.save(reply));
     }
 }

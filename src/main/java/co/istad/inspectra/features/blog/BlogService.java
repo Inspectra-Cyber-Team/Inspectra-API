@@ -3,7 +3,9 @@ package co.istad.inspectra.features.blog;
 import co.istad.inspectra.features.blog.dto.BlogRequestDto;
 import co.istad.inspectra.features.blog.dto.BlogResponseDto;
 import co.istad.inspectra.features.blog.dto.BlogUpdateRequest;
+import co.istad.inspectra.security.CustomUserDetails;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ public interface BlogService {
      * @param blogUuid the blog uuid
      * @return the string
      */
-  String likeBlog(String blogUuid);
+  String likeBlog(String blogUuid, @AuthenticationPrincipal CustomUserDetails customUserDetails);
 
     /**
      * Unlike a blog.

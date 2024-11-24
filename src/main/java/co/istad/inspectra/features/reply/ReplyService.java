@@ -22,6 +22,16 @@ public interface ReplyService {
     ReplyResponse createReply(ReplyRequest request);
 
     /**
+     * Get a reply by uuid
+     * @see ReplyServiceImpl#getReplyByUuid
+     * @param replyUuid the reply id
+     *                  @return {@link ReplyResponse}
+     */
+
+    ReplyResponse getReplyByUuid(String replyUuid);
+
+
+    /**
      * Get all replies
      * @see ReplyServiceImpl#getAllReplies
      * @return {@link ReplyResponse}
@@ -53,5 +63,17 @@ public interface ReplyService {
      * @param replyUuid the reply id
      */
     void unlikeReply(String replyUuid);
+
+    /**
+     * delete a reply comment
+     * @see ReplyServiceImpl#deleteReply
+     * @param replyUuid the reply id
+     *
+     *
+     */
+    void deleteReply(String replyUuid);
+
+
+    ReplyResponse updateReply(String replyUuid, String content);
 
 }

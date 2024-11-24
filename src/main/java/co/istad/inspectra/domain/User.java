@@ -101,6 +101,14 @@ public class User extends Auditable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<ScanHistory> scanHistorySet = new HashSet<>();
 
+    // relationship with view blog
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private LikeBlog viewBlog;
+
+    // relationship with like blog
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<LikeBlog> likeBlogSet = new HashSet<>();
+
 
 
 }

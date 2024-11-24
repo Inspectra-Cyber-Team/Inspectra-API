@@ -50,6 +50,9 @@ public class Blog extends Auditable {
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LikeBlog> likeBlogs;
+
     public int getTotalInteractions() {
         int commentsCount = (comments != null) ? comments.size() : 0;
         int repliesCount =  (comments != null) ? comments.stream().mapToInt(comment -> comment.getReplies().size()).sum() : 0;
