@@ -14,8 +14,20 @@ RUN ./gradlew build --no-daemon -x test
 FROM openjdk:21-jdk-slim
 
 # Install dependencies and tools for version checking
+#RUN apt-get update && apt-get install -y \
+#    curl zip unzip jq \
+#    apt-transport-https \
+#    ca-certificates \
+#    gnupg \
+#    lsb-release \
+#    && rm -rf /var/lib/apt/lists/*
+
+# Install dependencies and tools for version checking
 RUN apt-get update && apt-get install -y \
-    curl zip unzip jq \
+    php-cli \
+    unzip \
+    curl \
+    jq \
     apt-transport-https \
     ca-certificates \
     gnupg \
@@ -55,13 +67,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 # Set PATH for Node.js
 ENV PATH=$PATH:/usr/bin/node:/usr/bin/npm
 
-
 # Install Composer
 ENV COMPOSER_VERSION=2.6.2
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer --version
-
-
 
 # Set the working directory in the container
 WORKDIR /app
