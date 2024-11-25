@@ -78,6 +78,16 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN pip3 install --no-cache-dir django fastapi uvicorn sqlalchemy pydantic
 
 
+# Install Go CLI
+ENV GO_VERSION=1.21.3
+RUN curl -LO https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz \
+    && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz \
+    && rm go${GO_VERSION}.linux-amd64.tar.gz
+ENV PATH=$PATH:/usr/local/go/bin
+
+
+
+
 
 # Set the working directory in the container
 WORKDIR /app

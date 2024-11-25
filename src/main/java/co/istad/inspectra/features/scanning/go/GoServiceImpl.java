@@ -114,8 +114,8 @@ public class GoServiceImpl  implements  GoService{
 
             } else {
 
-                    List<String> commandProd = getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName);
-                    executeCommand(commandProd);
+                   executeCommand(getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName));
+
 
             }
 
