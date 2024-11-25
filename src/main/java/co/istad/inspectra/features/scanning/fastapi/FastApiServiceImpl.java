@@ -112,8 +112,8 @@ public class FastApiServiceImpl implements FastApiService {
             if(myApp.equals("dev")) {
                 executeCommand(command);
             }else {
-                List<String> commandProd = getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName);
-                executeCommand(commandProd);
+
+                executeCommand( getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName));
             }
 
             // Notify the user of successful completion

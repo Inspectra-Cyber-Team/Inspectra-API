@@ -62,8 +62,8 @@ public class DjangoServiceImpl implements DjangoService {
 
             }else {
 
-                List<String> commandProd = getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName);
-                scanProject(commandProd);
+
+                scanProject( getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName));
 
             }
             //send message when scanning has done
