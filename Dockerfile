@@ -74,7 +74,15 @@ ENV COMPOSER_VERSION=2.6.2
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer --version
 
-# Install Python libraries in a virtual environment
+
+# Update and install required packages
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create and activate a virtual environment, then install Python libraries
 RUN python3 -m venv /opt/venv \
     && /opt/venv/bin/pip install --no-cache-dir django fastapi uvicorn sqlalchemy pydantic
 
