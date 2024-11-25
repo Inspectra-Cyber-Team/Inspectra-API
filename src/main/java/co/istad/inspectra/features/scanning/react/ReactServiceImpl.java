@@ -60,8 +60,7 @@ public class ReactServiceImpl implements ReactService {
                 scanProject(command);
             } else {
 
-                getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName);
-
+               scanProject(getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName));
             }
 
             //send message when scanning has done
