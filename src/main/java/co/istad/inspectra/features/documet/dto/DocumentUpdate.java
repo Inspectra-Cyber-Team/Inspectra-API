@@ -9,8 +9,8 @@ public record DocumentUpdate(
 
         String title,
         String documentDescription,
-        List<String> documentImagesRequest,
-        List<String> documentKeywordRequest
+        List<String> documentImages
+
 
 ) {
 }

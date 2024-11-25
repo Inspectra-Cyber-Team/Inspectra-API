@@ -24,10 +24,6 @@ public class DocumentImages extends Auditable {
 
     private String thumbnail;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-
     @ManyToOne
     @JoinColumn(name = "document_id")
     private Document document;

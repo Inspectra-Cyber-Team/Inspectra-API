@@ -78,7 +78,7 @@ public class DocumentCategoryController {
     @Operation(summary = "Create a new document category")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN')")
+
     public BaseRestResponse<DocumentCategoryResponse> createDocumentCategory(@Valid @RequestBody DocumentCategoryRequest documentCategoryRequest) {
 
         return BaseRestResponse.<DocumentCategoryResponse>
@@ -93,7 +93,7 @@ public class DocumentCategoryController {
     @Operation(summary = "Update an existing document category")
     @PutMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
+
     public BaseRestResponse<DocumentCategoryResponse> updateDocumentCategory(@PathVariable String uuid, @Valid @RequestBody DocumentCategoryUpdate documentCategoryUpdate) {
 
         return BaseRestResponse.<DocumentCategoryResponse>
@@ -108,7 +108,7 @@ public class DocumentCategoryController {
     @Operation(summary = "Delete a document category")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN')")
+
     public BaseRestResponse<Object> deleteDocumentCategory(@PathVariable String uuid) {
 
         documentCategoryService.delete(uuid);

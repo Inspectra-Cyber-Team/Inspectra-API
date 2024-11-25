@@ -6,10 +6,7 @@ import co.istad.inspectra.domain.Keyword;
 import co.istad.inspectra.features.documet.dto.DocumentRequest;
 import co.istad.inspectra.features.documet.dto.DocumentResponse;
 import co.istad.inspectra.features.documet.dto.DocumentUpdate;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +17,7 @@ public interface DocumentMapper {
     Document mapToDocument(DocumentRequest documentRequest);
 
     // Custom mappings for images and keywords
+    @Named(("mapToDocumentResponse"))
     @Mapping(target = "documentCategoryName", source = "category.name")
     @Mapping(target = "documentImages", source = "images")
     DocumentResponse mapToDocumentResponse(Document document);
@@ -27,7 +25,7 @@ public interface DocumentMapper {
 
 
     @BeanMapping(nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE)
-    void updateDocumentFromRequest( DocumentUpdate documentUpdate,@MappingTarget  Document document);
+    void updateDocumentFromRequest(@MappingTarget  Document document, DocumentUpdate documentUpdate);
 
 
     default List<String> mapImagesToUrls(List<DocumentImages> images) {

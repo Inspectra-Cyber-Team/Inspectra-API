@@ -1,6 +1,7 @@
 package co.istad.inspectra.features.documet;
 
 
+import co.istad.inspectra.domain.BlogImages;
 import co.istad.inspectra.domain.Document;
 import co.istad.inspectra.domain.DocumentImages;
 import co.istad.inspectra.features.documentcategory.DocumentCategoryRepository;
@@ -107,31 +108,55 @@ public class DocumentServiceImpl implements DocumentService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found with uuid: " + uuid));
 
         document.setTitle(documentUpdate.title());
-
         document.setDescription(documentUpdate.documentDescription());
 
-        // Handle images update: delete orphaned images and add new ones
-        if (documentUpdate.documentImagesRequest() != null) {
-            document.getImages().clear();
+        // Fetch existing images from the document
+        List<DocumentImages> existingImages = document.getImages();
 
-            List<DocumentImages> images = documentUpdate.documentImagesRequest().stream()
-                    .map(image -> {
-                        var documentImage = new DocumentImages();
-                        documentImage.setUuid(UUID.randomUUID().toString());
-                        documentImage.setThumbnail(image);
-                        documentImage.setDocument(document);
-                        return documentImage;
-                    }).toList();
-
-            document.setImages(images);
-
-            documentImageRepository.saveAll(images);
+        if (existingImages == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No images found in the document with uuid: " + uuid);
         }
 
+        // Get the updated list of thumbnails from the request, defaulting to an empty list if null
+        List<String> updatedThumbnails = documentUpdate.documentImages();
+
+        // Find and remove obsolete images
+        List<DocumentImages> imagesToRemove = existingImages.stream()
+                .filter(existingImage -> !updatedThumbnails.contains(existingImage.getThumbnail()))
+                .toList();
+
+        existingImages.removeAll(imagesToRemove);
+
+        // Add new images that are not already present
+        List<String> existingThumbnails = existingImages.stream()
+                .map(DocumentImages::getThumbnail)
+                .toList();
+
+        List<DocumentImages> newImages = updatedThumbnails.stream()
+                .filter(thumbnail -> !existingThumbnails.contains(thumbnail))
+                .map(thumbnail -> {
+                    DocumentImages newImage = new DocumentImages();
+                    newImage.setUuid(UUID.randomUUID().toString());
+                    newImage.setThumbnail(thumbnail);
+                    newImage.setDocument(document);
+                    return newImage;
+                })
+                .toList();
+
+        existingImages.addAll(newImages);
+
+        document.setImages(existingImages);
+
+        // Update other document properties using a mapper
+        documentMapper.updateDocumentFromRequest(document, documentUpdate);
+
+        // Save updated document
         documentRepository.save(document);
 
+        // Return updated document as a response
         return documentMapper.mapToDocumentResponse(document);
     }
+
 
 
     @Override

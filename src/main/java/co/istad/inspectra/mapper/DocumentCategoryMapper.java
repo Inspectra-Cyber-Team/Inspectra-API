@@ -8,15 +8,17 @@ import co.istad.inspectra.features.documentcategory.dto.DocumentCategoryResponse
 import co.istad.inspectra.features.documentcategory.dto.DocumentCategoryUpdate;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DocumentMapper.class})
 public interface DocumentCategoryMapper {
 
     DocumentCategory mapToDocumentCategory(DocumentCategoryRequest documentCategoryRequest);
 
     DocumentCategoryResponse mapToDocumentCategoryResponse(DocumentCategory documentCategory);
 
+    @Mapping(qualifiedByName = "mapToDocumentResponse", target = "documents")
     DocumentCategoryDetails mapToDocumentCategoryDetails(DocumentCategory documentCategory);
 
     @BeanMapping(nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE)
