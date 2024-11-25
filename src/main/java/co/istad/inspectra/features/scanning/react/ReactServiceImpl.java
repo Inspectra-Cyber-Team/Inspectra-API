@@ -34,6 +34,9 @@ public class ReactServiceImpl implements ReactService {
     @Value("${sonar.token}")
     private String sonarLoginToken;
 
+    @Value("${my-app.state}")
+    private String myApp;
+
     private final AppConfig appConfig;
 
     private final EmailUtil emailUtil;
@@ -52,7 +55,15 @@ public class ReactServiceImpl implements ReactService {
 
         try {
 
-            scanProject(command);
+            if (myApp.equals("dev"))
+            {
+                scanProject(command);
+            } else {
+
+                getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName);
+
+            }
+
             //send message when scanning has done
             emailUtil.sendScanMessage("lyhou282@gmail.com", "SonarQube scan completed");
 
@@ -94,6 +105,26 @@ public class ReactServiceImpl implements ReactService {
 
         return command;
     }
+
+
+    private List<String> getProjectScanInProduction(String projectName, String cloneDirectory, String fileName) {
+
+        String projectPath = cloneDirectory + fileName;
+
+        List<String> command = new ArrayList<>();
+        command.add("sonar-scanner");
+        command.add("-Dsonar.host.url=" + sonarHostUrl);
+        command.add("-Dsonar.token=" + sonarLoginToken);
+        command.add("-Dsonar.projectKey=" + projectName);
+        command.add("-Dsonar.projectName=" + projectName);
+        command.add("-Dsonar.sources=" + projectPath);
+        command.add("-Dsonar.verbose=true");
+        command.add("-X");
+
+        return command;
+
+    }
+
 
     // This method could be part of the class
     private void scanProject(List<String> command) throws InterruptedException, IOException, MessagingException {

@@ -56,6 +56,12 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 ENV PATH=$PATH:/usr/bin/node:/usr/bin/npm
 
 
+# Install Composer
+ENV COMPOSER_VERSION=2.6.2
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && composer --version
+
+
 
 # Set the working directory in the container
 WORKDIR /app
@@ -71,7 +77,7 @@ RUN mkdir -p /app/config
 COPY src/main/resources/application-prod.yml /app/config/
 
 # Expose the port your application will run on
-EXPOSE 8081
+EXPOSE 8080
 
 # Define the command to run your application
 ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod", "app.jar", "--spring.config.location=file:/app/config/application-prod.yml"]

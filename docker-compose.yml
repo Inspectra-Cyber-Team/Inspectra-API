@@ -13,7 +13,7 @@ services:
       - TZ=Asia/Bangkok
     privileged: true  # Grant additional privileges for Docker-in-Docker
     ports:
-      - "3003:8081"
+      - "3003:8080"
     networks:
       - cyber_network
     # Define environment variables or additional settings here if needed

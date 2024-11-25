@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +32,10 @@ public class NestJsServiceImpl implements NestJsService {
 
     @Value("${sonar.token}")
     private String sonarLoginToken;
+
+    @Value("${my-app.state}")
+    private String myApp;
+
 
     private final AppConfig appConfig;
 
@@ -61,7 +66,12 @@ public class NestJsServiceImpl implements NestJsService {
 
         try {
             // Execute the scanning process
-            executeCommand(command);
+            if(myApp.equals("dev"))
+            {
+                executeCommand(command);
+            } else {
+                executeCommand(getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName));
+            }
 
             // Send notification after successful scanning
             emailUtil.sendScanMessage(
@@ -96,6 +106,24 @@ public class NestJsServiceImpl implements NestJsService {
                 "-Dsonar.sources=.",
                 "-Dsonar.language=ts" // Specify TypeScript as the language for NestJS
         );
+    }
+
+    private List<String> getProjectScanInProduction(String projectName, String cloneDirectory, String fileName) {
+
+        String projectPath = cloneDirectory + fileName;
+
+        List<String> command = new ArrayList<>();
+        command.add("sonar-scanner");
+        command.add("-Dsonar.host.url=" + sonarHostUrl);
+        command.add("-Dsonar.token=" + sonarLoginToken);
+        command.add("-Dsonar.projectKey=" + projectName);
+        command.add("-Dsonar.projectName=" + projectName);
+        command.add("-Dsonar.sources=" + projectPath);
+        command.add("-Dsonar.verbose=true");
+        command.add("-X");
+
+        return command;
+
     }
 
     private void executeCommand(List<String> command) throws IOException, InterruptedException {
