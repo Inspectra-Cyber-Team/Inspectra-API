@@ -68,6 +68,14 @@ public interface DocumentService {
     Page<DocumentResponse> getAllDocumentByPage(int page, int size);
 
 
+    /**
+     * get document by category
+     * @param categoryUuid use for get document by category
+     * @return {@link DocumentResponse}
+     */
+    List<DocumentResponse> getDocumentByCategory(String categoryUuid);
+
+
 
 
 

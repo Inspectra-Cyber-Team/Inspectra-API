@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -86,6 +87,7 @@ public class FaqController {
     @Operation(summary = "Create a new FAQ")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<FaqResponse> createFaq(@Valid @RequestBody FaqRequest faqRequest)
     {
         return BaseRestResponse.<FaqResponse>
@@ -99,6 +101,7 @@ public class FaqController {
     @Operation(summary = "Update a FAQ")
     @PutMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<FaqResponse> updateFaq(@Valid @RequestBody FaqUpdateRequest faqUpdateRequest, @PathVariable String uuid)
     {
         return BaseRestResponse.<FaqResponse>
@@ -112,6 +115,7 @@ public class FaqController {
     @Operation(summary = "Delete a FAQ")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<Void> deleteFaq(@PathVariable String uuid)
     {
         faqService.deleteFaq(uuid);

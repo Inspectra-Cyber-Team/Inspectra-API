@@ -1,56 +1,60 @@
-stages:
-  - build
-  #  - test
-  - sonarqube
-  - docker
-
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  DOCKER_FILE: Dockerfile
-
-cache:
-  paths:
-    - .gradle/wrapper
-    - .gradle/caches
-    - .m2/repository
-
-build:
-  stage: build
-  image:  openjdk:17-jdk-slim
-  script:
-    - echo "[+] build the project"
-    - chmod +x gradlew
-    - ./gradlew build -x test
-  artifacts:
-    paths:
-      - build/libs/*.jar
-    expire_in: 1 week
-
-#test:
-#  stage: test
-#  image: openjdk:21-jdk-slim
+#stages:
+#  - build
+#  - sonarqube
+#  - docker
+#
+#variables:
+#  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+#  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+#  DOCKER_FILE: Dockerfile
+#
+#cache:
+#  paths:
+#    - .gradle/wrapper
+#    - .gradle/caches
+#    - .m2/repository
+#
+#build:
+#  stage: build
+#  image:  openjdk:17-jdk-slim
 #  script:
-#    - ./gradlew test
+#    - echo "[+] build the project"
+#    - chmod +x gradlew
+#    - ./gradlew build -x test
+#  artifacts:
+#    paths:
+#      - build/libs/*.jar
+#    expire_in: 1 week
+#
+##test:
+##  stage: test
+##  image: openjdk:21-jdk-slim
+##  script:
+##    - ./gradlew test
+#
+#
+#
+#
+#docker:
+#  stage: docker
+#  image: docker:latest
+#  services:
+#    - docker:dind
+#  script:
+#    - echo "[+] Building the Docker image"
+#    - docker build -t cyber-api:1.0 -f $DOCKER_FILE .
+#    - echo "[+] Docker image built successfully"
+#    - echo "[+] Login to docker hub"
+#    - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+#    - docker tag cyber-api:1.0 $DOCKER_HUB_USERNAME/cyber-api:1.0
+#    - echo "[+] Pushing the Docker image to Docker Hub"
+#    - docker push $DOCKER_HUB_USERNAME/cyber-api:1.0
+#    - echo "[+] Docker image pushed successfully"
+#    - echo "[+] Build completed successfully"
+#  only:
+#    - main
 
 
 
 
-docker:
-  stage: docker
-  image: docker:latest
-  services:
-    - docker:dind
-  script:
-    - echo "[+] Building the Docker image"
-    - docker build -t cyber-api:1.0 -f $DOCKER_FILE .
-    - echo "[+] Docker image built successfully"
-    - echo "[+] Login to docker hub"
-    - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
-    - docker tag cyber-api:1.0 $DOCKER_HUB_USERNAME/cyber-api:1.0
-    - echo "[+] Pushing the Docker image to Docker Hub"
-    - docker push $DOCKER_HUB_USERNAME/cyber-api:1.0
-    - echo "[+] Docker image pushed successfully"
-    - echo "[+] Build completed successfully"
-  only:
-    - main
+

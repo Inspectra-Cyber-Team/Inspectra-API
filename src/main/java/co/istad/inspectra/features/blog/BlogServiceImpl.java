@@ -141,9 +141,6 @@ public class BlogServiceImpl implements BlogService {
 
         Optional<LikeBlog> likeBlogOptional = userLikeBlogRepository.findByBlogUuidAndUserUuid(blogUuid, uuid);
 
-        System.out.println("this is the like blog optional" + likeBlogOptional);
-
-
         Blog blog = blogRepository.findByUuid(blogUuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Blog not found"));
 

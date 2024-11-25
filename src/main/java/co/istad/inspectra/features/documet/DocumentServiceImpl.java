@@ -3,14 +3,12 @@ package co.istad.inspectra.features.documet;
 
 import co.istad.inspectra.domain.Document;
 import co.istad.inspectra.domain.DocumentImages;
-import co.istad.inspectra.domain.Keyword;
 import co.istad.inspectra.features.documentcategory.DocumentCategoryRepository;
 import co.istad.inspectra.features.documet.dto.DocumentRequest;
 import co.istad.inspectra.features.documet.dto.DocumentResponse;
 import co.istad.inspectra.features.documet.dto.DocumentUpdate;
 import co.istad.inspectra.mapper.DocumentMapper;
 import co.istad.inspectra.repo.DocumentImageRepository;
-import co.istad.inspectra.repo.DocumentKeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,8 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,8 +31,6 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentCategoryRepository documentCategoryRepository;
 
     private final DocumentImageRepository documentImageRepository;
-
-    private final DocumentKeywordRepository documentKeywordRepository;
 
     @Override
     public DocumentResponse createDocument(DocumentRequest documentRequest) {
@@ -66,19 +60,19 @@ public class DocumentServiceImpl implements DocumentService {
 
         document.setImages(images);
 
-        List<Keyword> keywords = documentRequest.documentKeywordRequest().stream()
-                .map(keyword -> {
-                    var documentKeyword = new Keyword();
-                    documentKeyword.setUuid(UUID.randomUUID().toString());
-                    documentKeyword.setDocuments(new ArrayList<>());
-                    documentKeyword.setKeyword(keyword);
-
-                    documentKeywordRepository.save(documentKeyword);
-
-                    return documentKeyword;
-                }).toList();
-
-        document.setKeywords(keywords);
+//        List<Keyword> keywords = documentRequest.documentKeywordRequest().stream()
+//                .map(keyword -> {
+//                    var documentKeyword = new Keyword();
+//                    documentKeyword.setUuid(UUID.randomUUID().toString());
+//                    documentKeyword.setDocuments(new ArrayList<>());
+//                    documentKeyword.setKeyword(keyword);
+//
+//                    documentKeywordRepository.save(documentKeyword);
+//
+//                    return documentKeyword;
+//                }).toList();
+//
+//        document.setKeywords(keywords);
 
 
         return documentMapper.mapToDocumentResponse(document);
@@ -112,63 +106,30 @@ public class DocumentServiceImpl implements DocumentService {
         Document document = documentRepository.findByUuid(uuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found with uuid: " + uuid));
 
-        // Update basic fields of the document
         document.setTitle(documentUpdate.title());
-        document.setDescription(documentUpdate.documentDescription());
 
-        // Update the category if necessary
-//        if (documentUpdate.documentCategoryName() != null) {
-//            var documentCategory = documentCategoryRepository.findByName(documentUpdate.documentCategoryName())
-//                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document category not found with name: "
-//                            + documentUpdate.documentCategoryName()));
-//            document.setCategory(documentCategory);
-//        }
+        document.setDescription(documentUpdate.documentDescription());
 
         // Handle images update: delete orphaned images and add new ones
         if (documentUpdate.documentImagesRequest() != null) {
-            // Remove all existing images from the document
-            document.getImages().clear();  // Remove the references from the Document entity
-            // No need to manually delete them as orphanRemoval = true will take care of it
+            document.getImages().clear();
 
-            // Add new images
             List<DocumentImages> images = documentUpdate.documentImagesRequest().stream()
                     .map(image -> {
                         var documentImage = new DocumentImages();
                         documentImage.setUuid(UUID.randomUUID().toString());
                         documentImage.setThumbnail(image);
-                        documentImage.setDocument(document);  // Set the updated document as the owner
+                        documentImage.setDocument(document);
                         return documentImage;
                     }).toList();
 
-            // Add new images to the document
-            document.setImages(images);  // Reassign the images collection
+            document.setImages(images);
 
-            // Save the new images to the repository
             documentImageRepository.saveAll(images);
         }
 
-        // Handle keywords update
-        if (documentUpdate.documentKeywordRequest() != null) {
-            // Remove existing keywords (if necessary)
-            document.getKeywords().clear();  // Clear current keywords
-            List<Keyword> keywords = documentUpdate.documentKeywordRequest().stream()
-                    .map(keyword -> {
-                        var documentKeyword = new Keyword();
-                        documentKeyword.setUuid(UUID.randomUUID().toString());
-                        documentKeyword.setKeyword(keyword);
-                        documentKeyword.setDocuments(new ArrayList<>(List.of(document))); // Link the keyword to the document
-                        return documentKeyword;
-                    }).toList();
-
-            // Save the new keywords
-            documentKeywordRepository.saveAll(keywords);
-            document.setKeywords(keywords);  // Update the document's keywords field
-        }
-
-        // Save the updated document
         documentRepository.save(document);
 
-        // Return the updated document as a response
         return documentMapper.mapToDocumentResponse(document);
     }
 
@@ -198,6 +159,21 @@ public class DocumentServiceImpl implements DocumentService {
         Page<Document> documents = documentRepository.findAll(pageRequest);
 
         return documents.map(documentMapper::mapToDocumentResponse);
+    }
+
+    @Override
+    public List<DocumentResponse> getDocumentByCategory(String categoryUuid) {
+
+        List<Document> documents = documentRepository.findByCategoryUuid(categoryUuid);
+
+        if (documents.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No documents found for category: " + categoryUuid);
+        }
+
+        return documents.stream()
+                .map(documentMapper::mapToDocumentResponse)
+                .toList();
+
     }
 
 

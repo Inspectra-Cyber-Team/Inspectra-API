@@ -13,8 +13,7 @@ public record DocumentResponse(
         String title,
         String documentDescription,
         String createdAt,
-        List<String> documentImages,
-        List<String> documentKeywords
+        List<String> documentImages
 
 
 

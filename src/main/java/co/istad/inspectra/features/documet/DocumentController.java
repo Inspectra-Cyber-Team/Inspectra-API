@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class DocumentController {
     @Operation(summary = "Create document")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<DocumentResponse> createDocument(@Valid @RequestBody DocumentRequest documentRequest) {
 
         return BaseRestResponse.<DocumentResponse>builder()
@@ -63,6 +65,7 @@ public class DocumentController {
     @Operation(summary = "Update document")
     @PutMapping("/{uuid}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<DocumentResponse> updateDocument(@PathVariable String uuid, @Valid @RequestBody DocumentUpdate documentUpdate) {
 
         return BaseRestResponse.<DocumentResponse>builder()
@@ -75,6 +78,7 @@ public class DocumentController {
     @Operation(summary = "Delete document")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<Void> deleteDocument(@PathVariable String uuid) {
 
         documentService.deleteDocument(uuid);
@@ -93,6 +97,18 @@ public class DocumentController {
 
         return documentService.getAllDocumentByPage(page, size);
 
+    }
+
+
+    @Operation(summary = "Get document by category")
+    @GetMapping("/category/{categoryUuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<List<DocumentResponse>> getDocumentByCategory(@PathVariable String categoryUuid) {
+
+        return BaseRestResponse.<List<DocumentResponse>>builder()
+                .data(documentService.getDocumentByCategory(categoryUuid))
+                .message("Documents retrieved successfully")
+                .build();
     }
 
 

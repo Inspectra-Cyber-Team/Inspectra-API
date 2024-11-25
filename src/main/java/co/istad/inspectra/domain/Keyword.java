@@ -29,8 +29,8 @@ public class Keyword extends Auditable {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToMany(mappedBy = "keywords")
-    private List<Document> documents;
+//    @ManyToMany(mappedBy = "keywords")
+//    private List<Document> documents;
 
 
 }

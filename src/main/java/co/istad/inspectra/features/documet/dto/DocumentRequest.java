@@ -22,8 +22,7 @@ public record DocumentRequest(
 
 
         String documentDescription,
-        List<String> documentImagesRequest,
-        List<String> documentKeywordRequest
+        List<String> documentImagesRequest
 
 
 ) {

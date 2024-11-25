@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class FeedbackController {
     @Operation(summary = "Get all feedback")
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public Page<FeedbackResponse> getFeedbacks(@RequestParam(defaultValue = "0") int page,
                                                @RequestParam(defaultValue = "25") int limit) {
 
@@ -38,6 +40,7 @@ public class FeedbackController {
     @Operation(summary = "Get feedback by uuid")
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<FeedbackResponse> getFeedbackByUuid(@PathVariable String uuid) {
 
         return BaseRestResponse.<FeedbackResponse>builder()
@@ -51,6 +54,7 @@ public class FeedbackController {
     @Operation(summary = "Create feedback")
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('USER')")
     public BaseRestResponse<FeedbackResponse> createFeedback(@AuthenticationPrincipal CustomUserDetails customUserDetails,@Valid @RequestBody FeedbackRequest request) {
 
         return BaseRestResponse.<FeedbackResponse>builder()
@@ -63,6 +67,7 @@ public class FeedbackController {
     @Operation(summary = "Update feedback")
     @PutMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<FeedbackResponse> updateFeedback(@Valid @RequestBody  FeedBackUpdate feedBackUpdate, @PathVariable String uuid) {
 
         return BaseRestResponse.<FeedbackResponse>builder()
@@ -75,6 +80,7 @@ public class FeedbackController {
     @Operation(summary = "Delete feedback")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<Void> deleteFeedback(@PathVariable String uuid) {
 
         feedBackService.deleteFeedBack(uuid);
@@ -89,6 +95,7 @@ public class FeedbackController {
     @Operation(summary = "Get feedback details")
     @GetMapping("/details/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<FeedbackResponseDetails> getFeedbackDetails(@PathVariable String uuid) {
 
         return BaseRestResponse.<FeedbackResponseDetails>builder()
@@ -101,6 +108,7 @@ public class FeedbackController {
     @Operation(summary = "Get all feedback")
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<List<FeedbackResponse>> getAllFeedbacks() {
 
         return BaseRestResponse.<List<FeedbackResponse>>builder()

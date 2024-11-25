@@ -22,7 +22,6 @@ public interface DocumentMapper {
     // Custom mappings for images and keywords
     @Mapping(target = "documentCategoryName", source = "category.name")
     @Mapping(target = "documentImages", source = "images")
-    @Mapping(target = "documentKeywords", source = "keywords")
     DocumentResponse mapToDocumentResponse(Document document);
 
 
@@ -37,11 +36,6 @@ public interface DocumentMapper {
                 .collect(Collectors.toList()) : null;
     }
 
-    default List<String> mapKeywordsToStrings(List<Keyword> keywords) {
-        return keywords != null ? keywords.stream()
-                .map(Keyword::getKeyword)
-                .collect(Collectors.toList()) : null;
-    }
 
 
 

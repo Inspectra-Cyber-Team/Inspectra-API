@@ -34,14 +34,14 @@ public class Document extends Auditable {
     private DocumentCategory category;
 
 
-    //relationships with keywords
-    @ManyToMany
-    @JoinTable(
-            name = "document_keywords",
-            joinColumns = @JoinColumn(name = "document_id"),
-            inverseJoinColumns = @JoinColumn(name = "keyword_id")
-    )
-    private List<Keyword> keywords;
+//    //relationships with keywords
+//    @ManyToMany
+//    @JoinTable(
+//            name = "document_keywords",
+//            joinColumns = @JoinColumn(name = "document_id"),
+//            inverseJoinColumns = @JoinColumn(name = "keyword_id")
+//    )
+//    private List<Keyword> keywords;
 
 
     //relationships with images
