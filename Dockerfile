@@ -28,6 +28,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     jq \
+    python3 \
+    python3-pip \
     apt-transport-https \
     ca-certificates \
     gnupg \
@@ -71,6 +73,11 @@ ENV PATH=$PATH:/usr/bin/node:/usr/bin/npm
 ENV COMPOSER_VERSION=2.6.2
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer --version
+
+# Install Django and FastAPI (and optional dependencies)
+RUN pip3 install --no-cache-dir django fastapi uvicorn sqlalchemy pydantic
+
+
 
 # Set the working directory in the container
 WORKDIR /app
