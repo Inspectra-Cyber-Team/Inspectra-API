@@ -74,9 +74,12 @@ ENV COMPOSER_VERSION=2.6.2
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer --version
 
-# Install Django and FastAPI (and optional dependencies)
-RUN pip3 install --no-cache-dir django fastapi uvicorn sqlalchemy pydantic
+# Install Python libraries in a virtual environment
+RUN python3 -m venv /opt/venv \
+    && /opt/venv/bin/pip install --no-cache-dir django fastapi uvicorn sqlalchemy pydantic
 
+# Add the virtual environment's binaries to PATH
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Install Go CLI
 ENV GO_VERSION=1.21.3
