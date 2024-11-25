@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,6 +40,9 @@ public class GoServiceImpl  implements  GoService{
 
     @Value("${sonar.token}")
     private String sonarLoginToken;
+
+    @Value("${my-app.state}")
+    private String myApp;
 
     private final AppConfig appConfig;
 
@@ -104,7 +108,17 @@ public class GoServiceImpl  implements  GoService{
 
         try {
             // Execute the SonarQube scan
-            executeCommand(command);
+            if(myApp.equals("dev")) {
+
+                executeCommand(command);
+
+            } else {
+
+                    List<String> commandProd = getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName);
+                    executeCommand(commandProd);
+
+            }
+
 
             // Notify the user of successful completion
             emailUtil.sendScanMessage(
@@ -141,6 +155,24 @@ public class GoServiceImpl  implements  GoService{
                 "-Dsonar.sources=.",
                 "-X"
         );
+    }
+
+    private List<String> getProjectScanInProduction(String projectName, String cloneDirectory, String fileName) {
+
+        String projectPath = cloneDirectory + fileName;
+
+        List<String> command = new ArrayList<>();
+        command.add("sonar-scanner");
+        command.add("-Dsonar.host.url=" + sonarHostUrl);
+        command.add("-Dsonar.token=" + sonarLoginToken);
+        command.add("-Dsonar.projectKey=" + projectName);
+        command.add("-Dsonar.projectName=" + projectName);
+        command.add("-Dsonar.sources=" + projectPath);
+        command.add("-Dsonar.verbose=true");
+        command.add("-X");
+
+        return command;
+
     }
 
     private void executeCommand(List<String> command) throws IOException, InterruptedException {

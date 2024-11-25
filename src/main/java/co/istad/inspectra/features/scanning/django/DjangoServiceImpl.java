@@ -33,6 +33,9 @@ public class DjangoServiceImpl implements DjangoService {
     @Value("${sonar.token}")
     private String sonarLoginToken;
 
+    @Value("${my-app.state}")
+    private String myApp;
+
     private final GitConfig gitConfig;
 
     private final AppConfig appConfig;
@@ -53,7 +56,16 @@ public class DjangoServiceImpl implements DjangoService {
 
         try {
 
-            scanProject(command);
+            if(myApp.equals("dev")) {
+
+                scanProject(command);
+
+            }else {
+
+                List<String> commandProd = getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName);
+                scanProject(commandProd);
+
+            }
             //send message when scanning has done
             emailUtil.sendScanMessage("lyhou282@gmail.com", "SonarQube scan completed");
 
@@ -93,6 +105,24 @@ public class DjangoServiceImpl implements DjangoService {
         command.add("-X");
 
         return command;
+    }
+
+    private List<String> getProjectScanInProduction(String projectName, String cloneDirectory, String fileName) {
+
+        String projectPath = cloneDirectory + fileName;
+
+        List<String> command = new ArrayList<>();
+        command.add("sonar-scanner");
+        command.add("-Dsonar.host.url=" + sonarHostUrl);
+        command.add("-Dsonar.token=" + sonarLoginToken);
+        command.add("-Dsonar.projectKey=" + projectName);
+        command.add("-Dsonar.projectName=" + projectName);
+        command.add("-Dsonar.sources=" + projectPath);
+        command.add("-Dsonar.verbose=true");
+        command.add("-X");
+
+        return command;
+
     }
 
     // This method c
