@@ -46,6 +46,16 @@ RUN curl -LO https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/son
     && rm sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip \
     && ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
 
+# Install Node.js
+ENV NODE_VERSION=18.x
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm
+
+# Set PATH for Node.js
+ENV PATH=$PATH:/usr/bin/node:/usr/bin/npm
+
+
 
 # Set the working directory in the container
 WORKDIR /app
