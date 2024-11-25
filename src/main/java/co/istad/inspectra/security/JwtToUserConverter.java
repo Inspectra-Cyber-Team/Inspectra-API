@@ -8,8 +8,14 @@ import lombok.Setter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -29,13 +35,13 @@ public class JwtToUserConverter implements Converter<Jwt, UsernamePasswordAuthen
 
         userDetail.setUser(user);
 
-        userDetail.getAuthorities().forEach(
-                authority -> {
-                    System.out.println("Here is the authority get from the jwt"+authority.getAuthority());
-                }
-        );
+        // Log the authorities for debugging purposes
+        userDetail.getAuthorities().forEach(authority -> {
+            System.out.println("Authority: " + authority.getAuthority());
+        });
 
 
-        return new UsernamePasswordAuthenticationToken(userDetail,"",userDetail.getAuthorities());
+
+            return new UsernamePasswordAuthenticationToken(userDetail,"",userDetail.getAuthorities());
     }
 }

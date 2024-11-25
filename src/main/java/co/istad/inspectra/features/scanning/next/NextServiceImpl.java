@@ -31,6 +31,9 @@ public class NextServiceImpl implements NextService{
     @Value("${sonar.token}")
     private String sonarLoginToken;
 
+    @Value("${my-app.state}")
+    private String myApp;
+
     private final AppConfig appConfig;
 
     private final GitConfig gitConfig;
@@ -59,7 +62,11 @@ public class NextServiceImpl implements NextService{
 
         try {
 
-            scanProject(command);
+            if(myApp.equals("dev")) {
+                scanProject(command);
+            } else {
+                scanProject(getProjectScanInProduction(nextScanningRequest.projectName(), cloneDirectory, fileName));
+            }
             //send message when scanning has done
             emailUtil.sendScanMessage("lyhou282@gmail.com", "SonarQube scan completed");
 
@@ -97,6 +104,27 @@ public class NextServiceImpl implements NextService{
 
         return command;
     }
+
+
+    private List<String> getProjectScanInProduction(String projectName, String cloneDirectory, String fileName) {
+
+        String projectPath = cloneDirectory + fileName;
+
+        List<String> command = new ArrayList<>();
+        command.add("sonar-scanner");
+        command.add("-Dsonar.host.url=" + sonarHostUrl);
+        command.add("-Dsonar.token=" + sonarLoginToken);
+        command.add("-Dsonar.projectKey=" + projectName);
+        command.add("-Dsonar.projectName=" + projectName);
+        command.add("-Dsonar.sources=" + projectPath);
+        command.add("-Dsonar.verbose=true");
+        command.add("-X");
+
+        return command;
+
+    }
+
+
 
     // This method could be part of the class
     private void scanProject(List<String> command) throws InterruptedException, IOException, MessagingException {

@@ -2,6 +2,8 @@ package co.istad.inspectra.base;
 
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Setter
 @Getter
 @NoArgsConstructor

@@ -14,8 +14,11 @@ public record ResponseUserDto(
         String email,
         String profile,
         String bio,
-        LocalDateTime registeredDate,
-        LocalDateTime updatedDate,
+        String createdAt,
+
+        Boolean isActive,
+
+        String lastModifiedAt,
         Boolean isVerified,
         Boolean isDeleted,
         Set<UserRoleResponse> roles

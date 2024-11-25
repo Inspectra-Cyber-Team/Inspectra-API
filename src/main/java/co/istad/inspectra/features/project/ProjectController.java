@@ -29,7 +29,7 @@ public class ProjectController {
     )
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseRestResponse<ProjectResponse> createProject(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ProjectRequest projectRequest) throws Exception {
+    public BaseRestResponse<ProjectResponse> createProject(@AuthenticationPrincipal CustomUserDetails customUserDetails,@Valid @RequestBody ProjectRequest projectRequest) throws Exception {
 
         return BaseRestResponse
                 .<ProjectResponse>builder()
@@ -111,7 +111,7 @@ public class ProjectController {
     @Operation(summary = "find project by user uuid", description = "This endpoint is used for finding project by user uuid")
     @GetMapping("/user")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<List<ProjectResponse>> findProjectByUserUuid(@Valid @RequestParam String userUuid) throws Exception {
+    public BaseRestResponse<List<ProjectResponse>> findProjectByUserUuid(@Valid @RequestParam String userUuid)  {
         return BaseRestResponse
                 .<List<ProjectResponse>>builder()
                 .timestamp(LocalDateTime.now())
@@ -165,14 +165,10 @@ public class ProjectController {
     )
     @GetMapping("/favorite")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<Object> getProjectFavorite() throws Exception {
-       return BaseRestResponse
-               .builder()
-               .timestamp(LocalDateTime.now())
-               .status(HttpStatus.OK.value())
-               .data(projectService.getProjectFavorite())
-               .message("List all projects")
-               .build();
+    public Flux<Object> getProjectFavorite() throws Exception {
+
+        return projectService.getProjectFavorite();
+
     }
 
     @Operation(
@@ -181,7 +177,7 @@ public class ProjectController {
     )
     @PostMapping("/remove/favorite")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<Object> removeFavorite(@Valid @RequestParam String projectKey) throws Exception {
+    public BaseRestResponse<Object> removeFavorite(@Valid @RequestParam String projectKey)  {
 
        return BaseRestResponse
                .builder()
@@ -196,7 +192,7 @@ public class ProjectController {
     @Operation(summary = "Get security hotspot", description = "This endpoint is used for getting security hotspot")
     @GetMapping("/security/hotspot")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getSecurityHotspot(@Valid @RequestParam String projectName) throws Exception {
+    public Flux<Object> getSecurityHotspot(@Valid @RequestParam String projectName){
         return projectService.getSecurityHotspot(projectName);
     }
 
@@ -204,7 +200,7 @@ public class ProjectController {
     @Operation(summary = "Get project branch", description = "This endpoint is used for getting project branch")
     @GetMapping("/branch")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getProjectBranch(@Valid @RequestParam String projectName) throws Exception {
+    public Flux<Object> getProjectBranch(@Valid @RequestParam String projectName){
         return projectService.getProjectBranch(projectName);
     }
 
@@ -212,14 +208,14 @@ public class ProjectController {
     @Operation(summary = "Get project warning", description = "This endpoint is used for getting project warning")
     @GetMapping("/warning")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getProjectWarning(@Valid @RequestParam String projectName) throws Exception {
+    public Flux<Object> getProjectWarning(@Valid @RequestParam String projectName) {
         return projectService.getProjectWarning(projectName);
     }
 
     @Operation(summary = "Get project overview", description = "This endpoint is used for getting project overview")
     @GetMapping("/overview")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getProjectOverview(@Valid @RequestParam String projectName) throws Exception {
+    public Flux<Object> getProjectOverview(@Valid @RequestParam String projectName)  {
         return projectService.getProjectOverview(projectName);
     }
 

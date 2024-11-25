@@ -1,16 +1,20 @@
 package co.istad.inspectra.features.user;
 
 
+import co.istad.inspectra.base.BaseSpecification;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UpdateUserDto;
+import co.istad.inspectra.security.CustomUserDetails;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.List;
 
 /**
  *   UserService interface
  *   @version 1.0
- * @Author : lyhou
+ * @author : lyhou
  *
  */
 
@@ -22,15 +26,8 @@ public interface UserService {
      * @param uuid is identifier of user
      * @author : lyhou
      */
-    ResponseUserDto getUserById(String uuid);
+    ResponseUserDto getUserByUuid(String uuid);
 
-    /**
-     * Update user
-     * @return @link ResponseUserDto}
-     * @param uuid, updateUserDto
-     * author: lyhou
-     */
-    ResponseUserDto updateUser(String uuid,UpdateUserDto updateUserDto);
 
     /**
      * Delete user
@@ -51,7 +48,7 @@ public interface UserService {
     /**
      * Get all user by page
      * @return {@link ResponseUserDto}
-     * @Author : lyhou
+     * @author : lyhou
      */
 
     Page<ResponseUserDto> getAllUsersByPage(int page, int size);
@@ -62,7 +59,28 @@ public interface UserService {
      *
      */
 
-    String updateProfile(String uuid, String thumbnails);
+    ResponseUserDto updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, UpdateUserDto updateUserDto);
+
+
+    /**
+     * Block user
+     * @param uuid is identifier of user
+     * @return {@link ResponseUserDto}
+     * @author : lyhou
+     */
+    void blockUser(String uuid);
+
+    /**
+     * Unblock user
+     * @param uuid is identifier of user
+     * @return {@link ResponseUserDto}
+     * @author : lyhou
+     */
+
+    void unblockUser(String uuid);
+
+    List<ResponseUserDto> getUserByFilter(BaseSpecification.FilterDto filterDto);
+
 
 
 

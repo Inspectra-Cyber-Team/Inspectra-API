@@ -7,10 +7,13 @@ import co.istad.inspectra.domain.User;
 import co.istad.inspectra.features.blog.dto.BlogRequestDto;
 import co.istad.inspectra.features.blog.dto.BlogResponseDto;
 import co.istad.inspectra.features.blog.dto.BlogUpdateRequest;
+import co.istad.inspectra.features.blog.dto.UserDto;
 import co.istad.inspectra.features.user.UserRepository;
 import co.istad.inspectra.features.userlikeblog.UserLikeBlogRepository;
+
 import co.istad.inspectra.mapper.BlogMapper;
 import co.istad.inspectra.security.CustomUserDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,11 +23,16 @@ import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static co.istad.inspectra.handler.WebSocketHandler.sessions;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +46,7 @@ public class BlogServiceImpl implements BlogService {
     private final UserRepository userRepository;
 
     private final UserLikeBlogRepository userLikeBlogRepository;
+
 
 
     @Override
@@ -74,7 +83,36 @@ public class BlogServiceImpl implements BlogService {
 
         blogRepository.save(blog);
 
+// Send a WebSocket notification to all connected clients
+        notifyClientsAboutNewBlog(blog);
+
         return blogMapper.toBlogResponseDto(blog);
+    }
+
+    private void notifyClientsAboutNewBlog(Blog blog) {
+        // Convert the Blog entity to a BlogResponseDto
+
+        blogMapper.toBlogResponseDto(blog);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            String message = objectMapper.writeValueAsString(blogMapper.toBlogResponseDto(blog));
+
+            // Send the serialized JSON message to all connected WebSocket clients
+            TextMessage webSocketMessage = new TextMessage(message);
+            for (WebSocketSession session : sessions) {
+                if (session.isOpen()) {
+                    try {
+                        session.sendMessage(webSocketMessage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

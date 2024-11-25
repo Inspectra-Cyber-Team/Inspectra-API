@@ -73,7 +73,11 @@ dependencies {
     implementation 'org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.1.22'
     // Works with OpenPDF
 
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
     implementation 'org.json:json:20210307'
+
+
 
 
 }

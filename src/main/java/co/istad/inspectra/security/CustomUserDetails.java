@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 @Getter
@@ -26,14 +26,9 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getRoleName().name()));
-        });
-        user.getAuthorities().forEach(authority -> {
-            authorities.add(new SimpleGrantedAuthority(authority.getAuthorityName()));
-        });
-        return authorities;
+       return user.getRoles().stream()
+               .map(role -> new SimpleGrantedAuthority(role.getRoleName().name()))
+               .collect(Collectors.toList());
     }
 
     @Override

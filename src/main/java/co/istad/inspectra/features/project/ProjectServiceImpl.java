@@ -13,17 +13,12 @@ import co.istad.inspectra.utils.SonarHeaders;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
-
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -137,34 +132,41 @@ public class ProjectServiceImpl implements ProjectService {
 
         var entity = new HttpEntity<>(httpHeaders);
 
-        var response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+      try {
+
+          var response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
 
 //        check if project name doesn't exist
-        if(response.getStatusCode() == HttpStatus.NOT_FOUND){
+          if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
 
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectName not found");
+              throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectName not found");
 
-        }
+          }
 
-        if(response.getStatusCode() == HttpStatus.NO_CONTENT){
+          if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
 
-            Project project = projectRepository.findByProjectName(projectName)
-                    .orElseThrow(() ->
-                            new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectName not found"));
+              Project project = projectRepository.findByProjectName(projectName)
+                      .orElseThrow(() ->
+                              new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectName not found"));
 
-            project.setIsDeleted(true);
+              project.setIsDeleted(true);
 
-            projectRepository.save(project);
+              projectRepository.save(project);
 
 
-            return response.getBody();
+              return response.getBody();
 
-        } else {
+          } else {
 
-            throw new RuntimeException("Failed to delete project: " + response.getStatusCode());
+              throw new RuntimeException("Failed to delete project: " + response.getStatusCode());
 
-        }
+          }
+      }catch (Exception e) {
+
+          throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred while sending request: " + e.getMessage());
+
+      }
 
 
     }
@@ -183,15 +185,17 @@ public class ProjectServiceImpl implements ProjectService {
 
         var entity = new HttpEntity<>(httpHeaders);
 
+    try {
+
         var response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-        if(response.getStatusCode() == HttpStatus.NOT_FOUND){
+        if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
 
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectName not found");
 
         }
 
-        if(response.getStatusCode() == HttpStatus.OK){
+        if (response.getStatusCode() == HttpStatus.OK) {
 
             project.setProjectName(projectUpdateDto.newProjectName());
 
@@ -201,9 +205,15 @@ public class ProjectServiceImpl implements ProjectService {
 
         } else {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Failed to update project: " + response.getStatusCode());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to update project: " + response.getStatusCode());
 
         }
+
+    }catch (Exception e) {
+
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred while sending request: " + e.getMessage());
+
+    }
 
 
     }
@@ -211,17 +221,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public String favoriteProject(String projectName) {
 
-//        Project project = projectRepository.findByProjectName(projectName)
-//                .orElseThrow(() ->
-//                        new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectName not found"));
-//
-//        project.setIsUsed(true);
-//
-//        projectRepository.save(project);
+        Project project = projectRepository.findByProjectName(projectName)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectName not found"));
+
+        project.setIsUsed(true);
+
+        projectRepository.save(project);
 
         String url = sonarUrl + "/api/favorites/add?component=" + projectName;
-
-        System.out.println("this is url: " + url);
 
 //        HttpHeaders httpHeaders = sonarHeaders.getSonarHeader();
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -257,17 +265,40 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Object getProjectFavorite() throws Exception {
+    public Flux<Object> getProjectFavorite(){
+
+//        String uuid = customUserDetails.getUserUuid();
+//
+//        if(projectRepository.findAll().isEmpty()){
+//
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project is empty");
+//
+//        }
+//
+//        List<Project> project = projectRepository.findByUserUuid(uuid);
+//
+//        if(project.isEmpty()){
+//
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project is empty");
+//
+//        }
+
 
         String url = sonarUrl + "/api/favorites/search";
-        HttpHeaders httpHeaders = sonarHeaders.getSonarHeader();
 
-        return sonaResponse.responseFromSonarAPI(url, null, httpHeaders, HttpMethod.GET);
+        return webClient.get()
+                .uri(url)
+                .headers(headers -> headers.setBearerAuth(sonarToken))
+                .retrieve()
+                .bodyToFlux(Object.class);
+
+
+
 
     }
 
     @Override
-    public String removeFavorite(String projectKey) throws Exception {
+    public String removeFavorite(String projectKey)  {
 
         String url = sonarUrl + "/api/favorites/remove?component=" + projectKey;
 
@@ -296,7 +327,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Flux<Object> getSecurityHotspot(String projectName) throws Exception {
+    public Flux<Object> getSecurityHotspot(String projectName)  {
 
 
         String url = sonarUrl + "/api/hotspots/search?project="+projectName;
@@ -312,7 +343,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Flux<Object> getProjectBranch(String projectName) throws Exception {
+    public Flux<Object> getProjectBranch(String projectName)  {
 
 
         return webClient.get()
@@ -324,7 +355,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Flux<Object> getProjectWarning(String projectName) throws Exception {
+    public Flux<Object> getProjectWarning(String projectName)  {
 
         return webClient.get()
                 .uri(sonarUrl + "/api/ce/analysis_status?component=" + projectName)
@@ -336,7 +367,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Flux<Object> getProjectOverview(String projectName) throws Exception {
+    public Flux<Object> getProjectOverview(String projectName) {
 
         return webClient.get()
                 .uri(sonarUrl + "/api/measures/component?component="+projectName+"&metricKeys=ncloc,security_issues,reliability_issues,maintainability_issues,vulnerabilities,bugs,code_smells,security_hotspots,coverage,duplicated_lines_density")
@@ -347,7 +378,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Flux<Object> getFacets() throws Exception {
+    public Flux<Object> getFacets()  {
 
 
         return webClient.get()
@@ -359,7 +390,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectResponse> getProjectByUserUid(String userUid) throws Exception {
+    public List<ProjectResponse> getProjectByUserUid(String userUid) {
 
         User user = userRepository.findUserByUuid(userUid);
 

@@ -118,7 +118,7 @@ public class AuthServiceImpl implements AuthService {
         roles.add(userRoleRepository.findRoleByRoleName(EnumRole.ROLE_USER).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found.")));
         user.setRoles(roles);
         // set password for users
-        user.setIsActive(false);
+        user.setIsActive(true);
         user.setPassword(passwordEncoder.encode(userRegisterDto.password()));
         user.setOtp("");
         user.setOtpGeneratedTime(LocalDateTime.now());
