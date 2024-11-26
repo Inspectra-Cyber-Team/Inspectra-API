@@ -1,8 +1,7 @@
 package co.istad.inspectra.features.pdf;
 
 import co.istad.inspectra.features.issue.IssueService;
-import co.istad.inspectra.features.project_analy.ProjectAnalyzeService;
-import com.lowagie.text.PageSize;
+import co.istad.inspectra.features.projectanaly.ProjectAnalyzeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

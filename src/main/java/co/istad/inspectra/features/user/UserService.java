@@ -4,10 +4,11 @@ package co.istad.inspectra.features.user;
 import co.istad.inspectra.base.BaseSpecification;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UpdateUserDto;
+import co.istad.inspectra.features.user.dto.UserRegisterDto;
 import co.istad.inspectra.security.CustomUserDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.context.request.WebRequest;
+
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  *   UserService interface
  *   @version 1.0
  * @author : lyhou
+ * @see UserServiceImpl
  *
  */
 
@@ -55,7 +57,8 @@ public interface UserService {
 
     /**
      * Update user profile
-     *
+     * @param customUserDetails is custom user details
+     * @return {@link ResponseUserDto}
      *
      */
 
@@ -65,7 +68,6 @@ public interface UserService {
     /**
      * Block user
      * @param uuid is identifier of user
-     * @return {@link ResponseUserDto}
      * @author : lyhou
      */
     void blockUser(String uuid);
@@ -73,13 +75,25 @@ public interface UserService {
     /**
      * Unblock user
      * @param uuid is identifier of user
-     * @return {@link ResponseUserDto}
      * @author : lyhou
      */
 
     void unblockUser(String uuid);
 
+
+    /**
+     * Get user by filter
+     * @param filterDto is filter dto
+     * @return {@link List<ResponseUserDto>}
+     */
     List<ResponseUserDto> getUserByFilter(BaseSpecification.FilterDto filterDto);
+
+    /**
+     * Create admin user
+     * @param userRegisterDto is user register dto
+     * @return {@link ResponseUserDto}
+     */
+    ResponseUserDto createAdmin(UserRegisterDto userRegisterDto);
 
 
 

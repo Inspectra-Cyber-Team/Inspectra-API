@@ -4,7 +4,7 @@ import co.istad.inspectra.domain.User;
 import co.istad.inspectra.domain.role.EnumRole;
 import co.istad.inspectra.domain.role.Role;
 import co.istad.inspectra.features.auth.dto.*;
-import co.istad.inspectra.features.user_role.UserRoleRepository;
+import co.istad.inspectra.features.userrole.UserRoleRepository;
 import co.istad.inspectra.mapper.UserMapper;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UserRegisterDto;
@@ -234,6 +234,8 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password is incorrect");
         }
     }
+
+
 
 
     //make function find user by email

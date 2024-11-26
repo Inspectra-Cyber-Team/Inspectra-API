@@ -1,6 +1,6 @@
-package co.istad.inspectra.features.project_analy;
+package co.istad.inspectra.features.projectanaly;
 
-import co.istad.inspectra.features.project_analy.dto.LinesResponse;
+import co.istad.inspectra.features.projectanaly.dto.LinesResponse;
 import reactor.core.publisher.Flux;
 
 public interface ProjectAnalyzeService {

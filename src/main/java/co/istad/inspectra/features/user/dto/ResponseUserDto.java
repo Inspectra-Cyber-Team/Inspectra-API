@@ -1,8 +1,8 @@
 package co.istad.inspectra.features.user.dto;
 
-import co.istad.inspectra.features.user_role.dto.UserRoleResponse;
+import co.istad.inspectra.features.userrole.dto.UserRoleResponse;
 import lombok.Builder;
-import java.time.LocalDateTime;
+
 import java.util.Set;
 
 @Builder

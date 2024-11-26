@@ -1,8 +1,6 @@
-package co.istad.inspectra.features.project_analy.dto;
+package co.istad.inspectra.features.projectanaly.dto;
 
 import lombok.Builder;
-
-import java.util.List;
 
 @Builder
 public record LinesResponse(

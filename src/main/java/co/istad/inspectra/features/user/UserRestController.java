@@ -5,6 +5,7 @@ import co.istad.inspectra.base.BaseSpecification;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UpdateUserDto;
 import co.istad.inspectra.base.BaseRestResponse;
+import co.istad.inspectra.features.user.dto.UserRegisterDto;
 import co.istad.inspectra.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -130,6 +131,19 @@ public class UserRestController {
                 .message("Users found successfully.")
                 .build();
 
+    }
+
+    @Operation(summary = "create admin")
+    @PostMapping("/admin")
+    public BaseRestResponse<ResponseUserDto> createAdmin(@Valid @RequestBody UserRegisterDto userRegisterDto) {
+
+        return BaseRestResponse
+                .<ResponseUserDto>builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK.value())
+                .data(userService.createAdmin(userRegisterDto))
+                .message("Admin has been created successfully.")
+                .build();
     }
 
 

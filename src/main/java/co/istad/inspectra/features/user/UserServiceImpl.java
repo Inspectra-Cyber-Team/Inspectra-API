@@ -2,8 +2,12 @@ package co.istad.inspectra.features.user;
 
 import co.istad.inspectra.base.BaseSpecification;
 import co.istad.inspectra.domain.User;
+import co.istad.inspectra.domain.role.EnumRole;
+import co.istad.inspectra.domain.role.Role;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UpdateUserDto;
+import co.istad.inspectra.features.user.dto.UserRegisterDto;
+import co.istad.inspectra.features.userrole.UserRoleRepository;
 import co.istad.inspectra.mapper.UserMapper;
 import co.istad.inspectra.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +15,15 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,6 +35,10 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     private final BaseSpecification<User> baseSpecification;
+
+    private final UserRoleRepository userRoleRepository;
+
+    private final PasswordEncoder passwordEncoder;
     @Override
     public ResponseUserDto getUserByUuid(String uuid) {
 
@@ -176,8 +188,49 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    // Find all users matching the specification
+    @Override
+    public ResponseUserDto createAdmin(UserRegisterDto userRegisterDto) {
 
+
+        if (userRepository.existsByEmail(userRegisterDto.email()))
+        {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email " + userRegisterDto.email() + " already existed");
+        }
+
+        User user = new User();
+
+        user.setUuid(UUID.randomUUID().toString());
+        user.setFirstName(userRegisterDto.firstName());
+        user.setLastName(userRegisterDto.lastName());
+        user.setName(userRegisterDto.userName());
+        user.setEmail(userRegisterDto.email());
+        user.setIsDeleted(true);
+        user.setIsVerified(false);
+        user.setIsDeleted(false);
+
+        user.setIsAccountNonExpired(true);
+        user.setIsAccountNonLocked(true);
+        user.setIsCredentialsNonExpired(true);
+        user.setIsEnabled(false);
+
+
+
+        user.setRegisteredDate(LocalDateTime.now());
+//        set role for user
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRoleRepository.findRoleByRoleName(EnumRole.ROLE_ADMIN).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found.")));
+        user.setRoles(roles);
+        // set password for users
+        user.setIsActive(true);
+        user.setPassword(passwordEncoder.encode(userRegisterDto.password()));
+        user.setOtp("");
+        user.setOtpGeneratedTime(LocalDateTime.now());
+
+        userRepository.save(user);
+
+
+        return userMapper.mapFromUserToUserResponseDto(user);
+    }
 
 
 }

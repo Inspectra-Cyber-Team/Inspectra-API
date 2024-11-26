@@ -1,9 +1,9 @@
-package co.istad.inspectra.features.project_analy;
+package co.istad.inspectra.features.projectanaly;
 
 import co.istad.inspectra.base.SonaResponse;
 import co.istad.inspectra.features.project.ProjectRepository;
-import co.istad.inspectra.features.project_analy.dto.LineResponseWrapper;
-import co.istad.inspectra.features.project_analy.dto.LinesResponse;
+import co.istad.inspectra.features.projectanaly.dto.LineResponseWrapper;
+import co.istad.inspectra.features.projectanaly.dto.LinesResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;

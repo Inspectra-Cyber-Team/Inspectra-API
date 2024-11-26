@@ -1,4 +1,4 @@
-package co.istad.inspectra.features.user_role.dto;
+package co.istad.inspectra.features.userrole.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

@@ -5,7 +5,7 @@ import co.istad.inspectra.domain.User;
 import co.istad.inspectra.domain.role.EnumRole;
 import co.istad.inspectra.domain.role.Role;
 import co.istad.inspectra.features.authority.AuthorityRepository;
-import co.istad.inspectra.features.user_role.UserRoleRepository;
+import co.istad.inspectra.features.userrole.UserRoleRepository;
 import co.istad.inspectra.features.user.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

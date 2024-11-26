@@ -2,8 +2,8 @@ package co.istad.inspectra.mapper;
 
 
 import co.istad.inspectra.domain.role.Role;
-import co.istad.inspectra.features.user_role.dto.UserRoleRequest;
-import co.istad.inspectra.features.user_role.dto.UserRoleResponse;
+import co.istad.inspectra.features.userrole.dto.UserRoleRequest;
+import co.istad.inspectra.features.userrole.dto.UserRoleResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

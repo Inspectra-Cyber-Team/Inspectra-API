@@ -12,9 +12,9 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/role")
+@RequestMapping("/api/v1/rules")
 @RequiredArgsConstructor
-public class RoleController {
+public class RuleController {
 
     private final RuleService ruleService;
 

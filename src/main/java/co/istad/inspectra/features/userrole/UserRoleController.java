@@ -1,8 +1,8 @@
-package co.istad.inspectra.features.user_role;
+package co.istad.inspectra.features.userrole;
 
 import co.istad.inspectra.base.BaseRestResponse;
-import co.istad.inspectra.features.user_role.dto.UserRoleRequest;
-import co.istad.inspectra.features.user_role.dto.UserRoleResponse;
+import co.istad.inspectra.features.userrole.dto.UserRoleRequest;
+import co.istad.inspectra.features.userrole.dto.UserRoleResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

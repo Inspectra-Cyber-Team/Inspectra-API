@@ -1,4 +1,4 @@
-package co.istad.inspectra.features.quality_gates;
+package co.istad.inspectra.features.qualitygates;
 
 import co.istad.inspectra.base.SonaResponse;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package co.istad.inspectra.features.user_role;
+package co.istad.inspectra.features.userrole;
 
 import co.istad.inspectra.domain.role.EnumRole;
 import co.istad.inspectra.domain.role.Role;
