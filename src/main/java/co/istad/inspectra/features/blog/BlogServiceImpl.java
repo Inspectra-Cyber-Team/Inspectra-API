@@ -226,32 +226,36 @@ public class BlogServiceImpl implements BlogService {
         // Get the updated list of thumbnails from the request
         List<String> updatedThumbnails = blogUpdateRequest.thumbnail();
 
-        // Find and remove obsolete images
-        List<BlogImages> imagesToRemove = existingImages.stream()
-                .filter(existingImage -> !updatedThumbnails.contains(existingImage.getThumbnail()))
-                .toList();
-        existingImages.removeAll(imagesToRemove);
+        if (updatedThumbnails != null) {
 
-        // Add new images that are not already present
-        List<String> existingThumbnails = existingImages.stream()
-                .map(BlogImages::getThumbnail)
-                .toList();
+            // Find and remove obsolete images
+            List<BlogImages> imagesToRemove = existingImages.stream()
+                    .filter(existingImage -> !updatedThumbnails.contains(existingImage.getThumbnail()))
+                    .toList();
+            existingImages.removeAll(imagesToRemove);
 
-        List<BlogImages> newImages = updatedThumbnails.stream()
-                .filter(thumbnail -> !existingThumbnails.contains(thumbnail))
-                .map(thumbnail -> {
-                    BlogImages newImage = new BlogImages();
-                    newImage.setUuid(UUID.randomUUID().toString());
-                    newImage.setThumbnail(thumbnail);
-                    newImage.setBlog(blog);
-                    return newImage;
-                })
-                .toList();
+            // Add new images that are not already present
+            List<String> existingThumbnails = existingImages.stream()
+                    .map(BlogImages::getThumbnail)
+                    .toList();
 
-        existingImages.addAll(newImages);
+            List<BlogImages> newImages = updatedThumbnails.stream()
+                    .filter(thumbnail -> !existingThumbnails.contains(thumbnail))
+                    .map(thumbnail -> {
+                        BlogImages newImage = new BlogImages();
+                        newImage.setUuid(UUID.randomUUID().toString());
+                        newImage.setThumbnail(thumbnail);
+                        newImage.setBlog(blog);
+                        return newImage;
+                    })
+                    .toList();
 
-        // Update the blog's image list
-        blog.setBlogImages(existingImages);
+            existingImages.addAll(newImages);
+
+            // Update the blog's image list
+            blog.setBlogImages(existingImages);
+
+        }
 
         // Update other fields in the blog using the mapper
         blogMapper.UpdateBlog(blog, blogUpdateRequest);

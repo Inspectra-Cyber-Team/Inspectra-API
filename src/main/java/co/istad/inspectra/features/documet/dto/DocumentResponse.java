@@ -11,7 +11,7 @@ public record DocumentResponse(
         String uuid,
         String documentCategoryName,
         String title,
-        String documentDescription,
+        String description,
         String createdAt,
         List<String> documentImages
 
