@@ -12,7 +12,9 @@ import co.istad.inspectra.features.userlikeblog.UserLikeBlogRepository;
 
 import co.istad.inspectra.mapper.BlogMapper;
 import co.istad.inspectra.security.CustomUserDetails;
+import co.istad.inspectra.utils.EmailUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,6 +49,8 @@ public class BlogServiceImpl implements BlogService {
     private final UserRepository userRepository;
 
     private final UserLikeBlogRepository userLikeBlogRepository;
+
+    private final EmailUtil emailUtil;
 
 
 
@@ -320,7 +327,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void verifyBlog(String blogUuid) {
+    public void verifyBlog(String blogUuid) throws MessagingException {
 
         Blog blog = blogRepository.findByUuid(blogUuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Blog not found"));
@@ -328,6 +335,8 @@ public class BlogServiceImpl implements BlogService {
         blog.setIsVerified(true);
 
         blogRepository.save(blog);
+
+        emailUtil.sendBlogApprove(blog.getUser().getEmail(), blog.getUser().getName(), LocalDate.now().toString(), "https://inspectra.co/blog/" + blog.getUuid());
 
     }
 

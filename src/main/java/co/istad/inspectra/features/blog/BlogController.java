@@ -6,6 +6,7 @@ import co.istad.inspectra.features.blog.dto.BlogResponseDto;
 import co.istad.inspectra.features.blog.dto.BlogUpdateRequest;
 import co.istad.inspectra.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -137,8 +138,8 @@ public class BlogController {
     @Operation(summary = "Verify a blog")
     @PutMapping("/{blogUuid}/verify")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<BlogResponseDto> verifyBlog(@PathVariable String blogUuid)
-    {
+    public BaseRestResponse<BlogResponseDto> verifyBlog(@PathVariable String blogUuid) throws MessagingException {
+
         blogService.verifyBlog(blogUuid);
 
         return BaseRestResponse.<BlogResponseDto>builder()

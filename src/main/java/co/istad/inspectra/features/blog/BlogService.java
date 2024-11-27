@@ -4,6 +4,7 @@ import co.istad.inspectra.features.blog.dto.BlogRequestDto;
 import co.istad.inspectra.features.blog.dto.BlogResponseDto;
 import co.istad.inspectra.features.blog.dto.BlogUpdateRequest;
 import co.istad.inspectra.security.CustomUserDetails;
+import jakarta.mail.MessagingException;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
@@ -90,7 +91,7 @@ public interface BlogService {
   void deleteBlog(String blogUuid);
 
 
-  void verifyBlog(String blogUuid);
+  void verifyBlog(String blogUuid) throws MessagingException;
 
   void unverifyBlog(String blogUuid);
 

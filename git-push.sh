@@ -7,6 +7,6 @@ git add .
 
 git commit -m "$commitMessage"
 
-git push
+git push origin main
 
 echo "Changes have been pushed to the repository!"

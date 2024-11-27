@@ -62,5 +62,29 @@ public class EmailUtil {
 
   }
 
+  public void sendBlogApprove(String email, String userName,String approvalDate,String blogLink) throws MessagingException {
+
+    MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+    MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+    // Create a Thymeleaf context
+    Context context = new Context();
+    context.setVariable("email", email);
+    context.setVariable("userName", userName);
+    context.setVariable("approvalDate", approvalDate);
+    context.setVariable("blogLink", blogLink);
+
+    // Render the Thymeleaf template as a String
+    String htmlContent = templateEngine.process("blog-approval-email", context);
+
+    mimeMessageHelper.setTo(email);
+    mimeMessageHelper.setSubject("Blog Approved");
+    mimeMessageHelper.setText(htmlContent, true);
+
+    javaMailSender.send(mimeMessage);
+
+  }
+
 }
 
