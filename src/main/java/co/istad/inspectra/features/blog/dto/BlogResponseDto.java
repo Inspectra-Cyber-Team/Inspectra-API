@@ -11,6 +11,8 @@ public record BlogResponseDto(
         int likesCount,
        int viewsCount,
        int countComments,
+
+       Boolean isVerified,
        String description,
        List<String> thumbnail,
        UserDto user,

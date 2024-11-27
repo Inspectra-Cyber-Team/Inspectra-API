@@ -21,7 +21,7 @@ public class ProjectPath {
 
         String cloneProject = currentDir + clone_dir;
 
-        String projectName = gitConfig.gitClone(gitUrl,branch,cloneProject,"");
+        String projectName = gitConfig.gitClone(gitUrl,branch,cloneProject,"","");
 
         return cloneProject + projectName;
     }

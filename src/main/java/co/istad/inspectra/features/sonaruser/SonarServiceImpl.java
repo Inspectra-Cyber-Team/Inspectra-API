@@ -1,4 +1,4 @@
-package co.istad.inspectra.features.sonar_user;
+package co.istad.inspectra.features.sonaruser;
 
 import co.istad.inspectra.base.SonaResponse;
 import lombok.RequiredArgsConstructor;

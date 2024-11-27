@@ -33,11 +33,17 @@ public class ProjectServiceImpl implements ProjectService {
     private String sonarToken;
 
     private final RestTemplate restTemplate = new RestTemplate();
+
     private final ProjectRepository projectRepository;
+
     private final ProjectMapper projectMapper;
+
     private final SonaResponse sonaResponse;
+
     private final SonarHeaders sonarHeaders;
+
     private final WebClient webClient;
+
     private final UserRepository userRepository;
 
     @Override
@@ -52,6 +58,12 @@ public class ProjectServiceImpl implements ProjectService {
         User user = userRepository.findUsersByEmail(email)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        if (projectRepository.existsByProjectName(projectRequest.projectName())) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ProjectName already existed");
+
+        }
 
 
         String url = sonarUrl + "/api/projects/create";
@@ -370,7 +382,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Flux<Object> getProjectOverview(String projectName) {
 
         return webClient.get()
-                .uri(sonarUrl + "/api/measures/component?component="+projectName+"&metricKeys=ncloc,security_issues,reliability_issues,maintainability_issues,vulnerabilities,bugs,code_smells,security_hotspots,coverage,duplicated_lines_density")
+                .uri(sonarUrl + "/api/measures/component?component="+projectName+"&metricKeys=ncloc,security_issues,reliability_issues,maintainability_issues,vulnerabilities,bugs,code_smells,security_hotspots,coverage,duplicated_lines_density,accepted_issues")
                 .headers(headers -> headers.setBearerAuth(sonarToken))
                 .retrieve()
                 .bodyToFlux(Object.class)
@@ -382,7 +394,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         return webClient.get()
-                .uri(sonarUrl + "/api/components/search_projects?ps=50&facets=reliability_rating,security_rating,security_review_rating,coverage,duplicated_lines_density,ncloc,alert_status,languages,tags,qualifier&f=analysisDate,leakPeriodDate&filter=query=la&s=creationDate&asc=false")
+                .uri(sonarUrl + "/api/components/search_projects?ps=50&facets=reliability_rating,security_rating,security_review_rating,coverage,duplicated_lines_density,ncloc,alert_status,languages,tags,qualifier&f=analysisDate,leakPeriodDate&s=creationDate&asc=false")
                 .headers(headers -> headers.setBearerAuth(sonarToken))
                 .retrieve()
                 .bodyToFlux(Object.class)

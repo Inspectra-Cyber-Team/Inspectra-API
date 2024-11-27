@@ -27,7 +27,6 @@ public class RuleController {
 
     }
 
-
     @GetMapping("/rule/{roleKey}")
     public String getRuleDetails(@PathVariable String roleKey) throws Exception {
 

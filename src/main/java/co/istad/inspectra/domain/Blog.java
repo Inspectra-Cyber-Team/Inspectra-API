@@ -33,6 +33,8 @@ public class Blog extends Auditable {
 
     private int likesCount;
 
+    private Boolean isVerified;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 

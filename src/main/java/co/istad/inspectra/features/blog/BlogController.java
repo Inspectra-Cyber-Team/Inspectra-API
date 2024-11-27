@@ -38,11 +38,20 @@ public class BlogController {
     }
 
     @Operation(summary = "Get all blogs")
+    @GetMapping("/verified")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<BlogResponseDto> getAllBlogsVerified(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "25") int size)
+    {
+        return blogService.getAllBlogsVerified(page, size);
+    }
+
+    @Operation(summary = "Get all blogs")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<BlogResponseDto> getAllBlogs(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "25") int size)
     {
         return blogService.getAllBlogs(page, size);
+
     }
 
     @Operation(summary = "Unlike a blog")
@@ -124,6 +133,32 @@ public class BlogController {
                 .build();
     }
 
+
+    @Operation(summary = "Verify a blog")
+    @PutMapping("/{blogUuid}/verify")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<BlogResponseDto> verifyBlog(@PathVariable String blogUuid)
+    {
+        blogService.verifyBlog(blogUuid);
+
+        return BaseRestResponse.<BlogResponseDto>builder()
+                .status(HttpStatus.OK.value())
+                .message("Blog verified successfully")
+                .build();
+    }
+
+    @Operation(summary = "Unverify a blog")
+    @PutMapping("/{blogUuid}/unverified")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<BlogResponseDto> unverifiedBlog(@PathVariable String blogUuid)
+    {
+        blogService.unverifyBlog(blogUuid);
+
+        return BaseRestResponse.<BlogResponseDto>builder()
+                .status(HttpStatus.OK.value())
+                .message("Blog unverified successfully")
+                .build();
+    }
 
 
 

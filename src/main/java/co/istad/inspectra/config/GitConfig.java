@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class GitConfig {
 
-    public String gitClone(String url, String branch, String cloneDir, String accessToken)
+    public String gitClone(String url, String branch, String cloneDir, String accessToken, String languageName)
     {
 
 
@@ -36,7 +36,7 @@ public class GitConfig {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Clone directory is required");
         }
 
-        String projectName = "spring-boot-" + UUID.randomUUID();
+        String projectName = languageName + UUID.randomUUID();
 
 
         File dir = new File(cloneDir + projectName);

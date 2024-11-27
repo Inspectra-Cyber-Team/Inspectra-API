@@ -197,6 +197,11 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email " + userRegisterDto.email() + " already existed");
         }
 
+        if (userRepository.existsByName(userRegisterDto.userName()))
+        {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with username " + userRegisterDto.userName() + " already existed");
+        }
+
         User user = new User();
 
         user.setUuid(UUID.randomUUID().toString());

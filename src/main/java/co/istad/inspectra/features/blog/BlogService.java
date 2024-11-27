@@ -49,6 +49,9 @@ public interface BlogService {
      */
 
 
+  Page<BlogResponseDto> getAllBlogsVerified(int page, int size);
+
+
   Page<BlogResponseDto> getAllBlogs(int page, int size);
 
     /**
@@ -85,6 +88,11 @@ public interface BlogService {
    */
 
   void deleteBlog(String blogUuid);
+
+
+  void verifyBlog(String blogUuid);
+
+  void unverifyBlog(String blogUuid);
 
 
 }

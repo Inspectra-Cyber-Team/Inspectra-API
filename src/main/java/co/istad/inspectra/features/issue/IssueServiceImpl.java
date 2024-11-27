@@ -107,7 +107,8 @@ public class IssueServiceImpl implements IssueService{
     @Override
     public Object getCodeQualityIssues(String projectName) throws Exception {
 
-        String url = sonarUrl + "/api/issues/search?components="+ projectName+"&s=FILE_LINE&issueStatuses=CONFIRMED,OPEN&ps=100&facets=cleanCodeAttributeCategories,impactSoftwareQualities,codeVariants,severities,types,scopes,statuses,createdAt,files,languages,rules,tags,directories,author,assigned_to_me,sonarsourceSecurity&additionalFields=_all&timeZone=Asia/Bangkok";
+        String url = sonarUrl + "/api/issues/search?components="+ projectName+
+                "&facets=cleanCodeAttributeCategories,impactSoftwareQualities,codeVariants,severities,types,scopes,statuses,createdAt,files,languages,rules,tags,directories,author,assigned_to_me,sonarsourceSecurity&timeZone=Asia/Bangkok";
 
         HttpHeaders headers = sonarHeaders.getSonarHeader();
 

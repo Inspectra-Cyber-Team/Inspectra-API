@@ -7,7 +7,6 @@ import co.istad.inspectra.domain.User;
 import co.istad.inspectra.features.blog.dto.BlogRequestDto;
 import co.istad.inspectra.features.blog.dto.BlogResponseDto;
 import co.istad.inspectra.features.blog.dto.BlogUpdateRequest;
-import co.istad.inspectra.features.blog.dto.UserDto;
 import co.istad.inspectra.features.user.UserRepository;
 import co.istad.inspectra.features.userlikeblog.UserLikeBlogRepository;
 
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,7 +28,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 import static co.istad.inspectra.handler.WebSocketHandler.sessions;
 
@@ -65,6 +63,7 @@ public class BlogServiceImpl implements BlogService {
         blog.setUser(user);
         blog.setDescription(blogRequestDto.description());
         blog.setTitle(blogRequestDto.title());
+        blog.setIsVerified(false);
 
         List<BlogImages> blogImages = blogRequestDto.thumbnail()
                 .stream()
@@ -106,18 +105,20 @@ public class BlogServiceImpl implements BlogService {
                     try {
                         session.sendMessage(webSocketMessage);
                     } catch (IOException e) {
-                        e.printStackTrace();
+
+                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to send WebSocket message");
+
                     }
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+
+           throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to serialize WebSocket message");
         }
     }
 
     @Override
     public String likeBlog(String blogUuid, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
 
         if(customUserDetails == null)
         {
@@ -183,6 +184,24 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public Page<BlogResponseDto> getAllBlogsVerified(int page, int size) {
+
+        if (page < 0 || size < 0)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid page or size is provided");
+        }
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+        return blogRepository.findAllByIsVerified(true, pageRequest)
+                .map(blogMapper::toBlogResponseDto);
+
+
+    }
+
+    @Override
     public Page<BlogResponseDto> getAllBlogs(int page, int size) {
 
         if (page < 0 || size < 0)
@@ -194,10 +213,9 @@ public class BlogServiceImpl implements BlogService {
 
         PageRequest pageRequest = PageRequest.of(page, size, sort);
 
-
         return blogRepository.findAll(pageRequest)
-
                 .map(blogMapper::toBlogResponseDto);
+
     }
 
     @Override
@@ -299,6 +317,29 @@ public class BlogServiceImpl implements BlogService {
         blogRepository.delete(blog);
 
 
+    }
+
+    @Override
+    public void verifyBlog(String blogUuid) {
+
+        Blog blog = blogRepository.findByUuid(blogUuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Blog not found"));
+
+        blog.setIsVerified(true);
+
+        blogRepository.save(blog);
+
+    }
+
+    @Override
+    public void unverifyBlog(String blogUuid) {
+
+            Blog blog = blogRepository.findByUuid(blogUuid)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Blog not found"));
+
+            blog.setIsVerified(false);
+
+            blogRepository.save(blog);
     }
 
 

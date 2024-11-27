@@ -2,20 +2,18 @@ package co.istad.inspectra.features.scanning.nestjs;
 
 import co.istad.inspectra.config.AppConfig;
 import co.istad.inspectra.config.GitConfig;
+import co.istad.inspectra.domain.Project;
+import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scanning.dto.ScanningRequestDto;
 import co.istad.inspectra.utils.EmailUtil;
+import co.istad.inspectra.utils.SonarCustomizeScan;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -27,12 +25,6 @@ public class NestJsServiceImpl implements NestJsService {
     @Value("${git.clone_directory}")
     private String clone_dir;
 
-    @Value("${sonar.url}")
-    private String sonarHostUrl;
-
-    @Value("${sonar.token}")
-    private String sonarLoginToken;
-
     @Value("${my-app.state}")
     private String myApp;
 
@@ -42,6 +34,12 @@ public class NestJsServiceImpl implements NestJsService {
     private final EmailUtil emailUtil;
 
     private final GitConfig gitConfig;
+
+    private final ProjectRepository projectRepository;
+
+    private final SonarCustomizeScan sonarCustomizeScan;
+
+
 
     @Override
     public String scanNestJs(ScanningRequestDto scanningRequestDto) {
@@ -54,24 +52,41 @@ public class NestJsServiceImpl implements NestJsService {
                 scanningRequestDto.gitUrl(),
                 scanningRequestDto.branch(),
                 cloneDirectory,
-                ""
+                "",
+                "nestjs-"
         );
 
-        // Generate the command for scanning the NestJS project
-        List<String> command = buildSonarScannerCommand(
-                scanningRequestDto.projectName(),
-                cloneDirectory,
-                fileName
-        );
+        Project project = projectRepository.findByProjectName(scanningRequestDto.projectName())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Project with name '" + scanningRequestDto.projectName() + "' not found."
+                ));
+
+        if (project.getIsUsed())
+        {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Project with name '" + scanningRequestDto.projectName() + "' is currently in use."
+            );
+        }
+
+
 
         try {
             // Execute the scanning process
             if(myApp.equals("dev"))
             {
-                executeCommand(command);
+                sonarCustomizeScan.getScanLocal(project.getProjectName(), cloneDirectory, fileName);
+
             } else {
-                executeCommand(getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName));
+
+                sonarCustomizeScan.getProjectScanInProduction(project.getProjectName(), cloneDirectory, fileName);
+
             }
+
+            project.setIsUsed(true);
+
+            projectRepository.save(project);
 
             // Send notification after successful scanning
             emailUtil.sendScanMessage(
@@ -81,69 +96,11 @@ public class NestJsServiceImpl implements NestJsService {
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "SonarQube scan failed for NestJS project '" + scanningRequestDto.projectName() + "'.",
-                    e
+                    "SonarQube scan failed for NestJS project '" + scanningRequestDto.projectName() + "'.", e
             );
         }
 
         return fileName;
-    }
-
-    @NotNull
-    private List<String> buildSonarScannerCommand(String projectName, String cloneDirectory, String fileName) {
-        String projectPath = cloneDirectory + fileName;
-
-        return List.of(
-                "docker", "run", "--rm",
-                "-v", projectPath + ":/usr/src",
-                "--network=host",
-                "-w", "/usr/src",
-                "sonarsource/sonar-scanner-cli",
-                "-Dsonar.projectKey=" + projectName,
-                "-Dsonar.projectName=" + projectName,
-                "-Dsonar.host.url=" + sonarHostUrl,
-                "-Dsonar.token=" + sonarLoginToken,
-                "-Dsonar.sources=.",
-                "-Dsonar.language=ts" // Specify TypeScript as the language for NestJS
-        );
-    }
-
-    private List<String> getProjectScanInProduction(String projectName, String cloneDirectory, String fileName) {
-
-        String projectPath = cloneDirectory + fileName;
-
-        List<String> command = new ArrayList<>();
-        command.add("sonar-scanner");
-        command.add("-Dsonar.host.url=" + sonarHostUrl);
-        command.add("-Dsonar.token=" + sonarLoginToken);
-        command.add("-Dsonar.projectKey=" + projectName);
-        command.add("-Dsonar.projectName=" + projectName);
-        command.add("-Dsonar.sources=" + projectPath);
-        command.add("-Dsonar.verbose=true");
-        command.add("-X");
-
-        return command;
-
-    }
-
-    private void executeCommand(List<String> command) throws IOException, InterruptedException {
-
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
-
-        processBuilder.redirectErrorStream(true);
-
-        Process process = processBuilder.start();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line); // Log or store the output for debugging
-            }
-        }
-
-        int exitCode = process.waitFor();
-        if (exitCode != 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Command execution failed with exit code: " + exitCode);
-        }
     }
 
 }
