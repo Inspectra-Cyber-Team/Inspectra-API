@@ -47,7 +47,6 @@ public class SonarCustomizeScan {
         command.add("-Dsonar.host.url=" + sonarHostUrl);
         command.add("-Dsonar.token=" + sonarLoginToken);
         command.add("-Dsonar.sources=.");
-        command.add("-Dsonar.language=py");
         command.add("-X");
 
         scanProject(command);

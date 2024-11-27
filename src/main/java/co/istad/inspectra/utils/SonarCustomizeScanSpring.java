@@ -180,6 +180,7 @@ public class SonarCustomizeScanSpring {
         command.add("-Dsonar.java.binaries=" + projectPath + binariesPath);
         command.add("-Dsonar.verbose=true");
         command.add("-X");
+
         return command;
     }
     private void runCommand(List<String> command) throws Exception {
