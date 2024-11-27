@@ -12,7 +12,7 @@ import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
-public class SonarCustomizeScanSpring {
+public class SonarCustomizeScanSpringUtil {
 
     @Value("${sonar.token}")
     private String sonarUserToken;

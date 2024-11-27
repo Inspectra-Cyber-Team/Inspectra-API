@@ -14,6 +14,7 @@ public record BlogRequestDto(
         String userUuid,
 
         @NotBlank(message = "Title is required")
+        @Size(max = 255, message = "Title must be less than 255 characters")
         String title,
 
         String description,

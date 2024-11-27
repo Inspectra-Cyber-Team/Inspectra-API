@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class SonarHeaders {
+public class SonarHeadersUtil {
 
     @Value("${sonar.token}")
     private String sonarToken;

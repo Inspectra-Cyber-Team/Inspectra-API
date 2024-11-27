@@ -1,12 +1,11 @@
 package co.istad.inspectra.features.metrics;
 
-import co.istad.inspectra.utils.SonarHeaders;
+import co.istad.inspectra.utils.SonarHeadersUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,14 +22,14 @@ public class MetricsServiceImpl implements MetricsService{
 
     private final RestTemplate restTemplate;
 
-    private final SonarHeaders sonarHeaders;
+    private final SonarHeadersUtil sonarHeadersUtil;
 
     @Override
     public Object getMetricsList() throws Exception {
 
         String url = sonarUrl + "/api/metrics/search";
 
-        HttpHeaders headers = sonarHeaders.getSonarHeader();
+        HttpHeaders headers = sonarHeadersUtil.getSonarHeader();
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
@@ -44,7 +43,7 @@ public class MetricsServiceImpl implements MetricsService{
 
         String url = sonarUrl + "/api/metrics/show?key=" + metricKey;
 
-        HttpHeaders headers = sonarHeaders.getSonarHeader();
+        HttpHeaders headers = sonarHeadersUtil.getSonarHeader();
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 

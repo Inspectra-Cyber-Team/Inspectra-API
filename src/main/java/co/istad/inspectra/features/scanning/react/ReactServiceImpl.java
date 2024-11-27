@@ -6,7 +6,7 @@ import co.istad.inspectra.domain.Project;
 import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scanning.dto.ScanningRequestDto;
 import co.istad.inspectra.utils.EmailUtil;
-import co.istad.inspectra.utils.SonarCustomizeScan;
+import co.istad.inspectra.utils.SonarCustomizeScanUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ public class ReactServiceImpl implements ReactService {
 
     private final ProjectRepository projectRepository;
 
-    private final SonarCustomizeScan sonarCustomizeScan;
+    private final SonarCustomizeScanUtil sonarCustomizeScanUtil;
 
 
     @Override
@@ -59,11 +59,11 @@ public class ReactServiceImpl implements ReactService {
 
             if (myApp.equals("dev"))
             {
-                sonarCustomizeScan.getScanLocal(project.getProjectName(), cloneDirectory, fileName);
+                sonarCustomizeScanUtil.getScanLocal(project.getProjectName(), cloneDirectory, fileName);
 
             } else {
 
-               sonarCustomizeScan.getProjectScanInProduction(project.getProjectName(), cloneDirectory, fileName);
+               sonarCustomizeScanUtil.getProjectScanInProduction(project.getProjectName(), cloneDirectory, fileName);
 
             }
 

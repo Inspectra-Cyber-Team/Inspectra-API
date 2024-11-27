@@ -10,7 +10,7 @@ import co.istad.inspectra.features.scanhistory.ScanHistoryRepository;
 import co.istad.inspectra.features.scanning.dto.ScanningRequestDto;
 import co.istad.inspectra.features.user.UserRepository;
 import co.istad.inspectra.utils.EmailUtil;
-import co.istad.inspectra.utils.SonarCustomizeScan;
+import co.istad.inspectra.utils.SonarCustomizeScanUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -45,7 +45,7 @@ public class FastApiServiceImpl implements FastApiService {
 
     private final ScanHistoryRepository scanHistoryRepository;
 
-    private final SonarCustomizeScan sonarCustomizeScan;
+    private final SonarCustomizeScanUtil sonarCustomizeScanUtil;
 
     private final ProjectRepository projectRepository;
 
@@ -103,11 +103,11 @@ public class FastApiServiceImpl implements FastApiService {
             // Execute the SonarQube scan
             if(myApp.equals("dev")) {
 
-                sonarCustomizeScan.getScanLocal(project.getProjectName(), cloneDirectory, fileName);
+                sonarCustomizeScanUtil.getScanLocal(project.getProjectName(), cloneDirectory, fileName);
 
             }else {
 
-                sonarCustomizeScan.getProjectScanInProduction(project.getProjectName(), cloneDirectory, fileName);
+                sonarCustomizeScanUtil.getProjectScanInProduction(project.getProjectName(), cloneDirectory, fileName);
             }
 
             project.setIsUsed(true);

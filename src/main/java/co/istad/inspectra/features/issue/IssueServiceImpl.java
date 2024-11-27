@@ -8,7 +8,7 @@ import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.rule.RuleService;
 import co.istad.inspectra.features.source.SourceService;
 import co.istad.inspectra.base.SonaResponse;
-import co.istad.inspectra.utils.SonarHeaders;
+import co.istad.inspectra.utils.SonarHeadersUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
-
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +39,7 @@ public class IssueServiceImpl implements IssueService{
 
     private final WebClient webClient;
 
-    private final SonarHeaders sonarHeaders;
+    private final SonarHeadersUtil sonarHeadersUtil;
 
     @Override
     public Object getIssueByProjectName(String projectName) throws Exception {
@@ -110,7 +108,7 @@ public class IssueServiceImpl implements IssueService{
         String url = sonarUrl + "/api/issues/search?components="+ projectName+
                 "&facets=cleanCodeAttributeCategories,impactSoftwareQualities,codeVariants,severities,types,scopes,statuses,createdAt,files,languages,rules,tags,directories,author,assigned_to_me,sonarsourceSecurity&timeZone=Asia/Bangkok";
 
-        HttpHeaders headers = sonarHeaders.getSonarHeader();
+        HttpHeaders headers = sonarHeadersUtil.getSonarHeader();
 
         return sonaResponse.responseFromSonarAPI(url, null, headers, HttpMethod.GET);
 
@@ -145,7 +143,7 @@ public class IssueServiceImpl implements IssueService{
 
         return webClient.method(HttpMethod.GET)
                 .uri(url)
-                .headers(httpHeaders -> httpHeaders.addAll(sonarHeaders.getSonarHeader()))
+                .headers(httpHeaders -> httpHeaders.addAll(sonarHeadersUtil.getSonarHeader()))
                 .retrieve()
                 .bodyToFlux(ListIssueResponseMessage.class)
                 .onErrorResume(throwable -> Flux.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Issues not found", throwable)));

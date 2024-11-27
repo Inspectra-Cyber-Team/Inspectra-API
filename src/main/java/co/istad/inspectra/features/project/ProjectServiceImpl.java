@@ -9,7 +9,7 @@ import co.istad.inspectra.features.project.dto.ProjectUpdateDto;
 import co.istad.inspectra.features.user.UserRepository;
 import co.istad.inspectra.mapper.ProjectMapper;
 import co.istad.inspectra.security.CustomUserDetails;
-import co.istad.inspectra.utils.SonarHeaders;
+import co.istad.inspectra.utils.SonarHeadersUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -40,7 +40,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final SonaResponse sonaResponse;
 
-    private final SonarHeaders sonarHeaders;
+    private final SonarHeadersUtil sonarHeadersUtil;
 
     private final WebClient webClient;
 
@@ -193,7 +193,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         String url = sonarUrl + "/api/projects/update_key?from=" + projectUpdateDto.projectName() + "&to=" + projectUpdateDto.newProjectName();
 
-        HttpHeaders httpHeaders = sonarHeaders.getSonarHeader();
+        HttpHeaders httpHeaders = sonarHeadersUtil.getSonarHeader();
 
         var entity = new HttpEntity<>(httpHeaders);
 
@@ -270,7 +270,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Object getAllProject1() throws Exception {
 
         String url = sonarUrl + "/api/projects?s=creationDate";
-        HttpHeaders httpHeaders = sonarHeaders.getSonarHeader();
+        HttpHeaders httpHeaders = sonarHeadersUtil.getSonarHeader();
 
         return sonaResponse.responseFromSonarAPI(url, null, httpHeaders, HttpMethod.GET);
 
@@ -314,7 +314,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         String url = sonarUrl + "/api/favorites/remove?component=" + projectKey;
 
-        HttpHeaders httpHeaders = sonarHeaders.getSonarHeader();
+        HttpHeaders httpHeaders = sonarHeadersUtil.getSonarHeader();
 
         var entity = new HttpEntity<>(httpHeaders);
 

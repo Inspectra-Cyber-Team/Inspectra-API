@@ -9,7 +9,9 @@ import java.sql.Timestamp;
 public record FeedbackResponse(
 
         String uuid,
-        String name,
+        String firstName,
+        String lastName,
+        String email,
         String profile,
         String message,
         Timestamp createdAt

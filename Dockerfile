@@ -14,15 +14,6 @@ RUN ./gradlew build --no-daemon -x test
 FROM openjdk:21-jdk-slim
 
 # Install dependencies and tools for version checking
-#RUN apt-get update && apt-get install -y \
-#    curl zip unzip jq \
-#    apt-transport-https \
-#    ca-certificates \
-#    gnupg \
-#    lsb-release \
-#    && rm -rf /var/lib/apt/lists/*
-
-# Install dependencies and tools for version checking
 RUN apt-get update && apt-get install -y \
     php-cli \
     unzip \

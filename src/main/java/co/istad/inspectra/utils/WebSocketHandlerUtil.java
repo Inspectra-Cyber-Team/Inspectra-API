@@ -1,4 +1,4 @@
-package co.istad.inspectra.handler;
+package co.istad.inspectra.utils;
 
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class WebSocketHandler extends TextWebSocketHandler {
+public class WebSocketHandlerUtil extends TextWebSocketHandler {
 
     // Store the sessions of all connected clients
     public static Set<WebSocketSession> sessions = new HashSet<>();

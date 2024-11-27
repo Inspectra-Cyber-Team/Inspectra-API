@@ -5,7 +5,7 @@ import co.istad.inspectra.config.DetectSpringBuildTool;
 import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.domain.Project;
 import co.istad.inspectra.features.project.ProjectRepository;
-import co.istad.inspectra.utils.SonarCustomizeScanSpring;
+import co.istad.inspectra.utils.SonarCustomizeScanSpringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -32,7 +32,7 @@ public class SpringBootServiceImpl implements SpringBootService{
 
     private final ProjectRepository projectRepository;
 
-    private final SonarCustomizeScanSpring sonarCustomizeScanSpring;
+    private final SonarCustomizeScanSpringUtil sonarCustomizeScanSpringUtil;
 
     @Override
     public String springBootScanning(String gitUrl, String branch, String projectName) throws Exception {
@@ -67,13 +67,13 @@ public class SpringBootServiceImpl implements SpringBootService{
 
         if(buildTool.equalsIgnoreCase("Maven")) {
 
-            sonarCustomizeScanSpring.scanForMaven(clone_direct, fileName, projectName);
+            sonarCustomizeScanSpringUtil.scanForMaven(clone_direct, fileName, projectName);
             project.setIsUsed(true);
             projectRepository.save(project);
 
         } else if(buildTool.equalsIgnoreCase("Gradle")) {
 
-            sonarCustomizeScanSpring.scanForGradle(clone_direct, fileName, projectName);
+            sonarCustomizeScanSpringUtil.scanForGradle(clone_direct, fileName, projectName);
             project.setIsUsed(true);
             projectRepository.save(project);
 

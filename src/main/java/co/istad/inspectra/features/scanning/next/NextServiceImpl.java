@@ -6,7 +6,7 @@ import co.istad.inspectra.domain.Project;
 import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scanning.next.dto.NextScanningRequest;
 import co.istad.inspectra.utils.EmailUtil;
-import co.istad.inspectra.utils.SonarCustomizeScan;
+import co.istad.inspectra.utils.SonarCustomizeScanUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class NextServiceImpl implements NextService{
 
     private final EmailUtil emailUtil;
 
-    private final SonarCustomizeScan sonarCustomizeScan;
+    private final SonarCustomizeScanUtil sonarCustomizeScanUtil;
 
     private final ProjectRepository projectRepository;
 
@@ -66,11 +66,11 @@ public class NextServiceImpl implements NextService{
 
             if(myApp.equals("dev")) {
 
-                sonarCustomizeScan.getScanLocal(nextScanningRequest.projectName(), cloneDirectory, fileName);
+                sonarCustomizeScanUtil.getScanLocal(nextScanningRequest.projectName(), cloneDirectory, fileName);
 
             } else {
 
-                sonarCustomizeScan.getProjectScanInProduction(nextScanningRequest.projectName(), cloneDirectory, fileName);
+                sonarCustomizeScanUtil.getProjectScanInProduction(nextScanningRequest.projectName(), cloneDirectory, fileName);
 
             }
 

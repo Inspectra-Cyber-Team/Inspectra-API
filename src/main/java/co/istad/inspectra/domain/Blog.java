@@ -26,7 +26,7 @@ public class Blog extends Auditable {
     private String uuid;
 
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String title;
 
     private int viewsCount;

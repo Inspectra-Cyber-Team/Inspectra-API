@@ -16,7 +16,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 
-public class SonarCustomizeScan {
+public class SonarCustomizeScanUtil {
 
     @Value("${sonar.token}")
     private String sonarLoginToken;

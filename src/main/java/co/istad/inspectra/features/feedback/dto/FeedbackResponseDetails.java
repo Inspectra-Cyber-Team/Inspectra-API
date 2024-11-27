@@ -4,7 +4,8 @@ import co.istad.inspectra.features.user.dto.ResponseUserDto;
 
 public record FeedbackResponseDetails(
         String uuid,
-        String name,
+        String firstName,
+        String lastName,
         String email,
         String profile,
         String message,

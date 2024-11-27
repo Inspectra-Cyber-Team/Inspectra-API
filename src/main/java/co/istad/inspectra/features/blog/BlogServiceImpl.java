@@ -30,7 +30,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-import static co.istad.inspectra.handler.WebSocketHandler.sessions;
+import static co.istad.inspectra.utils.WebSocketHandlerUtil.sessions;
 
 @Service
 @RequiredArgsConstructor

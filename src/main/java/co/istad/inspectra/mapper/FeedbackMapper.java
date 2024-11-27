@@ -15,9 +15,15 @@ public interface FeedbackMapper {
 
 
     @Mapping(target = "profile", source = "user.profile")
+    @Mapping(target = "firstName", source = "user.firstName")
+    @Mapping(target = "lastName", source = "user.lastName")
+    @Mapping(target = "email", source = "user.email")
     FeedbackResponse toFeedbackResponse(Feedback feedback);
 
     @Mapping(target = "profile", source = "user.profile")
+    @Mapping(target = "firstName", source = "user.firstName")
+    @Mapping(target = "lastName", source = "user.lastName")
+    @Mapping(target = "email", source = "user.email")
     FeedbackResponseDetails toFeedbackResponseDetails(Feedback feedback);
 
 

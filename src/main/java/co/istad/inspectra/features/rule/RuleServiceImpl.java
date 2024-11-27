@@ -3,7 +3,7 @@ package co.istad.inspectra.features.rule;
 import co.istad.inspectra.features.rule.dto.RuleLanguageCountResponse;
 import co.istad.inspectra.features.rule.dto.RulesResponseDto;
 import co.istad.inspectra.features.rule.dto.RulesWrapperResponse;
-import co.istad.inspectra.utils.SonarHeaders;
+import co.istad.inspectra.utils.SonarHeadersUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +34,7 @@ public class RuleServiceImpl implements RuleService{
 
     private final RestTemplate restTemplate;
 
-    private final SonarHeaders sonarHeaders;
+    private final SonarHeadersUtil sonarHeadersUtil;
 
     private final WebClient webClient;
 
@@ -52,7 +52,7 @@ public class RuleServiceImpl implements RuleService{
 
         String url = sonarUrl + "/api/rules/show?key=" + roleKey;
 
-        HttpHeaders headers = sonarHeaders.getSonarHeader();
+        HttpHeaders headers = sonarHeadersUtil.getSonarHeader();
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
