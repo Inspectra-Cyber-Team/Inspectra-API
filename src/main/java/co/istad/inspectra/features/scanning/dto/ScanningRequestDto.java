@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 
+import java.util.List;
+
 @Builder
 public record ScanningRequestDto(
 
@@ -16,6 +18,8 @@ public record ScanningRequestDto(
 
         @NotBlank(message = "project name is required")
         String projectName
+
+
 
 ) {
 }

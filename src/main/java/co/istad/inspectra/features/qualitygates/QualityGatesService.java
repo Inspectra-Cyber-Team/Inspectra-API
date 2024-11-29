@@ -6,5 +6,7 @@ public interface QualityGatesService {
 
     Object getAllQualityGates() throws Exception;
 
+    Object CustomScan(String projectName,String qualityGate) throws Exception;
+
 
 }

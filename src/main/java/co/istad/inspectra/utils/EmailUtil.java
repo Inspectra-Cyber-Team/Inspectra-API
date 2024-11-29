@@ -11,6 +11,7 @@ import org.thymeleaf.context.Context;
 
 @Component
 @RequiredArgsConstructor
+
 public class EmailUtil {
 
   private final JavaMailSender javaMailSender;

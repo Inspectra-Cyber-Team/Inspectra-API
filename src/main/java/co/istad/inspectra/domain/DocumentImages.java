@@ -28,5 +28,9 @@ public class DocumentImages extends Auditable {
     @JoinColumn(name = "document_id")
     private Document document;
 
+    @ManyToOne
+    @JoinColumn(name = "document_categories_id")
+    private DocumentCategory category;
+
 
 }

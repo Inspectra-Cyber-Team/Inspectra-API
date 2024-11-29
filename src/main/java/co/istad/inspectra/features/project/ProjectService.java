@@ -70,7 +70,7 @@ public interface ProjectService {
     String favoriteProject(String projectName);
 
 
-    Object getAllProject1() throws Exception;
+    Object getAllProject1(String projectName) throws Exception;
 
 
     Flux<Object> getProjectFavorite();
@@ -82,6 +82,7 @@ public interface ProjectService {
     Flux<Object> getProjectBranch(String projectName) ;
     Flux<Object> getProjectWarning(String projectName) ;
     Flux<Object> getProjectOverview(String projectName);
+    Flux<Object> getProjectDetails(String projectName);
 
     Flux<Object> getFacets() throws Exception;
 

@@ -1,6 +1,5 @@
 package co.istad.inspectra.features.documentcategory.dto;
 
-import co.istad.inspectra.domain.Document;
 import co.istad.inspectra.features.documet.dto.DocumentResponse;
 
 import java.util.List;

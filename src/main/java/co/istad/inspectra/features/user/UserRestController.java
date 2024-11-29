@@ -27,27 +27,27 @@ public class UserRestController {
     private final UserServiceImpl userService;
 
 
-    @GetMapping("/find")
-    public BaseRestResponse<ResponseUserDto> findUserByUuid(@RequestParam String userUuid) {
+    @GetMapping("/{uuid}")
+    public BaseRestResponse<ResponseUserDto> findUserByUuid(@PathVariable String uuid) {
 
         return BaseRestResponse
                 .<ResponseUserDto>builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
-                .data(userService.getUserByUuid(userUuid))
+                .data(userService.getUserByUuid(uuid))
                 .message("User has been found successfully.")
                 .build();
     }
 
 
-    @GetMapping("/page")
+    @GetMapping("")
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     public Page<ResponseUserDto> getAllUsersByPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size) {
 
             return userService.getAllUsersByPage(page, size);
     }
 
-    @GetMapping("")
+    @GetMapping("/list")
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     public BaseRestResponse<List<ResponseUserDto>> getAllUsers() {
 
@@ -61,11 +61,11 @@ public class UserRestController {
     }
 
 
-    @DeleteMapping("/{userUuid}")
+    @DeleteMapping("/{uuid}")
     @PreAuthorize("hasAnyRole('USER','ADMIN','SUPER_ADMIN')")
-    public BaseRestResponse<ResponseUserDto> deleteUserByUuid(@PathVariable String userUuid) {
+    public BaseRestResponse<ResponseUserDto> deleteUserByUuid(@PathVariable String uuid) {
 
-        userService.deleteUser(userUuid);
+        userService.deleteUser(uuid);
 
         return BaseRestResponse
                 .<ResponseUserDto>builder()
@@ -90,11 +90,11 @@ public class UserRestController {
     }
 
 
-    @PutMapping("/block/{userUuid}")
+    @PutMapping("/block/{uuid}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public BaseRestResponse<ResponseUserDto> blockUser(@PathVariable String userUuid) {
+    public BaseRestResponse<ResponseUserDto> blockUser(@PathVariable String uuid) {
 
-        userService.blockUser(userUuid);
+        userService.blockUser(uuid);
 
         return BaseRestResponse
                 .<ResponseUserDto>builder()
@@ -105,11 +105,11 @@ public class UserRestController {
 
     }
 
-    @PutMapping("/unblock/{userUuid}")
+    @PutMapping("/unblock/{uuid}")
     @PreAuthorize("hasRole('ADMIN')")
-    public BaseRestResponse<ResponseUserDto> unblockUser(@PathVariable String userUuid) {
+    public BaseRestResponse<ResponseUserDto> unblockUser(@PathVariable String uuid) {
 
-        userService.unblockUser(userUuid);
+        userService.unblockUser(uuid);
 
         return BaseRestResponse
                 .<ResponseUserDto>builder()

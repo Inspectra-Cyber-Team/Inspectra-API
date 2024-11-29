@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/quality-gates")
+@RequestMapping("/api/v1/quality_gates")
 @RequiredArgsConstructor
 public class QualityGatesController {
 
@@ -30,6 +30,16 @@ public class QualityGatesController {
         return BaseRestResponse.builder()
                 .data(qualityGatesService.getAllQualityGates())
                 .message("Get all quality gates.")
+                .build();
+    }
+
+
+    @GetMapping("/custom-scan")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<Object> CustomScan(String projectName,String qualityGate) throws Exception {
+        return BaseRestResponse.builder()
+                .data(qualityGatesService.CustomScan(projectName,qualityGate))
+                .message("Custom scan.")
                 .build();
     }
 

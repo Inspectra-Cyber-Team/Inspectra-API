@@ -32,4 +32,7 @@ public class DocumentCategory extends Auditable {
     @OneToMany(mappedBy = "category")
     private List<Document> documents;
 
+    @OneToMany(mappedBy = "category")
+    private List<DocumentImages> images;
+
 }

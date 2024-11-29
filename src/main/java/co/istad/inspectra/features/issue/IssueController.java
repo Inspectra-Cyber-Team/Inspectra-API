@@ -27,12 +27,12 @@ public class IssueController {
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<Object> getAllIssuesOnProject(@RequestParam String projectName) throws Exception {
+    public BaseRestResponse<Object> getAllIssuesOnProject(@RequestParam String projectName, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size) throws Exception {
 
         return BaseRestResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
-                .data(issueService.getIssueByProjectName(projectName))
+                .data(issueService.getIssue(projectName,page,size))
                 .message("Get issue by project name.")
                 .build();
 
@@ -79,14 +79,14 @@ public class IssueController {
             summary = "Search for all issues in project",
             description = "This is used for get all issues in a project after scanning."
     )
-    @GetMapping("/details")
+    @GetMapping("/{issueKey}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<Object> getIssueDetails() throws Exception {
+    public BaseRestResponse<Object> getIssueDetails(@PathVariable String issueKey) throws Exception {
 
         return BaseRestResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
-                .data(issueService.getIssueDetails())
+                .data(issueService.getIssueDetails(issueKey))
                 .message("Get issue by project name.")
                 .build();
 
@@ -105,17 +105,17 @@ public class IssueController {
 
     }
 
-    @Operation(
-            summary = "Search for all issues in project",
-            description = "This is used for get all issues in a project after scanning."
-    )
-    @GetMapping("/quality")
-    @ResponseStatus(HttpStatus.OK)
-    public Object getCodeQualityIssues(@RequestParam String projectName) throws Exception {
-
-        return issueService.getCodeQualityIssues(projectName);
-
-    }
+//    @Operation(
+//            summary = "Search for all issues in project",
+//            description = "This is used for get all issues in a project after scanning."
+//    )
+//    @GetMapping("")
+//    @ResponseStatus(HttpStatus.OK)
+//    public Object getCodeQualityIssues(@RequestParam String projectName,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size) throws Exception {
+//
+//        return issueService.getIssue(projectName,page,size);
+//
+//    }
 
 
     @Operation(summary = "Get all  issues message in component")

@@ -60,13 +60,13 @@ public class NextServiceImpl implements NextService{
         String cloneDirectory = currentProjectDir + clone_dir;
 
         // Clone the repository
-        String fileName = gitConfig.gitClone(nextScanningRequest.gitUrl(), nextScanningRequest.branch(), cloneDirectory,"", "next");
+        String fileName = gitConfig.gitClone(nextScanningRequest.gitUrl(), nextScanningRequest.branch(), cloneDirectory,"", "next-");
 
         try {
 
             if(myApp.equals("dev")) {
 
-                sonarCustomizeScanUtil.getScanLocal(nextScanningRequest.projectName(), cloneDirectory, fileName);
+                sonarCustomizeScanUtil.getScanLocal1(nextScanningRequest.projectName(), cloneDirectory, fileName, nextScanningRequest.issueTypes(), nextScanningRequest.excludePaths());
 
             } else {
 

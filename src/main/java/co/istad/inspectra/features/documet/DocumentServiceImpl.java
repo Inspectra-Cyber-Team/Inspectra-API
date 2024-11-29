@@ -43,6 +43,7 @@ public class DocumentServiceImpl implements DocumentService {
 
         document.setUuid(UUID.randomUUID().toString());
         document.setCategory(documentCategory);
+        document.setTitle(documentRequest.title());
 
         documentRepository.save(document);
 
@@ -105,9 +106,6 @@ public class DocumentServiceImpl implements DocumentService {
         // Fetch the existing document from the repository
         Document document = documentRepository.findByUuid(uuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found with uuid: " + uuid));
-
-        document.setTitle(documentUpdate.title());
-        document.setDescription(documentUpdate.documentDescription());
 
         // Fetch existing images from the document
         List<DocumentImages> existingImages = document.getImages();

@@ -13,15 +13,13 @@ public record DocumentRequest(
         @Size(max = 100, message = "Document category name must be less than 100 characters")
         String documentCategoryName,
 
-        @NotBlank(message = "Document name is required")
-        @Size(max = 100, message = "Document name must be less than 100 characters")
-        String documentName,
 
+        @Size(max = 100, message = "Document name must be less than 100 characters")
         @NotBlank(message = "Document description is required")
         String title,
 
 
-        String documentDescription,
+        String description,
         List<String> documentImagesRequest
 
 

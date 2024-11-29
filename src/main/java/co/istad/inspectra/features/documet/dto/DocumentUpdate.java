@@ -8,7 +8,7 @@ import java.util.List;
 public record DocumentUpdate(
 
         String title,
-        String documentDescription,
+        String description,
         List<String> documentImages
 
 

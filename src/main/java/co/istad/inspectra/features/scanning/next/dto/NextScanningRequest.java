@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 
+import java.util.List;
+
 @Builder
 public record NextScanningRequest(
 
@@ -15,7 +17,10 @@ public record NextScanningRequest(
         String branch,
 
         @NotBlank(message = "project name is required")
-        String projectName
+        String projectName,
+
+        List<String> issueTypes,
+        String excludePaths
 
 ) {
 }

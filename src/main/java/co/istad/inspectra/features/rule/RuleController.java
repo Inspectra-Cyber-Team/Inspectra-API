@@ -18,24 +18,15 @@ public class RuleController {
 
     private final RuleService ruleService;
 
-    @GetMapping("/rule")
-    public Mono<Object> getAllRules(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize,
-                                    @RequestParam(required = false) String language, @RequestParam(required = false) String sortBy,
-                                    @RequestParam(required = false) String query) throws Exception {
+    @GetMapping()
+    public Mono<Object> getAllRules(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize
+                                 ) throws Exception {
 
-        return ruleService.getRuleList(page, pageSize, language, sortBy, query);
-
-    }
-
-    @GetMapping("/rule/{roleKey}")
-    public String getRuleDetails(@PathVariable String roleKey) throws Exception {
-
-        return ruleService.getRuleDetails(roleKey);
+        return ruleService.getRuleList(page, pageSize);
 
     }
 
-
-    @GetMapping("/rule1/{ruleKey}")
+    @GetMapping("{ruleKey}")
     public Flux<RulesResponseDto> getRuleDetails1(@PathVariable String ruleKey) {
 
         return ruleService.getRuleDetails1(ruleKey);
@@ -63,7 +54,7 @@ public class RuleController {
 
 
     @Operation(summary = "Get rule language count")
-    @GetMapping("/rule-language-count")
+    @GetMapping("/rule_language_count")
     @ResponseStatus(HttpStatus.OK)
     public Mono<Object> getRuleLanguageCount() throws Exception {
 
@@ -71,14 +62,6 @@ public class RuleController {
 
     }
 
-    @Operation(summary = "Get rule language count")
-    @GetMapping("/rule-language-count1")
-    @ResponseStatus(HttpStatus.OK)
-    public Mono<List<RuleLanguageCountResponse>> getRuleLanguageCount1() throws Exception {
-
-        return ruleService.getRuleLanguageCount1();
-
-    }
 
 
 }

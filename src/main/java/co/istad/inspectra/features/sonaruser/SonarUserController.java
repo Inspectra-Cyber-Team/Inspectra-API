@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/sonar_user")
+@RequestMapping("/api/v1/sonar_user")
 @RequiredArgsConstructor
 @RestController
 public class SonarUserController {

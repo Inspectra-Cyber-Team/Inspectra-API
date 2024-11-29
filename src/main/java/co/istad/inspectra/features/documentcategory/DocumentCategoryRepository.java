@@ -13,4 +13,6 @@ public interface DocumentCategoryRepository extends JpaRepository<DocumentCatego
 
     Optional<DocumentCategory> findByUuid(String uuid);
 
+    Boolean existsByName(String name);
+
 }

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/user-like-blog")
+@RequestMapping("/api/v1/user_like_blog")
 @RequiredArgsConstructor
 
 public class UserLikeBlogController {

@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface RuleService {
 
-    String getRuleDetails(String roleKey) throws Exception;
+    Object getRuleDetails(String roleKey) throws Exception;
 
-    Mono<Object> getRuleList(int page,int pageSize,String language,String sortBy, String query) throws Exception;
+    Mono<Object> getRuleList(int page,int pageSize) throws Exception;
 
     Flux<RulesResponseDto> getRuleDetails1(String ruleKey);
 
@@ -23,7 +23,6 @@ public interface RuleService {
     Mono<Object> getRuleLanguageCount() throws Exception;
 
 
-    Mono<List<RuleLanguageCountResponse>> getRuleLanguageCount1() throws Exception;
 
 
 

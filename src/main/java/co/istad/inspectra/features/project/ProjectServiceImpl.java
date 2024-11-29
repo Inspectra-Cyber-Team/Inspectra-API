@@ -2,15 +2,15 @@ package co.istad.inspectra.features.project;
 
 import co.istad.inspectra.domain.Project;
 import co.istad.inspectra.domain.User;
-import co.istad.inspectra.features.project.dto.ProjectRequest;
-import co.istad.inspectra.features.project.dto.ProjectResponse;
+import co.istad.inspectra.features.project.dto.*;
 import co.istad.inspectra.base.SonaResponse;
-import co.istad.inspectra.features.project.dto.ProjectUpdateDto;
 import co.istad.inspectra.features.user.UserRepository;
 import co.istad.inspectra.mapper.ProjectMapper;
 import co.istad.inspectra.security.CustomUserDetails;
 import co.istad.inspectra.utils.SonarHeadersUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,8 +19,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
-import java.util.List;
-import java.util.UUID;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -267,9 +269,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Object getAllProject1() throws Exception {
+    public Object getAllProject1(String projectName) throws Exception {
 
-        String url = sonarUrl + "/api/projects?s=creationDate";
+        Project project = projectRepository.findByProjectName(projectName)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectName not found"));
+
+        String url = sonarUrl + "/api/projects/search?projects="+projectName;
+
         HttpHeaders httpHeaders = sonarHeadersUtil.getSonarHeader();
 
         return sonaResponse.responseFromSonarAPI(url, null, httpHeaders, HttpMethod.GET);
@@ -341,53 +348,98 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Flux<Object> getSecurityHotspot(String projectName)  {
 
-
         String url = sonarUrl + "/api/hotspots/search?project="+projectName;
 
-        return webClient.get()
-                .uri(url)
-                .headers(headers -> headers.setBearerAuth(sonarToken))
-                .retrieve()
-                .bodyToFlux(Object.class)
-                .onErrorResume(e -> Flux.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred while sending request: " + e.getMessage())));
+        return getObjectFlux(projectName, url);
 
 
+    }
+
+    @NotNull
+    private Flux<Object> getObjectFlux(String projectName, String url) {
+        return Mono.fromCallable(() -> projectRepository.findByProjectName(projectName)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectName not found")))
+                .subscribeOn(Schedulers.boundedElastic())
+
+                // Moves the blocking call to a separate thread pool
+                .flatMapMany(project -> webClient.get()
+                        .uri(url)
+                        .headers(headers -> headers.setBearerAuth(sonarToken))
+                        .retrieve()
+                        .bodyToFlux(Object.class) // Returns Flux<Object>
+                        .onErrorResume(e -> Flux.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred while sending request: " + e.getMessage()))));
     }
 
     @Override
     public Flux<Object> getProjectBranch(String projectName)  {
 
+        String url = sonarUrl + "/api/project_branches/list?project=" + projectName;
 
-        return webClient.get()
-                .uri(sonarUrl + "/api/project_branches/list?project=" + projectName)
-                .headers(headers -> headers.setBearerAuth(sonarToken))
-                .retrieve()
-                .bodyToFlux(Object.class)
-                .onErrorResume(e -> Flux.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred while sending request: " + e.getMessage())));
+        return getObjectFlux(projectName, url);
+
+
     }
 
     @Override
     public Flux<Object> getProjectWarning(String projectName)  {
 
-        return webClient.get()
-                .uri(sonarUrl + "/api/ce/analysis_status?component=" + projectName)
-                .headers(headers -> headers.setBearerAuth(sonarToken))
-                .retrieve()
-                .bodyToFlux(Object.class)
-                .onErrorResume(e -> Flux.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred while sending request: " + e.getMessage())));
+        String url = sonarUrl + "/api/ce/analysis_status?component=" + projectName;
+
+        return getObjectFlux(projectName, url);
+
+
+    }
+
+//    @Override
+//    public Flux<Object> getProjectOverview(String projectName) {
+//        // Use Mono.defer() to handle the blocking operation
+//
+//        String url = sonarUrl + "/api/measures/component?component=" + projectName + "&metricKeys=ncloc,security_issues,reliability_issues,maintainability_issues,vulnerabilities,bugs,code_smells,security_hotspots,coverage,duplicated_lines_density,accepted_issues";
+//
+//        return getObjectFlux(projectName, url);
+//
+//    }
+
+    @Override
+    public Flux<Object> getProjectOverview(String projectName) {
+        // First API endpoint
+        String measuresUrl = sonarUrl + "/api/measures/component?component=" + projectName +
+                "&metricKeys=ncloc,security_issues,reliability_issues,maintainability_issues,vulnerabilities,bugs,code_smells,security_hotspots,coverage,duplicated_lines_density,accepted_issues";
+
+        // Second API endpoint
+        String branchUrl = sonarUrl + "/api/project_branches/list?project=" + projectName;
+
+        // Call both APIs using `getObjectFlux` method
+//        Flux<Object> measuresFlux = getObjectFlux(projectName, measuresUrl);
+//        Flux<Object> branchFlux = getObjectFlux(projectName, branchUrl);
+
+        // Combine the results from both Flux streams
+//        return Flux.zip(measuresFlux, branchFlux, (measures, branch) -> {
+//            // Combine or transform the data as needed
+//            Map<String, Object> combinedData = new HashMap<>();
+//            combinedData.put("", measures);
+//            combinedData.put("branchDetails", branch);
+//            return combinedData;
+//        });
+
+        // Call both APIs using `getObjectFlux` method
+        Flux<Object> measuresFlux = getObjectFlux(projectName, measuresUrl);
+        Flux<Object> branchFlux = getObjectFlux(projectName, branchUrl);
+
+        // Combine the results into a list without providing explicit keys
+        return Flux.zip(measuresFlux, branchFlux, (measures, branch) -> Arrays.asList(measures, branch));
 
     }
 
     @Override
-    public Flux<Object> getProjectOverview(String projectName) {
+    public Flux<Object> getProjectDetails(String projectName) {
 
-        return webClient.get()
-                .uri(sonarUrl + "/api/measures/component?component="+projectName+"&metricKeys=ncloc,security_issues,reliability_issues,maintainability_issues,vulnerabilities,bugs,code_smells,security_hotspots,coverage,duplicated_lines_density,accepted_issues")
-                .headers(headers -> headers.setBearerAuth(sonarToken))
-                .retrieve()
-                .bodyToFlux(Object.class)
-                .onErrorResume(e -> Flux.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred while sending request: " + e.getMessage())));
+        String measuresUrl = sonarUrl + "/api/measures/component?component=" + projectName +
+                "&metricKeys=ncloc,security_issues,reliability_issues,maintainability_issues,vulnerabilities,bugs,code_smells,security_hotspots,coverage,duplicated_lines_density,accepted_issues";
+
+        return getObjectFlux(projectName, measuresUrl);
     }
+
 
     @Override
     public Flux<Object> getFacets()  {

@@ -109,4 +109,42 @@ public class SonarCustomizeScanUtil {
     }
 
 
+    public void getScanLocal1(String projectName, String cloneDirectory, String fileName,List<String> issueTypes, String excludePaths) throws MessagingException, IOException, InterruptedException {
+
+        String projectPath = getProjectPath(cloneDirectory, fileName);
+
+        List<String> command = new ArrayList<>();
+        command.add("docker");
+        command.add("run");
+        command.add("--rm");
+        command.add("-v");
+        command.add(projectPath + ":/usr/src");
+        command.add("ls /usr/src");
+        command.add("--network=host");
+        command.add("-w");
+        command.add("sonarsource/sonar-scanner-cli");
+
+        // SonarQube properties
+        command.add("-Dsonar.projectKey=" + projectName);
+        command.add("-Dsonar.projectName=" + projectName);
+        command.add("-Dsonar.host.url=" + sonarHostUrl);
+        command.add("-Dsonar.token=" + sonarLoginToken);
+
+        if (issueTypes != null && !issueTypes.isEmpty()) {
+            command.add("-Dsonar.issueTypes=" + String.join(",", issueTypes));
+        }
+
+        if (excludePaths != null && !excludePaths.isEmpty()) {
+            command.add("-Dsonar.exclusions=" + excludePaths+"/**");
+        }
+
+        command.add("-Dsonar.sources=.");
+        command.add("-X");
+
+        System.out.println("COMMAND: " + command);
+
+        scanProject(command);
+    }
+
+
 }

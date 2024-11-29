@@ -1,5 +1,6 @@
 package co.istad.inspectra.features.issue;
 
+import co.istad.inspectra.domain.Project;
 import co.istad.inspectra.features.issue.dto.IssueResponseDto;
 import co.istad.inspectra.features.issue.dto.IssuesResponse;
 import co.istad.inspectra.features.issue.dto.IssuesWrapperResponse;
@@ -22,10 +23,12 @@ import reactor.core.publisher.Flux;
 
 @Service
 @RequiredArgsConstructor
+
 public class IssueServiceImpl implements IssueService{
 
     @Value("${sonar.url}")
     private String sonarUrl;
+
     @Value("${sonar.token}")
     private String sonarUserToken;
 
@@ -42,20 +45,32 @@ public class IssueServiceImpl implements IssueService{
     private final SonarHeadersUtil sonarHeadersUtil;
 
     @Override
-    public Object getIssueByProjectName(String projectName) throws Exception {
+    public Object getIssueByProjectName(String projectName, int page, int size) throws Exception {
 
-//        if(projectRepository.findByProjectName(projectName).isPresent()) {
-            // Correct URL to SonarQube API endpoint
+        if (page < 0 || size < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page and size must be greater than 0");
+        }
+
+        Project project = projectRepository.findByProjectName(projectName)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found"));
+
+        if (project.getIsUsed())
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project is already in use");
+        }
+
             String url = sonarUrl + "/api/issues/search?components=" + projectName;
+
+            if (page > 0 && size > 0) {
+                url += "&p=" + page + "&ps=" + size;
+            }
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.set("Authorization", "Bearer " + sonarUserToken);
 
             return sonaResponse.responseFromSonarAPI(url, null, headers, HttpMethod.GET);
-//        }
 
-        //return "Project not found";
     }
 
     @Override
@@ -90,9 +105,14 @@ public class IssueServiceImpl implements IssueService{
     }
 
     @Override
-    public Object getIssueDetails() throws Exception {
+    public Object getIssueDetails(String issueKey) throws Exception {
 
-        String url = sonarUrl + "/api/issues/show";
+        if (issueKey == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Issue key must not be null");
+        }
+
+        String url = sonarUrl + "/api/issues/search?issues=" + issueKey;
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "Bearer " + sonarUserToken);
@@ -103,10 +123,18 @@ public class IssueServiceImpl implements IssueService{
     }
 
     @Override
-    public Object getCodeQualityIssues(String projectName) throws Exception {
+    public Object getIssue(String projectName,int page,int size) throws Exception {
+
+        if (page < 0 || size < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page and size must be greater than 0");
+        }
 
         String url = sonarUrl + "/api/issues/search?components="+ projectName+
                 "&facets=cleanCodeAttributeCategories,impactSoftwareQualities,codeVariants,severities,types,scopes,statuses,createdAt,files,languages,rules,tags,directories,author,assigned_to_me,sonarsourceSecurity&timeZone=Asia/Bangkok";
+
+        if (page > 0 && size > 0) {
+            url += "&p=" + page + "&ps=" + size;
+        }
 
         HttpHeaders headers = sonarHeadersUtil.getSonarHeader();
 
@@ -131,9 +159,7 @@ public class IssueServiceImpl implements IssueService{
                     .retrieve()
                     .bodyToMono(IssuesWrapperResponse.class)
                     .flatMapMany(wrapper -> Flux.fromIterable(wrapper.issues())); // Extracts list of issues and flattens
-//        } else {
-//            return Flux.empty();
-//        }
+
     }
 
     @Override

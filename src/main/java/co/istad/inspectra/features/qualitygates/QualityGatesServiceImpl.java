@@ -34,13 +34,26 @@ public class QualityGatesServiceImpl implements QualityGatesService {
     @Override
     public Object getAllQualityGates() throws Exception {
 
-        String url = sonarUrl + "/api/qualitygates/list";
+        String url = sonarUrl + "/api/qualitygates/search";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + sonarUserToken);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         return sonaResponse.responseFromSonarAPI(url, null, headers, HttpMethod.GET);
+
+    }
+
+    @Override
+    public Object CustomScan(String projectName,String qualityGate) throws Exception {
+
+        String url = sonarUrl + "/api/ce/submit?projectKey="+projectName+"&rules=javascript:S125&qualityGate="+qualityGate;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + sonarUserToken);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        return sonaResponse.responseFromSonarAPI(url, null, headers, HttpMethod.POST);
 
     }
 

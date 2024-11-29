@@ -19,7 +19,7 @@ public interface DocumentMapper {
     // Custom mappings for images and keywords
     @Named(("mapToDocumentResponse"))
     @Mapping(target = "documentCategoryName", source = "category.name")
-    @Mapping(target = "documentImages", source = "images")
+    @Mapping(target = "documentImages", source = "images", qualifiedByName = "mapImagesToUrls")
     DocumentResponse mapToDocumentResponse(Document document);
 
 
@@ -28,6 +28,7 @@ public interface DocumentMapper {
     void updateDocumentFromRequest(@MappingTarget  Document document, DocumentUpdate documentUpdate);
 
 
+    @Named("mapImagesToUrls")
     default List<String> mapImagesToUrls(List<DocumentImages> images) {
         return images != null ? images.stream()
                 .map(DocumentImages::getThumbnail)

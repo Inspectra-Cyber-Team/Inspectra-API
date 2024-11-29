@@ -38,17 +38,13 @@ public class RuleServiceImpl implements RuleService{
 
     private final WebClient webClient;
 
-    private final List<String> languages = List.of(
-            "azureresourcemanager", "cs", "css", "cloudformation", "docker", "flex",
-            "go", "web", "ipynb", "java", "js", "kotlin", "kubernetes",
-            "php", "py", "ruby", "scala", "secrets", "terraform", "text", "ts", "vbnet",
-            "xml"
-    );
-
-
 
     @Override
-    public String getRuleDetails(String roleKey) {
+    public Object getRuleDetails(String roleKey) {
+
+        if (roleKey == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rule key is required");
+        }
 
         String url = sonarUrl + "/api/rules/show?key=" + roleKey;
 
@@ -62,10 +58,14 @@ public class RuleServiceImpl implements RuleService{
     }
 
     @Override
-    public Mono<Object> getRuleList(int page,int pageSize,String language,String sortBy, String query) throws Exception {
+    public Mono<Object> getRuleList(int page,int pageSize) throws Exception {
+
+        if (page <0 || pageSize < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page and page size must be greater than 0");
+        }
 
        return webClient.get()
-                .uri(sonarUrl + "/api/rules/search?languages=" + language + "&p=" + page + "&ps=" + pageSize + "&s=" + sortBy + "&q=" + query)
+                .uri(sonarUrl + "/api/rules/search?ps=" + pageSize + "&p=" + page)
                 .headers(headers -> headers.setBearerAuth(sonarToken))
                 .retrieve()
                 .bodyToMono(Object.class)
@@ -79,15 +79,17 @@ public class RuleServiceImpl implements RuleService{
     @Override
     public Flux<RulesResponseDto> getRuleDetails1(String ruleKey) {
 
+        if (ruleKey == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rule key is required");
+        }
+
         String url = sonarUrl + "/api/rules/show?key=" + ruleKey ;
-        System.out.println(url);
 
         return webClient.get()
                 .uri(url)
                 .headers(headers -> headers.setBearerAuth(sonarToken))
                 .retrieve()
                 .bodyToMono(RulesWrapperResponse.class)
-                .doOnNext(response -> System.out.println("Response: " + response.toString()))
                 .flatMapMany(rulesWrapperResponse -> Flux.just(rulesWrapperResponse.rule()))
                 .onErrorResume(e -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -144,34 +146,6 @@ public class RuleServiceImpl implements RuleService{
                 });
     }
 
-
-
-    @Override
-    public Mono<List<RuleLanguageCountResponse>> getRuleLanguageCount1() throws Exception {
-
-        Map<String, Integer> languageCount = new HashMap<>();
-
-        languages.forEach(language -> {
-            String url = sonarUrl + "/api/rules/search?languages=" + language;
-            JsonNode response = webClient.get()
-                    .uri(url)
-                    .headers(headers -> headers.setBearerAuth(sonarToken))
-                    .retrieve()
-                    .bodyToMono(JsonNode.class)
-                    .block();
-
-            languageCount.put(language, response.get("total").asInt());
-        });
-
-        return Mono.just(languageCount.entrySet().stream()
-                .map(entry -> RuleLanguageCountResponse.builder()
-                        .language(entry.getKey())
-                        .count(entry.getValue())
-                        .build())
-                .toList());
-
-
-    }
 
 
 

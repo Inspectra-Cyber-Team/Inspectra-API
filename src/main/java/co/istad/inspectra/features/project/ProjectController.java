@@ -1,5 +1,6 @@
 package co.istad.inspectra.features.project;
 
+
 import co.istad.inspectra.features.project.dto.ProjectRequest;
 import co.istad.inspectra.base.BaseRestResponse;
 import co.istad.inspectra.features.project.dto.ProjectResponse;
@@ -146,14 +147,14 @@ public class ProjectController {
             summary = "Get all projects",
             description = "This endpoint is used for listing all projects"
     )
-    @GetMapping("/all")
+    @GetMapping("{projectName}/all")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<Object> getAllProject1() throws Exception {
+    public BaseRestResponse<Object> getAllProject1(@PathVariable String projectName) throws Exception {
        return BaseRestResponse
                .builder()
                .timestamp(LocalDateTime.now())
                .status(HttpStatus.OK.value())
-               .data(projectService.getAllProject1())
+               .data(projectService.getAllProject1(projectName))
                .message("List all projects")
                .build();
     }
@@ -217,6 +218,13 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.OK)
     public Flux<Object> getProjectOverview(@Valid @RequestParam String projectName)  {
         return projectService.getProjectOverview(projectName);
+    }
+
+    @Operation(summary = "Get project details", description = "This endpoint is used for getting project details from sonarqube api")
+    @GetMapping("/details")
+    @ResponseStatus(HttpStatus.OK)
+    public Flux<Object> getProjectDetails(@Valid @RequestParam String projectName) {
+        return projectService.getProjectDetails(projectName);
     }
 
     @Operation(summary = "Get facets", description = "This endpoint is used for getting facets")

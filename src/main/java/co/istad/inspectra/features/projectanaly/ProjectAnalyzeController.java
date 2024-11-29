@@ -14,7 +14,7 @@ import reactor.core.publisher.Flux;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/api/project-analyze")
+@RequestMapping("/api/v1/project-analyze")
 @RequiredArgsConstructor
 
 public class ProjectAnalyzeController {

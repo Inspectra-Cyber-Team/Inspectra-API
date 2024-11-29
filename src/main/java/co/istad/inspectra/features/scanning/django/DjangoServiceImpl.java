@@ -54,7 +54,7 @@ public class DjangoServiceImpl implements DjangoService {
 
         String cloneDirectory = currentProjectDir + clone_dir;
 
-        String fileName = gitConfig.gitClone(scanningRequestDto.gitUrl(), scanningRequestDto.branch(), cloneDirectory,"", "django");
+        String fileName = gitConfig.gitClone(scanningRequestDto.gitUrl(), scanningRequestDto.branch(), cloneDirectory,"", "django-");
 
         try {
 

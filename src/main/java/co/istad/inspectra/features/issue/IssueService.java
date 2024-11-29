@@ -7,15 +7,15 @@ import reactor.core.publisher.Flux;
 
 public interface IssueService {
 
-    Object getIssueByProjectName(String projectName) throws Exception;
+    Object getIssueByProjectName(String projectName,int page,int size) throws Exception;
 
     Object getIssueByIssueKey(String issueKey, String ruleKey) throws Exception;
 
     Object getIssueByProjectFilter(String projectName) throws Exception;
 
-    Object getIssueDetails() throws Exception;
+    Object getIssueDetails(String issueKey) throws Exception;
 
-    Object getCodeQualityIssues(String projectName) throws Exception;
+    Object getIssue(String projectName,int page,int size) throws Exception;
 
     Flux<IssuesResponse> getIssueByProjectNameFlux(String projectName) throws Exception;
 
