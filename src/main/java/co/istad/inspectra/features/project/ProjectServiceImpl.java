@@ -8,12 +8,12 @@ import co.istad.inspectra.features.user.UserRepository;
 import co.istad.inspectra.mapper.ProjectMapper;
 import co.istad.inspectra.security.CustomUserDetails;
 import co.istad.inspectra.utils.SonarHeadersUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,6 +22,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -48,16 +49,20 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public ProjectResponse createProject(@AuthenticationPrincipal CustomUserDetails customUserDetails, ProjectRequest projectRequest) throws Exception {
 
          if(customUserDetails == null){
+
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-            }
+
+         }
 
          String email = customUserDetails.getUsername();
 
-        User user = userRepository.findUsersByEmail(email)
+         User user = userRepository.findUsersByEmail(email)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -135,6 +140,83 @@ public class ProjectServiceImpl implements ProjectService {
 
         return projectMapper.mapToProjectResponse(findProject);
     }
+
+    @Override
+    public List<ProjectResponse> createProjectForNonUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
+
+        User user;
+
+        // Check if the user is logged in
+        if (customUserDetails == null) {
+            // Handle non-logged-in user (auto-create guest user with new UUID)
+            user = userRepository.save(User.builder()
+                    .uuid(UUID.randomUUID().toString()) // Generate new UUID for each request
+                    .firstName("Guest+")
+                    .lastName("User")
+                    .email("guest+"+UUID.randomUUID().toString()+"@default.com")
+                    .password(passwordEncoder.encode("default-password")) // Ensure encryption here
+                    .isVerified(true)
+                    .isDeleted(false)
+                    .isActive(true)
+                    .registeredDate(LocalDateTime.now())
+                    .isAccountNonExpired(true)
+                    .isAccountNonLocked(true)
+                    .isCredentialsNonExpired(true)
+                    .isEnabled(true)
+                    .build());
+
+            // Dynamically create unique project names for the guest user
+            List<String> defaultProjectNames = new ArrayList<>();
+            for (int i = 1; i <= 3; i++) {
+                String projectName = "Guest_Project_" + user.getUuid() + "_" + i;
+                defaultProjectNames.add(projectName);
+            }
+
+            List<ProjectResponse> projectResponses = new ArrayList<>();
+
+            // Loop through and create projects
+            for (String projectName : defaultProjectNames) {
+                if (projectRepository.existsByProjectName(projectName)) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ProjectName already exists: " + projectName);
+                }
+
+                // Call SonarQube API
+                String url = sonarUrl + "/api/projects/create";
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                httpHeaders.set("Authorization", "Bearer " + sonarToken);
+
+                String sanitizedProjectName = projectName.replace(" ", "-");
+                String body = "project=" + sanitizedProjectName +
+                        "&name=" + sanitizedProjectName +
+                        "&visibility=" + "public";
+
+                // Save the project in the database
+                Project project = projectRepository.save(
+                        Project.builder()
+                                .projectName(sanitizedProjectName)
+                                .uuid(UUID.randomUUID().toString())
+                                .user(user)
+                                .isDeleted(false)
+                                .isUsed(false)
+                                .build()
+                );
+
+                // Call external API
+                sonaResponse.responseFromSonarAPI(url, body, httpHeaders, HttpMethod.POST);
+
+                // Add the project response to the list
+                projectResponses.add(projectMapper.mapToProjectResponse(project));
+            }
+
+            return projectResponses;
+        } else {
+            // If logged-in user, let them create a single project (or handle differently if needed)
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This endpoint is for guest users only.");
+        }
+    }
+
+
 
     @Override
     public String deleteProjectByProjectName(String projectName) {
@@ -401,7 +483,7 @@ public class ProjectServiceImpl implements ProjectService {
 //    }
 
     @Override
-    public Flux<Object> getProjectOverview(String projectName) {
+    public Mono<ProjectOverview> getProjectOverview(String projectName) {
         // First API endpoint
         String measuresUrl = sonarUrl + "/api/measures/component?component=" + projectName +
                 "&metricKeys=ncloc,security_issues,reliability_issues,maintainability_issues,vulnerabilities,bugs,code_smells,security_hotspots,coverage,duplicated_lines_density,accepted_issues";
@@ -410,24 +492,12 @@ public class ProjectServiceImpl implements ProjectService {
         String branchUrl = sonarUrl + "/api/project_branches/list?project=" + projectName;
 
         // Call both APIs using `getObjectFlux` method
-//        Flux<Object> measuresFlux = getObjectFlux(projectName, measuresUrl);
-//        Flux<Object> branchFlux = getObjectFlux(projectName, branchUrl);
+        Mono<Object> measuresMono = getObjectFlux(projectName, measuresUrl).next(); // Get the first result
 
-        // Combine the results from both Flux streams
-//        return Flux.zip(measuresFlux, branchFlux, (measures, branch) -> {
-//            // Combine or transform the data as needed
-//            Map<String, Object> combinedData = new HashMap<>();
-//            combinedData.put("", measures);
-//            combinedData.put("branchDetails", branch);
-//            return combinedData;
-//        });
+        Mono<List<Object>> branchesMono = getObjectFlux(projectName, branchUrl).collectList(); // Collect as List
 
-        // Call both APIs using `getObjectFlux` method
-        Flux<Object> measuresFlux = getObjectFlux(projectName, measuresUrl);
-        Flux<Object> branchFlux = getObjectFlux(projectName, branchUrl);
-
-        // Combine the results into a list without providing explicit keys
-        return Flux.zip(measuresFlux, branchFlux, (measures, branch) -> Arrays.asList(measures, branch));
+        // Combine the results into a single Mono with the desired structure
+        return Mono.zip(measuresMono,branchesMono,ProjectOverview::new);
 
     }
 
@@ -453,28 +523,26 @@ public class ProjectServiceImpl implements ProjectService {
                 .onErrorResume(e -> Flux.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred while sending request: " + e.getMessage())));
     }
 
+
     @Override
-    public List<ProjectResponse> getProjectByUserUid(String userUid) {
+    public Flux<ProjectOverview> getProjectByUserUid(String userUid) {
+        // Find user by UUID
+        return Mono.fromCallable(() -> userRepository.findUserByUuid(userUid))
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")))
+                .flatMapMany(user -> {
+                    // Find projects by user UUID
+                    List<Project> projectList = projectRepository.findByUserUuid(user.getUuid());
 
-        User user = userRepository.findUserByUuid(userUid);
+                    if (projectList.isEmpty()) {
+                        return Flux.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Project list is empty"));
+                    }
 
-        if(user == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-
-        List<Project> project = projectRepository.findByUserUuid(user.getUuid());
-
-        if(project.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project is empty");
-        }
-
-        return project.stream()
-                .map(projectMapper::mapToProjectResponse)
-                .toList();
-
-
-
+                    // Process each project reactively
+                    return Flux.fromIterable(projectList)
+                            .flatMap(project -> getProjectOverview(project.getProjectName()));
+                });
     }
+
 
 
 

@@ -4,7 +4,7 @@ import co.istad.inspectra.domain.User;
 import co.istad.inspectra.domain.role.EnumRole;
 import co.istad.inspectra.domain.role.Role;
 import co.istad.inspectra.features.auth.dto.*;
-import co.istad.inspectra.features.userrole.UserRoleRepository;
+import co.istad.inspectra.features.role.RoleRepository;
 import co.istad.inspectra.mapper.UserMapper;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UserRegisterDto;
@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
 
-    private final UserRoleRepository userRoleRepository;
+    private final RoleRepository roleRepository;
 
     private final UserMapper userMapper;
 
@@ -119,7 +119,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRegisteredDate(LocalDateTime.now());
 //        set role for user
         Set<Role> roles = new HashSet<>();
-        roles.add(userRoleRepository.findRoleByRoleName(EnumRole.ROLE_USER).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found.")));
+        roles.add(roleRepository.findRoleByRoleName(EnumRole.ROLE_USER).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found.")));
         user.setRoles(roles);
         // set password for users
         user.setIsActive(true);
@@ -239,7 +239,29 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
+    public void initUserWithAuth(String email) {
 
+        //auto init user
+        User user = new User();
+        user.setEmail(email+ UUID.randomUUID());
+        user.setName(email.split("@")[0]);
+        user.setIsActive(true);
+        user.setIsDeleted(false);
+        user.setIsVerified(true);
+        user.setIsAccountNonExpired(true);
+        user.setIsAccountNonLocked(true);
+        user.setIsCredentialsNonExpired(true);
+        user.setIsEnabled(true);
+        user.setRegisteredDate(LocalDateTime.now());
+        user.setUuid(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode("123456"));
+
+        userRepository.save(user);
+
+
+
+    }
 
 
     //make function find user by email

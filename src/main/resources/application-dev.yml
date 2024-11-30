@@ -58,12 +58,12 @@ springdoc:
 
 
 sonar:
-  token: squ_7dd850e5682b577b48f0c997ac8edc14a200cadb
-  url: http://localhost:9000
+#  token: squ_7dd850e5682b577b48f0c997ac8edc14a200cadb
+#  url: http://localhost:9000
 
     #server
-# token: squ_1e3de797cb64c4ab682051d94c3ee7b3fc40ea33
-# url: http://35.213.179.239:3389
+ token: squ_1e3de797cb64c4ab682051d94c3ee7b3fc40ea33
+ url: http://35.213.179.239:3389
 
 
 my-app:

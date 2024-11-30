@@ -29,11 +29,29 @@ public interface ReportService {
      */
     Page<ReportResponseDetails> getAllReportDetails(int page, int size);
 
+    /**
+     * getAllReport
+     * @param page int
+     * @param size int
+     * @return Page<ReportResponse>
+     */
 
     Page<ReportResponse> getAllReport(int page, int size);
 
+    /**
+     * getReportByUuid
+     * @param uuid String
+     * @return ReportResponseDetails
+     */
+
     ReportResponseDetails getReportByUuid(String uuid);
 
+
+    /**
+     * deleteReport
+     * @param uuid String
+     */
+    void deleteReport(String uuid);
 
 
 

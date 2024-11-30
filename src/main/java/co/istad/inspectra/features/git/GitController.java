@@ -4,7 +4,6 @@ import co.istad.inspectra.config.AppConfig;
 import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.features.git.dto.GitBranchResponseDto;
 import co.istad.inspectra.features.git.dto.GitRepositoryResponse;
-import co.istad.inspectra.features.scanning.dto.ScanningRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 
@@ -76,8 +74,8 @@ public class GitController {
 
 
     @Operation(summary = "Get all branches by git url")
-    @GetMapping("/branches")
-    public Flux<GitBranchResponseDto> getBranches1(@RequestParam String gitUrl)
+    @GetMapping("/branches/{gitUrl}")
+    public Flux<GitBranchResponseDto> getBranches1(@PathVariable String gitUrl)
     {
         return gitService.getBranches1(gitUrl);
 
@@ -85,7 +83,7 @@ public class GitController {
 
 
     @Operation(summary = "Get all file and directories by user and project name")
-    @GetMapping("/list-files")
+    @GetMapping("/list_files")
     public Map<String,Object> listFilesInRepository (@RequestParam String gitUrl, String branch) throws IOException, GitAPIException {
 
 

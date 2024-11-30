@@ -23,10 +23,10 @@ public class SourceController {
             summary = "Get code snippets issues",
             description = "This endpoint used issueKey to get issues about codes, the issueKey get from searching all issues in a project"
     )
-    @GetMapping
+    @GetMapping("{issueKey}")
     @ResponseStatus(HttpStatus.OK)
 
-    public BaseRestResponse<Object> getCodeSnippetIssue(@RequestParam String issueKey) throws Exception{
+    public BaseRestResponse<Object> getCodeSnippetIssue(@PathVariable String issueKey) throws Exception{
 
         return BaseRestResponse
                 .builder()
@@ -42,10 +42,10 @@ public class SourceController {
             summary = "Get source code",
             description = "This endpoint used component to get source code of a project"
     )
-    @GetMapping("/source")
+    @GetMapping("{componentKey}")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getSourceCode(@RequestParam String component) throws Exception {
-        return sourceService.getSourceCode(component);
+    public Flux<Object> getSourceCode(@PathVariable String componentKey) throws Exception {
+        return sourceService.getSourceCode(componentKey);
     }
 
 
@@ -53,9 +53,9 @@ public class SourceController {
             summary = "Get source code lines",
             description = "This endpoint used componentKey to get source code lines of a project"
     )
-    @GetMapping("/source/lines")
+    @GetMapping("/lines/{componentKey}")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getSourceLinesCode(@RequestParam String componentKey) {
+    public Flux<Object> getSourceLinesCode(@PathVariable String componentKey) {
         return sourceService.getSourceLinesCode(componentKey);
     }
 

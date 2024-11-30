@@ -44,7 +44,7 @@ public class RuleController {
 
 
     @Operation(summary = "Get all rules repository")
-    @GetMapping("/rules-repository")
+    @GetMapping("/rules_repository")
     @ResponseStatus(HttpStatus.OK)
     public Mono<Object> getRulesRepository() throws Exception {
 

@@ -1,11 +1,13 @@
 package co.istad.inspectra.features.project;
 
+import co.istad.inspectra.features.project.dto.ProjectOverview;
 import co.istad.inspectra.features.project.dto.ProjectRequest;
 import co.istad.inspectra.features.project.dto.ProjectResponse;
 import co.istad.inspectra.features.project.dto.ProjectUpdateDto;
 import co.istad.inspectra.security.CustomUserDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 
 import java.util.List;
@@ -40,6 +42,9 @@ public interface ProjectService {
     *
     */
    ProjectResponse getProjectByProjectName(String projectName);
+
+
+    List<ProjectResponse> createProjectForNonUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception;
 
 
    /**
@@ -81,12 +86,12 @@ public interface ProjectService {
     Flux<Object> getSecurityHotspot(String projectName);
     Flux<Object> getProjectBranch(String projectName) ;
     Flux<Object> getProjectWarning(String projectName) ;
-    Flux<Object> getProjectOverview(String projectName);
+    Mono<ProjectOverview> getProjectOverview(String projectName);
     Flux<Object> getProjectDetails(String projectName);
 
     Flux<Object> getFacets() throws Exception;
 
-    List<ProjectResponse> getProjectByUserUid(String userUid);
+    Flux<ProjectOverview> getProjectByUserUid(String userUid);
 
 
 

@@ -116,4 +116,18 @@ public class ReportServiceImpl implements ReportService {
 
         return reportMapper.mapToReportResponseDetails(report);
     }
+
+    @Override
+    public void deleteReport(String uuid) {
+
+            if(uuid == null || uuid.isEmpty())
+            {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Uuid is required");
+            }
+
+            Report report = reportRepository.findByUuid(uuid).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Report not found"));
+
+            reportRepository.delete(report);
+    }
 }

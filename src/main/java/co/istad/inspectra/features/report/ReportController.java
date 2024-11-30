@@ -67,4 +67,19 @@ public class ReportController {
     }
 
 
+    @Operation(summary = "delete report by uuid")
+    @DeleteMapping("/{uuid}")
+    public BaseRestResponse<ReportResponse> deleteReport(@PathVariable String uuid) {
+
+        reportService.deleteReport(uuid);
+
+        return BaseRestResponse.<ReportResponse>builder()
+                .timestamp(LocalDateTime.now())
+                .message("Report deleted successfully")
+                .status(HttpStatus.OK.value())
+                .build();
+
+    }
+
+
 }

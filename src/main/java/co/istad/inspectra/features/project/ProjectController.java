@@ -1,6 +1,7 @@
 package co.istad.inspectra.features.project;
 
 
+import co.istad.inspectra.features.project.dto.ProjectOverview;
 import co.istad.inspectra.features.project.dto.ProjectRequest;
 import co.istad.inspectra.base.BaseRestResponse;
 import co.istad.inspectra.features.project.dto.ProjectResponse;
@@ -13,12 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/project")
+@RequestMapping("/api/v1/projects")
 @RequiredArgsConstructor
 
 public class ProjectController {
@@ -82,9 +84,9 @@ public class ProjectController {
             summary = "Delete project by project name",
             description = "This endpoint is used for deleting project by project name"
     )
-    @DeleteMapping("")
+    @DeleteMapping("{projectName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public BaseRestResponse<Object> deleteProjectByName(@Valid @RequestParam String projectName) {
+    public BaseRestResponse<Object> deleteProjectByName(@Valid @PathVariable String projectName) {
 
         return BaseRestResponse
                 .builder()
@@ -96,7 +98,7 @@ public class ProjectController {
     }
 
 
-    @PutMapping("/update")
+    @PutMapping()
     @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<ProjectResponse> updateProjectName(@Valid @RequestBody ProjectUpdateDto projectUpdateDto) {
 
@@ -110,16 +112,12 @@ public class ProjectController {
     }
 
     @Operation(summary = "find project by user uuid", description = "This endpoint is used for finding project by user uuid")
-    @GetMapping("/user")
+    @GetMapping("/user/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<List<ProjectResponse>> findProjectByUserUuid(@Valid @RequestParam String userUuid)  {
-        return BaseRestResponse
-                .<List<ProjectResponse>>builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.OK.value())
-                .data(projectService.getProjectByUserUid(userUuid))
-                .message("Project has been retrieved successfully.")
-                .build();
+    public Flux<ProjectOverview> findProjectByUserUuid(@Valid @PathVariable String uuid)  {
+
+        return projectService.getProjectByUserUid(uuid);
+
     }
 
 
@@ -191,32 +189,32 @@ public class ProjectController {
 
 
     @Operation(summary = "Get security hotspot", description = "This endpoint is used for getting security hotspot")
-    @GetMapping("/security/hotspot")
+    @GetMapping("/security_hotspot/{projectName}")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getSecurityHotspot(@Valid @RequestParam String projectName){
+    public Flux<Object> getSecurityHotspot(@Valid @PathVariable String projectName){
         return projectService.getSecurityHotspot(projectName);
     }
 
 
     @Operation(summary = "Get project branch", description = "This endpoint is used for getting project branch")
-    @GetMapping("/branch")
+    @GetMapping("/branch/{projectName}")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getProjectBranch(@Valid @RequestParam String projectName){
+    public Flux<Object> getProjectBranch(@Valid @PathVariable String projectName){
         return projectService.getProjectBranch(projectName);
     }
 
 
     @Operation(summary = "Get project warning", description = "This endpoint is used for getting project warning")
-    @GetMapping("/warning")
+    @GetMapping("/warning/{projectName}")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getProjectWarning(@Valid @RequestParam String projectName) {
+    public Flux<Object> getProjectWarning(@Valid @PathVariable String projectName) {
         return projectService.getProjectWarning(projectName);
     }
 
     @Operation(summary = "Get project overview", description = "This endpoint is used for getting project overview")
-    @GetMapping("/overview")
+    @GetMapping("/overview/{projectName}")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getProjectOverview(@Valid @RequestParam String projectName)  {
+    public Mono<ProjectOverview> getProjectOverview(@Valid @PathVariable String projectName)  {
         return projectService.getProjectOverview(projectName);
     }
 
@@ -233,6 +231,21 @@ public class ProjectController {
     public Flux<Object> getFacets() throws Exception {
         return projectService.getFacets();
     }
+
+
+    @Operation(summary = "Create project for non login user")
+    @PostMapping("/create/non_user")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseRestResponse<List<ProjectResponse>> createProjectForNonUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
+        return BaseRestResponse
+                .<List<ProjectResponse>>builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.CREATED.value())
+                .data(projectService.createProjectForNonUser(customUserDetails))
+                .message("Project has been created successfully.")
+                .build();
+    }
+
 
 
 

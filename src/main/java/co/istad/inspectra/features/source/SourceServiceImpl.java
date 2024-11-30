@@ -29,6 +29,13 @@ public class SourceServiceImpl implements SourceService{
 
     @Override
     public HashMap getCodeIssue(String issueKey) throws Exception{
+
+
+        if (issueKey == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Issue key is required");
+        }
+
+
         // Correct URL to SonarQube API endpoint
         String url = sonarUrl + "/api/sources/issue_snippets?issueKey=" + issueKey;
 
@@ -48,6 +55,10 @@ public class SourceServiceImpl implements SourceService{
     @Override
     public Flux<Object> getSourceCode(String component) throws Exception {
 
+        if (component == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Component is required");
+        }
+
         return webClient.get()
                 .uri(sonarUrl + "/api/sources/show?key=" + component)
                 .header("Authorization", "Bearer " + sonarToken)
@@ -60,6 +71,10 @@ public class SourceServiceImpl implements SourceService{
 
     @Override
     public Flux<Object> getSourceLinesCode(String componentKey) {
+
+        if (componentKey == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Component key is required");
+        }
 
         return webClient.get()
                 .uri(sonarUrl + "/api/sources/lines?key=" + componentKey)

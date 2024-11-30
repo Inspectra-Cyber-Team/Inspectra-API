@@ -7,7 +7,7 @@ import reactor.core.publisher.Flux;
 
 public interface IssueService {
 
-    Object getIssueByProjectName(String projectName,int page,int size) throws Exception;
+    Object getIssueByProjectName(String projectName,int page,int size, String cleanCodeAttributeCategories, String impactSoftwareQualities, String impactSeverities, String scopes) throws Exception;
 
     Object getIssueByIssueKey(String issueKey, String ruleKey) throws Exception;
 
@@ -15,10 +15,12 @@ public interface IssueService {
 
     Object getIssueDetails(String issueKey) throws Exception;
 
-    Object getIssue(String projectName,int page,int size) throws Exception;
+    Object getIssue(String projectName,int page,int size,String cleanCodeAttributeCategories, String impactSoftwareQualities, String impactSeverities, String scopes,String types, String languages,
+                    String directories, String rules, String issuesStatuses,String tags, String files, String assigned, String createdInLast) throws Exception;
 
     Flux<IssuesResponse> getIssueByProjectNameFlux(String projectName) throws Exception;
 
     Flux<ListIssueResponseMessage>  getComponentIssuesMessage(String projectName) throws Exception;
+
 
 }

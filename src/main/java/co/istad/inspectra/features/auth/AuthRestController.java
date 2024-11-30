@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 
 @RequestMapping("api/v1/auth")
@@ -99,6 +101,21 @@ public class AuthRestController {
                 .status(HttpStatus.OK.value())
                 .data(authService.changePassword(changePassword))
                 .message("Password changed successfully")
+                .build();
+
+    }
+
+    @PostMapping("/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<Object> initUser(@Valid @PathVariable String email) {
+
+        authService.initUserWithAuth(email);
+
+        return BaseRestResponse
+                .builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
+                .message("User has been initialized successfully.")
                 .build();
 
     }

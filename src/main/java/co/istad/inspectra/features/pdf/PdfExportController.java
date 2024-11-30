@@ -15,13 +15,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
-@RequestMapping("/api/v1/pdf")
+@RequestMapping("api/v1/pdf/")
 @RequiredArgsConstructor
 public class PdfExportController {
 
     private final PdfExportService pdfExportService;
 
-    @GetMapping(value = "/pdf/{projectName}", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(value = "{projectName}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> generatePdf(@PathVariable String projectName) {
         try {
 

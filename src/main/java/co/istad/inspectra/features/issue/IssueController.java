@@ -27,12 +27,29 @@ public class IssueController {
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<Object> getAllIssuesOnProject(@RequestParam String projectName, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size) throws Exception {
+    public BaseRestResponse<Object> getAllIssuesOnProject(@RequestParam String projectName,
+                                                          @RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "25") int size,
+                                                          @RequestParam(required = false) String cleanCodeAttributeCategories,
+                                                          @RequestParam(required = false) String impactSoftwareQualities,
+                                                          @RequestParam(required = false) String impactSeverities,
+                                                          @RequestParam(required = false) String scopes,
+                                                          @RequestParam(required = false) String types,
+                                                          @RequestParam(required = false) String languages,
+                                                          @RequestParam(required = false) String directories,
+                                                          @RequestParam(required = false) String rules,
+                                                          @RequestParam(required = false) String issuesStatuses,
+                                                          @RequestParam(required = false) String tags,
+                                                          @RequestParam(required = false) String files,
+                                                          @RequestParam(required = false) String assigned,
+                                                          @RequestParam(required = false) String createdInLast) throws Exception {
 
         return BaseRestResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
-                .data(issueService.getIssue(projectName,page,size))
+                .data(issueService.getIssue(projectName,page,size,cleanCodeAttributeCategories,impactSoftwareQualities,
+                                            impactSeverities,scopes,types,languages, directories, rules, issuesStatuses,
+                                            tags, files, assigned, createdInLast))
                 .message("Get issue by project name.")
                 .build();
 

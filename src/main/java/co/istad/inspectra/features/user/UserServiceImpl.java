@@ -7,7 +7,7 @@ import co.istad.inspectra.domain.role.Role;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UpdateUserDto;
 import co.istad.inspectra.features.user.dto.UserRegisterDto;
-import co.istad.inspectra.features.userrole.UserRoleRepository;
+import co.istad.inspectra.features.role.RoleRepository;
 import co.istad.inspectra.mapper.UserMapper;
 import co.istad.inspectra.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
     private final BaseSpecification<User> baseSpecification;
 
-    private final UserRoleRepository userRoleRepository;
+    private final RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder;
     @Override
@@ -223,7 +223,7 @@ public class UserServiceImpl implements UserService {
         user.setRegisteredDate(LocalDateTime.now());
 //        set role for user
         Set<Role> roles = new HashSet<>();
-        roles.add(userRoleRepository.findRoleByRoleName(EnumRole.ROLE_ADMIN).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found.")));
+        roles.add(roleRepository.findRoleByRoleName(EnumRole.ROLE_ADMIN).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found.")));
         user.setRoles(roles);
         // set password for users
         user.setIsActive(true);

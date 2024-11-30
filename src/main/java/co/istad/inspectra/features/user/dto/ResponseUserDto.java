@@ -1,6 +1,6 @@
 package co.istad.inspectra.features.user.dto;
 
-import co.istad.inspectra.features.userrole.dto.UserRoleResponse;
+import co.istad.inspectra.features.role.dto.RoleResponse;
 import lombok.Builder;
 
 import java.util.Set;
@@ -21,6 +21,6 @@ public record ResponseUserDto(
         String lastModifiedAt,
         Boolean isVerified,
         Boolean isDeleted,
-        Set<UserRoleResponse> roles
+        Set<RoleResponse> roles
 ) {
 }

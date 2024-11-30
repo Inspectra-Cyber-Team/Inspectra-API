@@ -81,6 +81,13 @@ public interface AuthService {
      */
     String changePassword(ChangePassword changePassword);
 
+    /**
+     * handle user login with auth from front-end
+     *
+     */
+
+    void initUserWithAuth(String email);
+
 
 
 

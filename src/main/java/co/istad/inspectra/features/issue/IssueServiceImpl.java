@@ -45,7 +45,7 @@ public class IssueServiceImpl implements IssueService{
     private final SonarHeadersUtil sonarHeadersUtil;
 
     @Override
-    public Object getIssueByProjectName(String projectName, int page, int size) throws Exception {
+    public Object getIssueByProjectName(String projectName, int page, int size, String cleanCodeAttributeCategories, String impactSoftwareQualities, String impactSeverities, String scopes) throws Exception {
 
         if (page < 0 || size < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page and size must be greater than 0");
@@ -65,6 +65,22 @@ public class IssueServiceImpl implements IssueService{
                 url += "&p=" + page + "&ps=" + size;
             }
 
+            if (cleanCodeAttributeCategories != null) {
+                url += "&cleanCodeAttributeCategories=" + cleanCodeAttributeCategories;
+            }
+
+            if (impactSoftwareQualities != null) {
+                url += "&impactSoftwareQualities=" + impactSoftwareQualities;
+            }
+
+            if (impactSeverities != null) {
+                url += "&impactSeverities=" + impactSeverities;
+            }
+
+            if (scopes != null) {
+                url += "&scopes=" + scopes;
+            }
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.set("Authorization", "Bearer " + sonarUserToken);
@@ -75,6 +91,10 @@ public class IssueServiceImpl implements IssueService{
 
     @Override
     public Object getIssueByIssueKey(String issueKey, String ruleKey) throws Exception {
+
+        if (issueKey == null || ruleKey == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Issue key and rule key must not be null");
+        }
 
         String url = sonarUrl + "/api/issues/search?issues=" + issueKey;
 
@@ -123,7 +143,9 @@ public class IssueServiceImpl implements IssueService{
     }
 
     @Override
-    public Object getIssue(String projectName,int page,int size) throws Exception {
+    public Object getIssue(String projectName,int page,int size,String cleanCodeAttributeCategories, String impactSoftwareQualities, String impactSeverities,
+                           String scopes, String types, String languages, String directories, String rules, String issuesStatuses, String tags, String files,
+                           String assigned, String createdInLast) throws Exception {
 
         if (page < 0 || size < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page and size must be greater than 0");
@@ -135,6 +157,60 @@ public class IssueServiceImpl implements IssueService{
         if (page > 0 && size > 0) {
             url += "&p=" + page + "&ps=" + size;
         }
+
+        if (cleanCodeAttributeCategories != null) {
+            url += "&cleanCodeAttributeCategories=" + cleanCodeAttributeCategories;
+        }
+
+        if (impactSoftwareQualities != null) {
+            url += "&impactSoftwareQualities=" + impactSoftwareQualities;
+        }
+
+        if (impactSeverities != null) {
+            url += "&impactSeverities=" + impactSeverities;
+        }
+
+        if (scopes != null) {
+            url += "&scopes=" + scopes;
+        }
+
+        if (types != null) {
+            url += "&types=" + types;
+        }
+
+        if (languages != null) {
+            url += "&languages=" + languages;
+        }
+
+        if (directories != null) {
+            url += "&directories=" + directories;
+        }
+
+        if (rules != null) {
+            url += "&rules=" + rules;
+        }
+
+        if (issuesStatuses != null) {
+            url += "&issuesStatuses=" + issuesStatuses;
+        }
+
+        if (tags != null) {
+            url += "&tags=" + tags;
+        }
+
+        if (files != null) {
+            url += "&files=" + files;
+        }
+
+        if (assigned != null) {
+            url += "&assigned=" + assigned;
+        }
+
+        if (createdInLast != null) {
+            url += "&createdInLast=" + createdInLast;
+        }
+
+
 
         HttpHeaders headers = sonarHeadersUtil.getSonarHeader();
 

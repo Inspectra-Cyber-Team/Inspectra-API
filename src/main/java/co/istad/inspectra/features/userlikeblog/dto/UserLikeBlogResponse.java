@@ -8,6 +8,7 @@ public record UserLikeBlogResponse(
         String userUuid,
         String firstName,
         String lastName,
+        String email,
         String profile,
         String bio
 ) {

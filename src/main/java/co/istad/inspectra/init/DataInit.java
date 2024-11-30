@@ -5,7 +5,7 @@ import co.istad.inspectra.domain.User;
 import co.istad.inspectra.domain.role.EnumRole;
 import co.istad.inspectra.domain.role.Role;
 import co.istad.inspectra.features.authority.AuthorityRepository;
-import co.istad.inspectra.features.userrole.UserRoleRepository;
+import co.istad.inspectra.features.role.RoleRepository;
 import co.istad.inspectra.features.user.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class DataInit {
 
     private final AuthorityRepository authorityRepository;
 
-    private final UserRoleRepository userRoleRepository;
+    private final RoleRepository roleRepository;
 
     private final UserRepository userRepository;
 
@@ -75,7 +75,7 @@ public class DataInit {
 
     void initRole() {
         // auth generate role (USER,ADMIN)
-        if (userRoleRepository.count() < 3) {
+        if (roleRepository.count() < 3) {
             List<String> roleNames = List.of(
                     "USER",
                     "ADMIN",
@@ -86,7 +86,7 @@ public class DataInit {
                     .map(this::createRole)
                     .toList();
 
-            userRoleRepository.saveAll(roles);
+            roleRepository.saveAll(roles);
         }
     }
 
@@ -98,7 +98,7 @@ public class DataInit {
 
         role.setUuid(UUID.randomUUID().toString());
 
-        return userRoleRepository.save(role);
+        return roleRepository.save(role);
     }
 
 
@@ -115,7 +115,7 @@ public class DataInit {
             user.setBio("I am a software engineer");
 
             // Fetching and assigning the Role
-            Role role = userRoleRepository.findRoleByRoleName(EnumRole.ROLE_USER)
+            Role role = roleRepository.findRoleByRoleName(EnumRole.ROLE_USER)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found."));
 
             Set<Role> roles = new HashSet<>();
@@ -153,7 +153,7 @@ public class DataInit {
             user1.setBio("I am a software engineer");
 
             // Fetching and assigning the Role
-            Role role1 = userRoleRepository.findRoleByRoleName(EnumRole.ROLE_ADMIN)
+            Role role1 = roleRepository.findRoleByRoleName(EnumRole.ROLE_ADMIN)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found."));
 
             Set<Role> roles1 = new HashSet<>();
