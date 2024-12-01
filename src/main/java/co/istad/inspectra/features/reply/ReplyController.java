@@ -27,6 +27,8 @@ public class ReplyController {
     public BaseRestResponse<ReplyResponse> createReply(@Valid @RequestBody ReplyRequest request) {
 
         return BaseRestResponse.<ReplyResponse>builder()
+                .status(HttpStatus.CREATED.value())
+                .timestamp(LocalDateTime.now())
                 .data(replyService.createReply(request))
                 .message("Reply created successfully")
                 .build();
@@ -39,6 +41,8 @@ public class ReplyController {
     @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<List<ReplyResponse>> getAllReplies() {
         return BaseRestResponse.<List<ReplyResponse>>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(replyService.getAllReplies())
                 .message("Replies retrieved successfully")
                 .build();
@@ -62,6 +66,8 @@ public class ReplyController {
     @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<List<ReplyResponse>> getReplyByCommentId(@PathVariable String commentId) {
         return BaseRestResponse.<List<ReplyResponse>>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(replyService.getReplyByCommentId(commentId))
                 .message("Replies retrieved successfully")
                 .build();
@@ -72,6 +78,8 @@ public class ReplyController {
     @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<String> likeReply(@PathVariable String replyUuid) {
         return BaseRestResponse.<String>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(replyService.likeReply(replyUuid))
                 .message("Reply liked successfully")
                 .build();
@@ -83,6 +91,8 @@ public class ReplyController {
     public BaseRestResponse<String> unlikeReply(@PathVariable String replyUuid) {
         replyService.unlikeReply(replyUuid);
         return BaseRestResponse.<String>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .message("Reply unliked successfully")
                 .build();
     }
@@ -94,6 +104,7 @@ public class ReplyController {
     public BaseRestResponse<String> deleteReply(@PathVariable String replyUuid) {
         replyService.deleteReply(replyUuid);
         return BaseRestResponse.<String>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NO_CONTENT.value())
                 .message("Reply deleted successfully")
                 .build();
@@ -105,6 +116,8 @@ public class ReplyController {
     public BaseRestResponse<ReplyResponse> updateReply(@PathVariable String replyUuid, @RequestBody String content) {
 
         return BaseRestResponse.<ReplyResponse>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .message("Reply updated successfully")
                 .data( replyService.updateReply(replyUuid, content))
                 .build();

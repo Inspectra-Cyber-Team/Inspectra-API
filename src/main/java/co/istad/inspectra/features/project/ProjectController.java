@@ -27,10 +27,8 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @Operation(
-            summary = "Create a project"
-    )
-    @PostMapping("/create")
+    @Operation(summary = "Create a project")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BaseRestResponse<ProjectResponse> createProject(@AuthenticationPrincipal CustomUserDetails customUserDetails,@Valid @RequestBody ProjectRequest projectRequest) throws Exception {
 
@@ -189,7 +187,7 @@ public class ProjectController {
 
 
     @Operation(summary = "Get security hotspot", description = "This endpoint is used for getting security hotspot")
-    @GetMapping("/security_hotspot/{projectName}")
+    @GetMapping("/security-hotspot/{projectName}")
     @ResponseStatus(HttpStatus.OK)
     public Flux<Object> getSecurityHotspot(@Valid @PathVariable String projectName){
         return projectService.getSecurityHotspot(projectName);

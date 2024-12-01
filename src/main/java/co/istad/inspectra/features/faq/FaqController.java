@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -29,6 +30,8 @@ public class FaqController {
     {
         return BaseRestResponse.<List<FaqResponse>>
                 builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(faqService.getAllFaq())
                 .message("Success fetch all FAQ")
                 .build();
@@ -53,6 +56,8 @@ public class FaqController {
     {
         return BaseRestResponse.<FaqResponse>
                 builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(faqService.getFaqByUuid(uuid))
                 .message("Success fetch FAQ by UUID")
                 .build();
@@ -65,6 +70,8 @@ public class FaqController {
     {
         return BaseRestResponse.<FaqResponse>
                 builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(faqService.getFaqByQuestion(question))
                 .message("Success fetch FAQ by question")
                 .build();
@@ -78,6 +85,8 @@ public class FaqController {
     {
         return BaseRestResponse.<FaqResponse>
                 builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(faqService.getFaqByAnswer(answer))
                 .message("Success fetch FAQ by answer")
                 .build();
@@ -92,6 +101,8 @@ public class FaqController {
     {
         return BaseRestResponse.<FaqResponse>
                 builder()
+                .status(HttpStatus.CREATED.value())
+                .timestamp(LocalDateTime.now())
                 .data(faqService.createFaq(faqRequest))
                 .message("Success create FAQ")
                 .build();
@@ -106,6 +117,8 @@ public class FaqController {
     {
         return BaseRestResponse.<FaqResponse>
                 builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(faqService.updateFaq(faqUpdateRequest, uuid))
                 .message("Success update FAQ")
                 .build();
@@ -121,6 +134,8 @@ public class FaqController {
         faqService.deleteFaq(uuid);
         return BaseRestResponse.<Void>
                 builder()
+                .status(HttpStatus.NO_CONTENT.value())
+                .timestamp(LocalDateTime.now())
                 .message("Success delete FAQ")
                 .build();
     }

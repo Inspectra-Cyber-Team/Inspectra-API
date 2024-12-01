@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,12 +18,14 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    @GetMapping("")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<List<RoleResponse>> getAllUserRoles(){
 
         return BaseRestResponse
                 .<List<RoleResponse>>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(roleService.getAllUserRoles())
                 .build();
     }
@@ -33,6 +36,8 @@ public class RoleController {
 
         return BaseRestResponse
                 .<RoleResponse>builder()
+                .status(HttpStatus.CREATED.value())
+                .timestamp(LocalDateTime.now())
                 .data(roleService.createRole(roleRequest))
                 .build();
     }
@@ -43,6 +48,8 @@ public class RoleController {
 
         return BaseRestResponse
                 .<RoleResponse>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(roleService.getRole(uuid))
                 .build();
     }
@@ -54,6 +61,8 @@ public class RoleController {
 
         return BaseRestResponse
                 .<RoleResponse>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(roleService.updateRole(uuid, roleRequest))
                 .build();
     }

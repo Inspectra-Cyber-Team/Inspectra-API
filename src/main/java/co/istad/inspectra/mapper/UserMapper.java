@@ -3,17 +3,20 @@ package co.istad.inspectra.mapper;
 import co.istad.inspectra.domain.User;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UpdateUserDto;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import co.istad.inspectra.features.user.dto.UserDetailsResponse;
+import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",uses = {BlogMapper.class,ProjectMapper.class})
 public interface UserMapper {
     ResponseUserDto mapFromUserToUserResponseDto(User user);
     List<ResponseUserDto> mapFromListOfUserToListOfUserDto(List<User> userList);
+
+
+    @Mapping(target = "blog", source = "blogSet",qualifiedByName = "toBlogResponseDto")
+    @Mapping(target = "project", source = "projectSet",qualifiedByName = "toProjectResponse")
+    UserDetailsResponse mapFromUserToUserDetailsResponse(User user);
 
 
 
@@ -35,7 +38,7 @@ public interface UserMapper {
 @Mapping(target = "authorities", ignore = true)
 @Mapping(target = "otp", ignore = true)
 @Mapping(target = "otpGeneratedTime", ignore = true)
-@BeanMapping(nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE)
+@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 void updateUserFromRequest(@MappingTarget User user, UpdateUserDto userDto);
 
 }

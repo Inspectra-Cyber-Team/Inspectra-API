@@ -10,14 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/authority")
+@RequestMapping("/api/v1/authorities")
 @RequiredArgsConstructor
 
 public class AuthorityController {
 
     private final AuthorityService authorityService;
 
-    @GetMapping("/all")
+    @GetMapping
     public Page<AuthorityResponse> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int limit) {
 
         return authorityService.findAll(page, limit);
@@ -35,7 +35,7 @@ public class AuthorityController {
 
     }
 
-    @PostMapping("/create")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BaseRestResponse<AuthorityResponse> createAuthority(@Valid @RequestBody AuthorityRequest authorityRequest) {
 

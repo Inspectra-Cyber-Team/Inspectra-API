@@ -44,7 +44,7 @@ public class RuleController {
 
 
     @Operation(summary = "Get all rules repository")
-    @GetMapping("/rules_repository")
+    @GetMapping("/rules-repository")
     @ResponseStatus(HttpStatus.OK)
     public Mono<Object> getRulesRepository() throws Exception {
 
@@ -52,15 +52,6 @@ public class RuleController {
 
     }
 
-
-    @Operation(summary = "Get rule language count")
-    @GetMapping("/rule_language_count")
-    @ResponseStatus(HttpStatus.OK)
-    public Mono<Object> getRuleLanguageCount() throws Exception {
-
-        return ruleService.getRuleLanguageCount();
-
-    }
 
 
 

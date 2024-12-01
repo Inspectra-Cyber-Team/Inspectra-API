@@ -4,6 +4,7 @@ package co.istad.inspectra.features.user;
 import co.istad.inspectra.base.BaseSpecification;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UpdateUserDto;
+import co.istad.inspectra.features.user.dto.UserDetailsResponse;
 import co.istad.inspectra.features.user.dto.UserRegisterDto;
 import co.istad.inspectra.security.CustomUserDetails;
 import org.springframework.data.domain.Page;
@@ -94,6 +95,9 @@ public interface UserService {
      * @return {@link ResponseUserDto}
      */
     ResponseUserDto createAdmin(UserRegisterDto userRegisterDto);
+
+
+    UserDetailsResponse getUserDetails(String uuid);
 
 
 

@@ -5,6 +5,7 @@ import co.istad.inspectra.base.BaseSpecification;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UpdateUserDto;
 import co.istad.inspectra.base.BaseRestResponse;
+import co.istad.inspectra.features.user.dto.UserDetailsResponse;
 import co.istad.inspectra.features.user.dto.UserRegisterDto;
 import co.istad.inspectra.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -146,6 +147,19 @@ public class UserRestController {
                 .build();
     }
 
+    @Operation(summary = "Get user details")
+    @GetMapping("/details/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<UserDetailsResponse> getUserDetails(@PathVariable String uuid) {
+
+        return BaseRestResponse
+                .<UserDetailsResponse>builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK.value())
+                .data(userService.getUserDetails(uuid))
+                .message("User details found successfully.")
+                .build();
+    }
 
 
 

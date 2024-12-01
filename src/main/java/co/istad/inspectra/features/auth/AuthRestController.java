@@ -22,9 +22,9 @@ public class AuthRestController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<Object> login(@Valid @RequestBody AuthRequest authRequest)
+    public BaseRestResponse<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest)
     {
-       return BaseRestResponse.
+       return BaseRestResponse.<AuthResponse>
                builder()
                .status(HttpStatus.OK.value())
                .data(authService.login(authRequest))
@@ -34,11 +34,11 @@ public class AuthRestController {
 
 
    @PostMapping("/register")
-   @ResponseStatus(HttpStatus.OK)
+   @ResponseStatus(HttpStatus.CREATED)
     public BaseRestResponse<ResponseUserDto> signup(@Valid @RequestBody UserRegisterDto userRegisterDto)
     {
         return BaseRestResponse.<ResponseUserDto>builder()
-                .status(HttpStatus.OK.value())
+                .status(HttpStatus.CREATED.value())
                 .data(authService.createUser(userRegisterDto))
                 .message("User created successfully")
                 .build();
@@ -106,14 +106,13 @@ public class AuthRestController {
     }
 
     @PostMapping("/{email}")
-    @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<Object> initUser(@Valid @PathVariable String email) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseRestResponse<ResponseUserDto> initUser(@Valid @PathVariable String email) {
 
         authService.initUserWithAuth(email);
 
-        return BaseRestResponse
-                .builder()
-                .status(HttpStatus.OK.value())
+        return BaseRestResponse.<ResponseUserDto>builder()
+                .status(HttpStatus.CREATED.value())
                 .timestamp(LocalDateTime.now())
                 .message("User has been initialized successfully.")
                 .build();

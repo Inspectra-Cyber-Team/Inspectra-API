@@ -6,6 +6,7 @@ import co.istad.inspectra.domain.role.EnumRole;
 import co.istad.inspectra.domain.role.Role;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UpdateUserDto;
+import co.istad.inspectra.features.user.dto.UserDetailsResponse;
 import co.istad.inspectra.features.user.dto.UserRegisterDto;
 import co.istad.inspectra.features.role.RoleRepository;
 import co.istad.inspectra.mapper.UserMapper;
@@ -235,6 +236,18 @@ public class UserServiceImpl implements UserService {
 
 
         return userMapper.mapFromUserToUserResponseDto(user);
+    }
+
+    @Override
+    public UserDetailsResponse getUserDetails(String uuid) {
+
+        User findUser = userRepository.findUserByUuid(uuid);
+
+        if(findUser == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found with uuid: "+uuid);
+        }
+
+        return userMapper.mapFromUserToUserDetailsResponse(findUser);
     }
 
 

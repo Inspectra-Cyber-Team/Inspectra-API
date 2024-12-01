@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -30,6 +31,7 @@ public class FileController {
     ) {
         return BaseRestResponse
                 .<FileResponse>builder()
+                .timestamp(LocalDateTime.now())
                 .data(fileService.uploadSingleFile(file,request))
                 .status(HttpStatus.CREATED.value())
                 .message("File uploaded successfully")
@@ -45,6 +47,7 @@ public class FileController {
                 .<List<String>>builder()
                 .data(fileService.uploadMultipleFiles(files,request))
                 .status(HttpStatus.CREATED.value())
+                .timestamp(LocalDateTime.now())
                 .message("Files uploaded successfully")
                 .build();
 

@@ -25,7 +25,9 @@ public class ReportController {
 
     private final ReportService reportService;
 
+    @Operation(summary = "Create blog")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public BaseRestResponse<ReportResponse> createReport(@Valid @RequestBody ReportRequest reportRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         return BaseRestResponse.<ReportResponse>builder()
@@ -55,6 +57,7 @@ public class ReportController {
 
     @Operation(summary = "get report by uuid")
     @GetMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<ReportResponseDetails> getReportByUuid(@PathVariable String uuid) {
 
         return BaseRestResponse.<ReportResponseDetails>builder()
@@ -69,6 +72,7 @@ public class ReportController {
 
     @Operation(summary = "delete report by uuid")
     @DeleteMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseRestResponse<ReportResponse> deleteReport(@PathVariable String uuid) {
 
         reportService.deleteReport(uuid);
@@ -76,7 +80,7 @@ public class ReportController {
         return BaseRestResponse.<ReportResponse>builder()
                 .timestamp(LocalDateTime.now())
                 .message("Report deleted successfully")
-                .status(HttpStatus.OK.value())
+                .status(HttpStatus.NO_CONTENT.value())
                 .build();
 
     }

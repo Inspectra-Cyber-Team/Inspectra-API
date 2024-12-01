@@ -12,10 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/document")
+@RequestMapping("/api/v1/documents")
 @RequiredArgsConstructor
 
 public class DocumentController {
@@ -25,11 +26,12 @@ public class DocumentController {
     @Operation(summary = "Create document")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-
     public BaseRestResponse<DocumentResponse> createDocument(@Valid @RequestBody DocumentRequest documentRequest) {
 
         return BaseRestResponse.<DocumentResponse>builder()
                 .data(documentService.createDocument(documentRequest))
+                .status(HttpStatus.CREATED.value())
+                .timestamp(LocalDateTime.now())
                 .message("Document created successfully")
                 .build();
 
@@ -42,6 +44,8 @@ public class DocumentController {
     public BaseRestResponse<DocumentResponse> getDocumentByUuid(@PathVariable String uuid) {
 
         return BaseRestResponse.<DocumentResponse>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(documentService.getDocumentByUuid(uuid))
                 .message("Document retrieved successfully")
                 .build();
@@ -50,11 +54,13 @@ public class DocumentController {
 
 
     @Operation(summary = "Get all documents")
-    @GetMapping
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<List<DocumentResponse>> getAllDocuments() {
 
         return BaseRestResponse.<List<DocumentResponse>>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(documentService.getAllDocument())
                 .message("Documents retrieved successfully")
                 .build();
@@ -64,11 +70,12 @@ public class DocumentController {
 
     @Operation(summary = "Update document")
     @PutMapping("/{uuid}")
-    @ResponseStatus(HttpStatus.CREATED)
-
+    @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<DocumentResponse> updateDocument(@PathVariable String uuid, @Valid @RequestBody DocumentUpdate documentUpdate) {
 
         return BaseRestResponse.<DocumentResponse>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(documentService.updateDocument(uuid, documentUpdate))
                 .message("Document updated successfully")
                 .build();
@@ -84,13 +91,15 @@ public class DocumentController {
         documentService.deleteDocument(uuid);
 
         return BaseRestResponse.<Void>builder()
+                .status(HttpStatus.NO_CONTENT.value())
+                .timestamp(LocalDateTime.now())
                 .message("Document deleted successfully")
                 .build();
     }
 
 
     @Operation(summary = "Get all documents by page")
-    @GetMapping("/page")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<DocumentResponse> getAllDocumentByPage(@RequestParam(defaultValue = "0") int page,
                                                        @RequestParam(defaultValue = "25") int size) {
@@ -103,9 +112,11 @@ public class DocumentController {
     @Operation(summary = "Get document by category")
     @GetMapping("/category/{categoryUuid}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<List<DocumentResponse>> getDocumentByCategory(@PathVariable String categoryUuid) {
+    public BaseRestResponse<List<DocumentResponse>> getDocumentsByCategory(@PathVariable String categoryUuid) {
 
         return BaseRestResponse.<List<DocumentResponse>>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(documentService.getDocumentByCategory(categoryUuid))
                 .message("Documents retrieved successfully")
                 .build();

@@ -13,10 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/document-category")
+@RequestMapping("/api/v1/document-categories")
 @RequiredArgsConstructor
 
 public class DocumentCategoryController {
@@ -24,20 +25,22 @@ public class DocumentCategoryController {
     private final DocumentCategoryService documentCategoryService;
 
     @Operation(summary = "Get all document categories")
-    @GetMapping
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<List<DocumentCategoryResponse>> getAllDocumentCategories() {
 
         return BaseRestResponse.<List<DocumentCategoryResponse>>
                 builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .data(documentCategoryService.getAll())
+                .message("Document categories have been retrieved successfully.")
                 .build();
 
     }
 
     @Operation(summary = "Get all document categories by page")
-    @GetMapping("/page")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<DocumentCategoryResponse> getAllDocumentCategoriesByPage(
             @RequestParam(defaultValue = "0") int page,
@@ -57,6 +60,8 @@ public class DocumentCategoryController {
                 builder()
                 .status(HttpStatus.OK.value())
                 .data(documentCategoryService.getByUuid(uuid))
+                .timestamp(LocalDateTime.now())
+                .message("Document category has been retrieved successfully.")
                 .build();
 
     }
@@ -69,6 +74,8 @@ public class DocumentCategoryController {
         return BaseRestResponse.<DocumentCategoryResponse>
                 builder()
                 .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
+                .message("Document category has been retrieved successfully.")
                 .data(documentCategoryService.getByName(name))
                 .build();
 
@@ -83,8 +90,10 @@ public class DocumentCategoryController {
 
         return BaseRestResponse.<DocumentCategoryResponse>
                 builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.CREATED.value())
                 .data(documentCategoryService.create(documentCategoryRequest))
+                .message("Document category has been created successfully.")
                 .build();
 
     }
@@ -99,7 +108,9 @@ public class DocumentCategoryController {
         return BaseRestResponse.<DocumentCategoryResponse>
                 builder()
                 .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(documentCategoryService.update(uuid, documentCategoryUpdate))
+                .message("Document category has been updated successfully.")
                 .build();
 
     }
@@ -108,7 +119,6 @@ public class DocumentCategoryController {
     @Operation(summary = "Delete a document category")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-
     public BaseRestResponse<Object> deleteDocumentCategory(@PathVariable String uuid) {
 
         documentCategoryService.delete(uuid);
@@ -116,6 +126,7 @@ public class DocumentCategoryController {
         return BaseRestResponse
                 .builder()
                 .status(HttpStatus.NO_CONTENT.value())
+                .timestamp(LocalDateTime.now())
                 .message("Document category has been deleted successfully.")
                 .build();
 
@@ -130,7 +141,9 @@ public class DocumentCategoryController {
         return BaseRestResponse.<List<DocumentCategoryDetails>>
                 builder()
                 .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(documentCategoryService.getAllDocumentCategories())
+                .message("Document categories details have been retrieved successfully.")
                 .build();
 
     }

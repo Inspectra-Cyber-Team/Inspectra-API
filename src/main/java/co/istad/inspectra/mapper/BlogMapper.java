@@ -5,10 +5,7 @@ import co.istad.inspectra.domain.BlogImages;
 import co.istad.inspectra.features.blog.dto.BlogRequestDto;
 import co.istad.inspectra.features.blog.dto.BlogResponseDto;
 import co.istad.inspectra.features.blog.dto.BlogUpdateRequest;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +20,7 @@ public interface BlogMapper {
 //    @Mapping(target = "countComments", expression = "java(blog.getComments() != null ? blog.getComments().size() : 0)")
 //    @Mapping(target = "countComments", expression = "java((blog.getComments() != null ? blog.getComments().size() : 0) + (blog.getReplies() != null ? blog.getReplies().size() : 0))")
 
+    @Named("toBlogResponseDto")
     @Mapping(target = "countComments", expression = "java(blog.getTotalInteractions())")
     BlogResponseDto toBlogResponseDto(Blog blog);
 

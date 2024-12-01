@@ -15,10 +15,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/feedback")
+@RequestMapping("/api/v1/feedbacks")
 @RequiredArgsConstructor
 
 public class FeedbackController {
@@ -30,9 +31,9 @@ public class FeedbackController {
     @ResponseStatus(HttpStatus.OK)
 //    @PreAuthorize("hasRole('ADMIN,USER')")
     public Page<FeedbackResponse> getFeedbacks(@RequestParam(defaultValue = "0") int page,
-                                               @RequestParam(defaultValue = "25") int limit) {
+                                               @RequestParam(defaultValue = "25") int size) {
 
-        return feedBackService.getFeedBacks(page, limit);
+        return feedBackService.getFeedBacks(page, size);
 
     }
 
@@ -44,6 +45,8 @@ public class FeedbackController {
     public BaseRestResponse<FeedbackResponse> getFeedbackByUuid(@PathVariable String uuid) {
 
         return BaseRestResponse.<FeedbackResponse>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .message("Get feedback by uuid")
                 .data(feedBackService.getFeedBackByUuid(uuid))
                 .build();
@@ -58,6 +61,8 @@ public class FeedbackController {
     public BaseRestResponse<FeedbackResponse> createFeedback(@AuthenticationPrincipal CustomUserDetails customUserDetails,@Valid @RequestBody FeedbackRequest request) {
 
         return BaseRestResponse.<FeedbackResponse>builder()
+                .status(HttpStatus.CREATED.value())
+                .timestamp(LocalDateTime.now())
                 .message("Create feedback")
                 .data(feedBackService.createFeedBack(customUserDetails,request))
                 .build();
@@ -71,6 +76,8 @@ public class FeedbackController {
     public BaseRestResponse<FeedbackResponse> updateFeedback(@Valid @RequestBody  FeedBackUpdate feedBackUpdate, @PathVariable String uuid) {
 
         return BaseRestResponse.<FeedbackResponse>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .message("Update feedback")
                 .data(feedBackService.updateFeedBack(uuid, feedBackUpdate))
                 .build();
@@ -86,6 +93,8 @@ public class FeedbackController {
         feedBackService.deleteFeedBack(uuid);
 
         return BaseRestResponse.<Void>builder()
+                .status(HttpStatus.NO_CONTENT.value())
+                .timestamp(LocalDateTime.now())
                 .message("Delete feedback")
                 .build();
 
@@ -99,6 +108,8 @@ public class FeedbackController {
     public BaseRestResponse<FeedbackResponseDetails> getFeedbackDetails(@PathVariable String uuid) {
 
         return BaseRestResponse.<FeedbackResponseDetails>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .message("Get feedback details")
                 .data(feedBackService.getFeedBackDetails(uuid))
                 .build();
@@ -112,6 +123,8 @@ public class FeedbackController {
     public BaseRestResponse<List<FeedbackResponse>> getAllFeedbacks() {
 
         return BaseRestResponse.<List<FeedbackResponse>>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .message("Get all feedback")
                 .data(feedBackService.getAllFeedbacks())
                 .build();
