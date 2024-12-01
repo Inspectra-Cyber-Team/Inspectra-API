@@ -83,7 +83,8 @@ public class NextServiceImpl implements NextService{
 
         } catch (Exception e) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Next Project scan failed", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Next Project scan failed "+ e);
+
 
         }
 

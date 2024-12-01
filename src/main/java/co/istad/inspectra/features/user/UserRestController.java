@@ -42,14 +42,14 @@ public class UserRestController {
 
 
     @GetMapping("")
-    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public Page<ResponseUserDto> getAllUsersByPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size) {
 
             return userService.getAllUsersByPage(page, size);
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public BaseRestResponse<List<ResponseUserDto>> getAllUsers() {
 
         return BaseRestResponse
@@ -63,7 +63,7 @@ public class UserRestController {
 
 
     @DeleteMapping("/{uuid}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN','SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public BaseRestResponse<ResponseUserDto> deleteUserByUuid(@PathVariable String uuid) {
 
         userService.deleteUser(uuid);
@@ -92,7 +92,7 @@ public class UserRestController {
 
 
     @PutMapping("/block/{uuid}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<ResponseUserDto> blockUser(@PathVariable String uuid) {
 
         userService.blockUser(uuid);
@@ -123,6 +123,7 @@ public class UserRestController {
 
 
     @PostMapping("/filter")
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<List<ResponseUserDto>> getUsersByFilter(@RequestBody BaseSpecification.FilterDto filterDto) {
 
         return BaseRestResponse.<List<ResponseUserDto>>builder()
@@ -136,6 +137,7 @@ public class UserRestController {
 
     @Operation(summary = "create admin")
     @PostMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<ResponseUserDto> createAdmin(@Valid @RequestBody UserRegisterDto userRegisterDto) {
 
         return BaseRestResponse

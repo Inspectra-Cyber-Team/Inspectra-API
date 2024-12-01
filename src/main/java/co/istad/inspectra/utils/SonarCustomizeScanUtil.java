@@ -119,9 +119,9 @@ public class SonarCustomizeScanUtil {
         command.add("--rm");
         command.add("-v");
         command.add(projectPath + ":/usr/src");
-        command.add("ls /usr/src");
-        command.add("--network=host");
         command.add("-w");
+        command.add("/usr/src");
+        command.add("ls /usr/src");
         command.add("sonarsource/sonar-scanner-cli");
 
         // SonarQube properties
@@ -135,7 +135,12 @@ public class SonarCustomizeScanUtil {
         }
 
         if (excludePaths != null && !excludePaths.isEmpty()) {
-            command.add("-Dsonar.exclusions=" + excludePaths+"/**");
+            // Ensure proper path format if needed
+            excludePaths = excludePaths.trim();
+            if (!excludePaths.endsWith("/**")) {
+                excludePaths += "/**";
+            }
+            command.add("-Dsonar.exclusions=" + excludePaths);
         }
 
         command.add("-Dsonar.sources=.");

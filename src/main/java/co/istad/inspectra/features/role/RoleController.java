@@ -6,6 +6,7 @@ import co.istad.inspectra.features.role.dto.RoleResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class RoleController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<List<RoleResponse>> getAllUserRoles(){
 
         return BaseRestResponse
@@ -32,6 +34,7 @@ public class RoleController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<RoleResponse> createRole(@Valid @RequestBody RoleRequest roleRequest){
 
         return BaseRestResponse
@@ -44,6 +47,7 @@ public class RoleController {
 
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<RoleResponse> getRole(@PathVariable String uuid){
 
         return BaseRestResponse
@@ -57,6 +61,7 @@ public class RoleController {
 
     @PutMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<RoleResponse> updateRole(@PathVariable String uuid, @Valid @RequestBody RoleRequest roleRequest){
 
         return BaseRestResponse
@@ -69,6 +74,7 @@ public class RoleController {
 
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteRole(@PathVariable String uuid){
 
         roleService.deleteRole(uuid);

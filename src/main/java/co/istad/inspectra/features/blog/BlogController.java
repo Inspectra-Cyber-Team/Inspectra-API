@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class BlogController {
     @Operation(summary = "Create a blog")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<BlogResponseDto> createBlog(@Valid @RequestBody BlogRequestDto blogRequestDto)
     {
         return BaseRestResponse.<BlogResponseDto>builder()
@@ -49,6 +51,7 @@ public class BlogController {
     @Operation(summary = "Get all blogs")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public Page<BlogResponseDto> getAllBlogs(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "25") int size)
     {
         return blogService.getAllBlogs(page, size);
@@ -58,6 +61,7 @@ public class BlogController {
     @Operation(summary = "Unlike a blog")
     @DeleteMapping("/{blogUuid}/unlike")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<String> unlikeBlog(@PathVariable String blogUuid)
     {
         blogService.unlikeBlog(blogUuid);
@@ -71,6 +75,7 @@ public class BlogController {
     @Operation(summary = "Like a blog")
     @PostMapping("/{blogUuid}/like")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<String> likeBlog(@PathVariable String blogUuid,@AuthenticationPrincipal CustomUserDetails customUserDetails)
     {
         return BaseRestResponse.<String>builder()
@@ -97,6 +102,7 @@ public class BlogController {
     @Operation(summary = "Update a blog")
     @PutMapping("/{blogUuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<BlogResponseDto> updateBlog(@PathVariable String blogUuid, @Valid @RequestBody BlogUpdateRequest blogUpdateRequest)
     {
         return BaseRestResponse.<BlogResponseDto>builder()
@@ -125,6 +131,7 @@ public class BlogController {
     @Operation(summary = "Delete a blog")
     @DeleteMapping("/{blogUuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<String> deleteBlog(@PathVariable String blogUuid)
     {
         blogService.deleteBlog(blogUuid);
@@ -138,6 +145,7 @@ public class BlogController {
     @Operation(summary = "Verify a blog")
     @PutMapping("/{blogUuid}/verify")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<BlogResponseDto> verifyBlog(@PathVariable String blogUuid) throws MessagingException {
 
         blogService.verifyBlog(blogUuid);
@@ -151,6 +159,7 @@ public class BlogController {
     @Operation(summary = "Unverify a blog")
     @PutMapping("/{blogUuid}/unverified")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<BlogResponseDto> unverifiedBlog(@PathVariable String blogUuid)
     {
         blogService.unverifyBlog(blogUuid);

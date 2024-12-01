@@ -29,7 +29,6 @@ public class FeedbackController {
     @Operation(summary = "Get all feedback")
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-//    @PreAuthorize("hasRole('ADMIN,USER')")
     public Page<FeedbackResponse> getFeedbacks(@RequestParam(defaultValue = "0") int page,
                                                @RequestParam(defaultValue = "25") int size) {
 
@@ -41,7 +40,6 @@ public class FeedbackController {
     @Operation(summary = "Get feedback by uuid")
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-//    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<FeedbackResponse> getFeedbackByUuid(@PathVariable String uuid) {
 
         return BaseRestResponse.<FeedbackResponse>builder()
@@ -57,7 +55,7 @@ public class FeedbackController {
     @Operation(summary = "Create feedback")
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     public BaseRestResponse<FeedbackResponse> createFeedback(@AuthenticationPrincipal CustomUserDetails customUserDetails,@Valid @RequestBody FeedbackRequest request) {
 
         return BaseRestResponse.<FeedbackResponse>builder()
@@ -72,7 +70,7 @@ public class FeedbackController {
     @Operation(summary = "Update feedback")
     @PutMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-//    @PreAuthorize("hasRole('ADMIN')")
+   @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<FeedbackResponse> updateFeedback(@Valid @RequestBody  FeedBackUpdate feedBackUpdate, @PathVariable String uuid) {
 
         return BaseRestResponse.<FeedbackResponse>builder()
@@ -87,7 +85,8 @@ public class FeedbackController {
     @Operation(summary = "Delete feedback")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-//    @PreAuthorize("hasRole('ADMIN')")
+   @PreAuthorize("hasRole('ADMIN')")
+
     public BaseRestResponse<Void> deleteFeedback(@PathVariable String uuid) {
 
         feedBackService.deleteFeedBack(uuid);

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class CommentController {
     @Operation(summary = "Create a comment")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<CommentResponse> createComment(@Valid @RequestBody CommentRequest commentRequest)
     {
         return BaseRestResponse.<CommentResponse>
@@ -48,6 +50,7 @@ public class CommentController {
 
     @Operation(summary = "Like a comment")
     @PostMapping("/{commentUuid}/like")
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<String> likeComment(@PathVariable String commentUuid)
     {
         return BaseRestResponse.<String>
@@ -59,6 +62,7 @@ public class CommentController {
 
     @Operation(summary = "Delete like a comment")
     @DeleteMapping("/{commentUuid}/unlike")
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<String> deleteLikeComment(@PathVariable String commentUuid)
     {
         commentService.deleteLikeComment(commentUuid);
@@ -71,6 +75,7 @@ public class CommentController {
     @Operation(summary = "Update a comment")
     @PutMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<CommentResponse> updateComment(@PathVariable String uuid, @RequestBody String content)
     {
         return BaseRestResponse.<CommentResponse>
@@ -100,6 +105,7 @@ public class CommentController {
     @Operation(summary = "Delete a comment")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<String> deleteComment(@PathVariable String uuid)
     {
         commentService.deleteComment(uuid);

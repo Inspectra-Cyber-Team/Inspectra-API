@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -30,6 +31,7 @@ public class ProjectController {
     @Operation(summary = "Create a project")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<ProjectResponse> createProject(@AuthenticationPrincipal CustomUserDetails customUserDetails,@Valid @RequestBody ProjectRequest projectRequest) throws Exception {
 
         return BaseRestResponse
@@ -49,6 +51,7 @@ public class ProjectController {
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<List<ProjectResponse>> getAllProject(@AuthenticationPrincipal CustomUserDetails customUserDetails)
     {
        return BaseRestResponse
@@ -66,6 +69,7 @@ public class ProjectController {
             description = "This endpoint is used for getting project by project name"
     )
     @GetMapping("/{projectName}")
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<ProjectResponse> getProjectByName(@Valid  @PathVariable String projectName) {
 
         return BaseRestResponse
@@ -84,6 +88,7 @@ public class ProjectController {
     )
     @DeleteMapping("{projectName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<Object> deleteProjectByName(@Valid @PathVariable String projectName) {
 
         return BaseRestResponse
@@ -98,6 +103,7 @@ public class ProjectController {
 
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<ProjectResponse> updateProjectName(@Valid @RequestBody ProjectUpdateDto projectUpdateDto) {
 
         return BaseRestResponse
@@ -112,6 +118,7 @@ public class ProjectController {
     @Operation(summary = "find project by user uuid", description = "This endpoint is used for finding project by user uuid")
     @GetMapping("/user/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public Flux<ProjectOverview> findProjectByUserUuid(@Valid @PathVariable String uuid)  {
 
         return projectService.getProjectByUserUid(uuid);
@@ -145,6 +152,7 @@ public class ProjectController {
     )
     @GetMapping("{projectName}/all")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<Object> getAllProject1(@PathVariable String projectName) throws Exception {
        return BaseRestResponse
                .builder()
@@ -162,6 +170,7 @@ public class ProjectController {
     )
     @GetMapping("/favorite")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public Flux<Object> getProjectFavorite() throws Exception {
 
         return projectService.getProjectFavorite();
@@ -174,6 +183,7 @@ public class ProjectController {
     )
     @PostMapping("/remove/favorite")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<Object> removeFavorite(@Valid @RequestParam String projectKey)  {
 
        return BaseRestResponse

@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class ReportController {
     @Operation(summary = "Create blog")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<ReportResponse> createReport(@Valid @RequestBody ReportRequest reportRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         return BaseRestResponse.<ReportResponse>builder()
@@ -73,6 +75,7 @@ public class ReportController {
     @Operation(summary = "delete report by uuid")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN,USER')")
     public BaseRestResponse<ReportResponse> deleteReport(@PathVariable String uuid) {
 
         reportService.deleteReport(uuid);

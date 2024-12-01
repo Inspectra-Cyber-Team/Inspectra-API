@@ -26,6 +26,7 @@ public class DocumentController {
     @Operation(summary = "Create document")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<DocumentResponse> createDocument(@Valid @RequestBody DocumentRequest documentRequest) {
 
         return BaseRestResponse.<DocumentResponse>builder()
@@ -71,6 +72,7 @@ public class DocumentController {
     @Operation(summary = "Update document")
     @PutMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<DocumentResponse> updateDocument(@PathVariable String uuid, @Valid @RequestBody DocumentUpdate documentUpdate) {
 
         return BaseRestResponse.<DocumentResponse>builder()
@@ -85,7 +87,7 @@ public class DocumentController {
     @Operation(summary = "Delete document")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<Void> deleteDocument(@PathVariable String uuid) {
 
         documentService.deleteDocument(uuid);
