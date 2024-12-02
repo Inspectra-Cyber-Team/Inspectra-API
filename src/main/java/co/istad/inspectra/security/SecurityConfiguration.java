@@ -63,6 +63,7 @@ public class SecurityConfiguration {
                                         "/swagger-resources/**").permitAll()
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                 .requestMatchers("/api/v1/files/**").permitAll()
+                                .requestMatchers("/websocket/**").permitAll()
                                 .requestMatchers("/images/**").permitAll()
                                 .anyRequest().authenticated()
                 ).csrf(AbstractHttpConfigurer::disable)

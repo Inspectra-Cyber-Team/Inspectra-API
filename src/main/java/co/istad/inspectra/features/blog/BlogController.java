@@ -75,7 +75,7 @@ public class BlogController {
     @Operation(summary = "Like a blog")
     @PostMapping("/{blogUuid}/like")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<String> likeBlog(@PathVariable String blogUuid,@AuthenticationPrincipal CustomUserDetails customUserDetails)
     {
         return BaseRestResponse.<String>builder()

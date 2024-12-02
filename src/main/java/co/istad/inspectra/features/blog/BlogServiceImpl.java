@@ -160,7 +160,11 @@ public class BlogServiceImpl implements BlogService {
             blog.setLikesCount(blog.getLikesCount() - 1);
             blogRepository.save(blog);
 
+            notifyClientsAboutNewBlog(blog);
+
             return "Blog unliked successfully";
+
+
         }else {
 
             LikeBlog likeBlog = new LikeBlog();
@@ -172,6 +176,8 @@ public class BlogServiceImpl implements BlogService {
 
             blog.setLikesCount(blog.getLikesCount() + 1);
             blogRepository.save(blog);
+
+            notifyClientsAboutNewBlog(blog);
 
             return "Blog liked successfully";
 

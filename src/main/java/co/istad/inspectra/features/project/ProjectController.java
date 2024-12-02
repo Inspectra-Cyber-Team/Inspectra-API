@@ -118,7 +118,7 @@ public class ProjectController {
     @Operation(summary = "find project by user uuid", description = "This endpoint is used for finding project by user uuid")
     @GetMapping("/user/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+//    @PreAuthorize("hasAnyRole('ADMIN,USER')")
     public Flux<ProjectOverview> findProjectByUserUuid(@Valid @PathVariable String uuid)  {
 
         return projectService.getProjectByUserUid(uuid);

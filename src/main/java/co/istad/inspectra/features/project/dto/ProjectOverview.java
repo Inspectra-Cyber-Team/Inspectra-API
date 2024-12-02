@@ -5,4 +5,4 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record ProjectOverview(Object project, List<Object> branches) {}
+public record ProjectOverview(Object component, Object branch) {}

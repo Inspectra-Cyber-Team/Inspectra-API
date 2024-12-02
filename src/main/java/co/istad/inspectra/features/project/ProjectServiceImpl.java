@@ -497,8 +497,7 @@ public class ProjectServiceImpl implements ProjectService {
         Mono<List<Object>> branchesMono = getObjectFlux(projectName, branchUrl).collectList(); // Collect as List
 
         // Combine the results into a single Mono with the desired structure
-        return Mono.zip(measuresMono,branchesMono,ProjectOverview::new);
-
+        return Mono.zip(measuresMono,branchesMono, ProjectOverview::new);
     }
 
     @Override
@@ -532,6 +531,10 @@ public class ProjectServiceImpl implements ProjectService {
                 .flatMapMany(user -> {
                     // Find projects by user UUID
                     List<Project> projectList = projectRepository.findByUserUuid(user.getUuid());
+
+                    System.out.println("Project list: " + projectList.stream()
+                            .map(Project::getProjectName)
+                            .toList());
 
                     if (projectList.isEmpty()) {
                         return Flux.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Project list is empty"));
