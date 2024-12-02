@@ -41,7 +41,6 @@ public class IssueController {
                                                           @RequestParam(required = false) String issuesStatuses,
                                                           @RequestParam(required = false) String tags,
                                                           @RequestParam(required = false) String files,
-                                                          @RequestParam(required = false) String assigned,
                                                           @RequestParam(required = false) String createdInLast) throws Exception {
 
         return BaseRestResponse.builder()
@@ -49,7 +48,7 @@ public class IssueController {
                 .status(HttpStatus.OK.value())
                 .data(issueService.getIssue(projectName,page,size,cleanCodeAttributeCategories,impactSoftwareQualities,
                                             impactSeverities,scopes,types,languages, directories, rules, issuesStatuses,
-                                            tags, files, assigned, createdInLast))
+                                            tags, files, createdInLast))
                 .message("Get issue by project name.")
                 .build();
 
@@ -81,12 +80,12 @@ public class IssueController {
     )
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<Object> getIssueByProjectFilter(@RequestParam String projectName) throws Exception {
+    public BaseRestResponse<Object> getIssueByProjectFilter(@RequestParam String projectName,@RequestParam(defaultValue = "0") int page ,@RequestParam(defaultValue = "25") int size) throws Exception {
 
         return BaseRestResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
-                .data(issueService.getIssueByProjectFilter(projectName))
+                .data(issueService.getIssueByProjectFilter(projectName,page,size))
                 .message("Get issue by project name.")
                 .build();
 

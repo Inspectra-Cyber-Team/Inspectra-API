@@ -7,7 +7,7 @@ if [ -z "$currentBranch" ]; then
   exit 1
 fi
 
-# Check if the repository has been initialized
+
 if [ ! -d .git ]; then
   echo "\033[31mError: Git repository is not initialized. Please initialize the repository first."
   exit 1

@@ -112,16 +112,20 @@ public class IssueServiceImpl implements IssueService{
     }
 
     @Override
-    public Object getIssueByProjectFilter(String projectName) throws Exception {
+    public Flux<IssuesResponse> getIssueByProjectFilter(String projectName,int page , int size) throws Exception {
 
-        String url = sonarUrl +  "/api/issues/search?issues=" + projectName ;
+        if (page < 0 || size < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page and size must be greater than 0");
+        }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "Bearer " + sonarUserToken);
+        String url = sonarUrl +  "/api/issues/search?components=" + projectName + "&p=" + page + "&ps=" + size;
 
-        return sonaResponse.responseFromSonarAPI(url, null, headers, HttpMethod.GET);
-
+        return webClient.method(HttpMethod.GET)
+                .uri(url)
+                .headers(httpHeaders -> httpHeaders.addAll(sonarHeadersUtil.getSonarHeader()))
+                .retrieve()
+                .bodyToMono(IssuesWrapperResponse.class)
+                .flatMapMany(wrapper -> Flux.fromIterable(wrapper.issues()));
     }
 
     @Override
@@ -145,7 +149,7 @@ public class IssueServiceImpl implements IssueService{
     @Override
     public Object getIssue(String projectName,int page,int size,String cleanCodeAttributeCategories, String impactSoftwareQualities, String impactSeverities,
                            String scopes, String types, String languages, String directories, String rules, String issuesStatuses, String tags, String files,
-                           String assigned, String createdInLast) throws Exception {
+                            String createdInLast) throws Exception {
 
         if (page < 0 || size < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page and size must be greater than 0");
@@ -200,10 +204,6 @@ public class IssueServiceImpl implements IssueService{
 
         if (files != null) {
             url += "&files=" + files;
-        }
-
-        if (assigned != null) {
-            url += "&assigned=" + assigned;
         }
 
         if (createdInLast != null) {

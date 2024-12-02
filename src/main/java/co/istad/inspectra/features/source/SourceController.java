@@ -42,7 +42,7 @@ public class SourceController {
             summary = "Get source code",
             description = "This endpoint used component to get source code of a project"
     )
-    @GetMapping("{componentKey}")
+    @GetMapping("/components/{componentKey}")
     @ResponseStatus(HttpStatus.OK)
     public Flux<Object> getSourceCode(@PathVariable String componentKey) throws Exception {
         return sourceService.getSourceCode(componentKey);

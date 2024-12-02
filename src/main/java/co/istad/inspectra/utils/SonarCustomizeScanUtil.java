@@ -71,44 +71,6 @@ public class SonarCustomizeScanUtil {
 
     }
 
-    public void scanProject(List<String> command) throws InterruptedException, IOException, MessagingException {
-
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
-
-        Process process = processBuilder.start();
-
-        // Capture output
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-        StringBuilder output = new StringBuilder();
-
-        String line;
-
-        while ((line = reader.readLine()) != null) {
-            output.append(line).append(System.lineSeparator());
-            System.out.println("OUTPUT: " + line);
-        }
-
-        int exitCode = process.waitFor();
-
-        if (exitCode != 0) {
-
-            //sending email when got an error also
-            emailUtil.sendScanMessage("lyhou282@gmail.com","SonarQube scan exited with code: " + exitCode + ". Output: " + output);
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"SonarQube scan exited with code: " + exitCode + ". Output: " + output);
-
-        }
-
-    }
-
-    public String getProjectPath(String cloneDirectory, String fileName) {
-
-        return cloneDirectory + fileName;
-
-    }
-
-
     public void getScanLocal1(String projectName, String cloneDirectory, String fileName,List<String> issueTypes, String excludePaths) throws MessagingException, IOException, InterruptedException {
 
         String projectPath = getProjectPath(cloneDirectory, fileName);
@@ -121,7 +83,6 @@ public class SonarCustomizeScanUtil {
         command.add(projectPath + ":/usr/src");
         command.add("-w");
         command.add("/usr/src");
-        command.add("ls /usr/src");
         command.add("sonarsource/sonar-scanner-cli");
 
         // SonarQube properties
@@ -150,6 +111,44 @@ public class SonarCustomizeScanUtil {
 
         scanProject(command);
     }
+
+    public void scanProject(List<String> command) throws InterruptedException, IOException, MessagingException {
+
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+
+        Process process = processBuilder.start();
+
+        // Capture output
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        StringBuilder output = new StringBuilder();
+
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            output.append(line).append(System.lineSeparator());
+            System.out.println("OUTPUT: " + line);
+        }
+
+        int exitCode = process.waitFor();
+
+        if (exitCode != 0) {
+
+            //sending email when got an error also
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"SonarQube scan exited with code: " + exitCode + ". Output: " + output);
+
+        }
+
+    }
+
+    public String getProjectPath(String cloneDirectory, String fileName) {
+
+        return cloneDirectory + fileName;
+
+    }
+
+
+
 
 
 }

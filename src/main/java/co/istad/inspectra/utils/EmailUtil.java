@@ -1,5 +1,6 @@
 package co.istad.inspectra.utils;
 
+import co.istad.inspectra.features.issue.dto.IssuesResponse;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -40,8 +44,7 @@ public class EmailUtil {
   }
 
 
-  public void sendScanMessage(String email, String message) throws MessagingException {
-
+  public void sendScanMessage(String email, String username, List<IssuesResponse> issues, String project) throws MessagingException {
 
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -50,7 +53,12 @@ public class EmailUtil {
     // Create a Thymeleaf context
     Context context = new Context();
     context.setVariable("email", email);
-    context.setVariable("message", message);
+    context.setVariable("userName", username);
+    context.setVariable("dates", LocalDate.now());
+    context.setVariable("issues", issues);
+    context.setVariable("project", project);
+    context.setVariable("totalIssues", 1);
+
 
     // Render the Thymeleaf template as a String
     String htmlContent = templateEngine.process("scan-message", context);

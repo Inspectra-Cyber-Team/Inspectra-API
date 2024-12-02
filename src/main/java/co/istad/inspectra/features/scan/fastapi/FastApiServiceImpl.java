@@ -5,6 +5,7 @@ import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.domain.Project;
 import co.istad.inspectra.domain.ScanHistory;
 import co.istad.inspectra.domain.User;
+import co.istad.inspectra.features.issue.IssueService;
 import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scanhistory.ScanHistoryRepository;
 import co.istad.inspectra.features.scan.dto.ScanningRequestDto;
@@ -48,6 +49,8 @@ public class FastApiServiceImpl implements FastApiService {
     private final SonarCustomizeScanUtil sonarCustomizeScanUtil;
 
     private final ProjectRepository projectRepository;
+
+    private final IssueService issueService;
 
     @Override
     public String scanFastApi(ScanningRequestDto scanningRequestDto) {
@@ -114,11 +117,7 @@ public class FastApiServiceImpl implements FastApiService {
 
             projectRepository.save(project);
 
-            // Notify the user of successful completion
-            emailUtil.sendScanMessage(
-                    "lyhou282@gmail.com",
-                    "SonarQube scan for project '" + scanningRequestDto.projectName() + "' completed successfully."
-            );
+
 
         } catch (Exception e) {
             throw new ResponseStatusException(

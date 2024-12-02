@@ -3,6 +3,7 @@ package co.istad.inspectra.features.scan.react;
 import co.istad.inspectra.config.AppConfig;
 import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.domain.Project;
+import co.istad.inspectra.features.issue.IssueService;
 import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scan.dto.ScanningRequestDto;
 import co.istad.inspectra.utils.EmailUtil;
@@ -34,6 +35,8 @@ public class ReactServiceImpl implements ReactService {
     private final ProjectRepository projectRepository;
 
     private final SonarCustomizeScanUtil sonarCustomizeScanUtil;
+
+    private final IssueService issueService;
 
 
     @Override
@@ -72,7 +75,8 @@ public class ReactServiceImpl implements ReactService {
             projectRepository.save(project);
 
             //send message when scanning has done
-            emailUtil.sendScanMessage("lyhou282@gmail.com", "SonarQube scan completed");
+
+
 
         } catch (Exception e) {
 

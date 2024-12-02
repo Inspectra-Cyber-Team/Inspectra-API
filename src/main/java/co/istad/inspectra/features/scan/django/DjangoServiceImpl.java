@@ -3,6 +3,7 @@ package co.istad.inspectra.features.scan.django;
 import co.istad.inspectra.config.AppConfig;
 import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.domain.Project;
+import co.istad.inspectra.features.issue.IssueService;
 import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scan.dto.ScanningRequestDto;
 import co.istad.inspectra.utils.EmailUtil;
@@ -34,6 +35,8 @@ public class DjangoServiceImpl implements DjangoService {
     private final EmailUtil emailUtil;
 
     private final ProjectRepository projectRepository;
+
+    private final IssueService issueService;
 
 
     @Override
@@ -71,8 +74,7 @@ public class DjangoServiceImpl implements DjangoService {
             project.setIsUsed(true);
 
             projectRepository.save(project);
-            //send message when scanning has done
-            emailUtil.sendScanMessage("lyhou282@gmail.com", "SonarQube scan completed");
+
 
         } catch (Exception e) {
 

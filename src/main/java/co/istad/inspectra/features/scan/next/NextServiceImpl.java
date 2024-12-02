@@ -3,6 +3,7 @@ package co.istad.inspectra.features.scan.next;
 import co.istad.inspectra.config.AppConfig;
 import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.domain.Project;
+import co.istad.inspectra.features.issue.IssueService;
 import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scan.next.dto.NextScanningRequest;
 import co.istad.inspectra.utils.EmailUtil;
@@ -33,6 +34,8 @@ public class NextServiceImpl implements NextService{
     private final SonarCustomizeScanUtil sonarCustomizeScanUtil;
 
     private final ProjectRepository projectRepository;
+
+    private final IssueService issueService;
 
 
 
@@ -79,7 +82,7 @@ public class NextServiceImpl implements NextService{
             projectRepository.save(project);
 
             //send message when scanning has done
-            emailUtil.sendScanMessage("lyhou282@gmail.com", "SonarQube scan completed");
+
 
         } catch (Exception e) {
 

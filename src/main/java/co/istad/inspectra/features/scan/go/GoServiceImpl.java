@@ -5,6 +5,7 @@ import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.domain.Project;
 import co.istad.inspectra.domain.ScanHistory;
 import co.istad.inspectra.domain.User;
+import co.istad.inspectra.features.issue.IssueService;
 import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scanhistory.ScanHistoryRepository;
 import co.istad.inspectra.features.scan.dto.ScanningRequestDto;
@@ -48,6 +49,8 @@ public class GoServiceImpl  implements  GoService{
     private final ProjectRepository projectRepository;
 
     private final SonarCustomizeScanUtil sonarCustomizeScanUtil;
+
+    private final IssueService issueService;
 
     @Override
     public String scanGo(ScanningRequestDto scanningRequestDto) {
@@ -116,18 +119,15 @@ public class GoServiceImpl  implements  GoService{
 
             projectRepository.save(project);
 
+            var issues = issueService.getIssueByProjectFilter(project.getProjectName(),1,3).collectList().block();
 
-            // Notify the user of successful completion
-            emailUtil.sendScanMessage(
-                    "lyhou282@gmail.com",
-                    "SonarQube scan for project '" + scanningRequestDto.projectName() + "' completed successfully."
-            );
+            emailUtil.sendScanMessage(email, email , issues, scanningRequestDto.projectName());
+
 
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "SonarQube scan failed for project '" + scanningRequestDto.projectName() + "'.",
-                    e
+                    "SonarQube scan failed for project '" + scanningRequestDto.projectName() + "'."+ e
             );
         }
 

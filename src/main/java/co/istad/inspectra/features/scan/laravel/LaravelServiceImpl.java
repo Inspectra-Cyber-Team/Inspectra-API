@@ -3,6 +3,7 @@ package co.istad.inspectra.features.scan.laravel;
 import co.istad.inspectra.config.AppConfig;
 import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.domain.Project;
+import co.istad.inspectra.features.issue.IssueService;
 import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scan.dto.ScanningRequestDto;
 import co.istad.inspectra.utils.EmailUtil;
@@ -34,6 +35,8 @@ public class LaravelServiceImpl implements LaravelService {
     private final ProjectRepository projectRepository;
 
     private final SonarCustomizeScanUtil sonarCustomizeScanUtil;
+
+    private final IssueService issueService;
     @Override
     public String scanLaravelProject(ScanningRequestDto scanningRequestDto) {
 
@@ -77,10 +80,8 @@ public class LaravelServiceImpl implements LaravelService {
             projectRepository.save(project);
 
             // Send notification after successful scanning
-            emailUtil.sendScanMessage(
-                    "lyhou282@gmail.com",
-                    "SonarQube scan for Laravel project '" + scanningRequestDto.projectName() + "' completed successfully."
-            );
+
+
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,

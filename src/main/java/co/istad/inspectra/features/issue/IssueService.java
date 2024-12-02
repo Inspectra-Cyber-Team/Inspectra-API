@@ -11,12 +11,12 @@ public interface IssueService {
 
     Object getIssueByIssueKey(String issueKey, String ruleKey) throws Exception;
 
-    Object getIssueByProjectFilter(String projectName) throws Exception;
+    Flux<IssuesResponse> getIssueByProjectFilter(String projectName,int page,int size) throws Exception;
 
     Object getIssueDetails(String issueKey) throws Exception;
 
     Object getIssue(String projectName,int page,int size,String cleanCodeAttributeCategories, String impactSoftwareQualities, String impactSeverities, String scopes,String types, String languages,
-                    String directories, String rules, String issuesStatuses,String tags, String files, String assigned, String createdInLast) throws Exception;
+                    String directories, String rules, String issuesStatuses,String tags, String files,  String createdInLast) throws Exception;
 
     Flux<IssuesResponse> getIssueByProjectNameFlux(String projectName) throws Exception;
 
