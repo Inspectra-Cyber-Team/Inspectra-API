@@ -156,7 +156,7 @@ public class IssueServiceImpl implements IssueService{
         }
 
         String url = sonarUrl + "/api/issues/search?components="+ projectName+
-                "&facets=cleanCodeAttributeCategories,impactSoftwareQualities,codeVariants,severities,types,scopes,statuses,createdAt,files,languages,rules,tags,directories,author,assigned_to_me,sonarsourceSecurity&timeZone=Asia/Bangkok";
+                "&facets=cleanCodeAttributeCategories,impactSoftwareQualities,codeVariants,severities,types,scopes,statuses,createdAt,files,languages,rules,tags,directories,author,assigned_to_me,sonarsourceSecurity&additionalFields=_all&timeZone=Asia/Bangkok";
 
         if (page > 0 && size > 0) {
             url += "&p=" + page + "&ps=" + size;

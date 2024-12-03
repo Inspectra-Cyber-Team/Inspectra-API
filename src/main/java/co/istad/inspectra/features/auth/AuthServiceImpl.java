@@ -107,7 +107,7 @@ public class AuthServiceImpl implements AuthService {
         user.setName(userRegisterDto.userName());
         user.setEmail(userRegisterDto.email());
         user.setIsDeleted(true);
-        user.setIsVerified(false);
+        user.setIsVerified(true);
         user.setIsDeleted(false);
 
         user.setIsAccountNonExpired(true);
@@ -122,7 +122,7 @@ public class AuthServiceImpl implements AuthService {
         roles.add(roleRepository.findRoleByRoleName(EnumRole.ROLE_USER).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found.")));
         user.setRoles(roles);
         // set password for users
-        user.setIsActive(true);
+        user.setIsActive(false);
         user.setPassword(passwordEncoder.encode(userRegisterDto.password()));
         user.setOtp("");
         user.setOtpGeneratedTime(LocalDateTime.now());

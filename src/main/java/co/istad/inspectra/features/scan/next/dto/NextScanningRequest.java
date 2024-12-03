@@ -20,7 +20,7 @@ public record NextScanningRequest(
         String projectName,
 
         List<String> issueTypes,
-        String excludePaths
+        List<String> excludePaths
 
 ) {
 }

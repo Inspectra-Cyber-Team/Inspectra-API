@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found with uuid: "+uuid);
         }
 
-        findUser.setIsActive(false);
+        findUser.setIsEnabled(true);
 
         userRepository.save(findUser);
 
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found with uuid: "+uuid);
             }
 
-            findUser.setIsActive(true);
+            findUser.setIsEnabled(false);
 
             userRepository.save(findUser);
 

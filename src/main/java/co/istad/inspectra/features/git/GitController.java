@@ -84,7 +84,7 @@ public class GitController {
 
     @Operation(summary = "Get all file and directories by user and project name")
     @GetMapping("/list_files")
-    public Map<String,Object> listFilesInRepository (@RequestParam String gitUrl, String branch) throws IOException, GitAPIException {
+    public Map<String,Object> listFilesInRepository (@RequestParam String gitUrl, @RequestParam String branch) throws IOException, GitAPIException {
 
 
         String cloneDirectory = clone_dir;

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @RequiredArgsConstructor
@@ -71,7 +72,7 @@ public class SonarCustomizeScanUtil {
 
     }
 
-    public void getScanLocal1(String projectName, String cloneDirectory, String fileName, List<String> issueTypes, String excludePaths) throws MessagingException, IOException, InterruptedException {
+    public void getScanLocal1(String projectName, String cloneDirectory, String fileName, List<String> issueTypes, List<String> excludePaths) throws MessagingException, IOException, InterruptedException {
 
         String projectPath = getProjectPath(cloneDirectory, fileName);
 
@@ -96,12 +97,11 @@ public class SonarCustomizeScanUtil {
         }
 
         if (excludePaths != null && !excludePaths.isEmpty()) {
-            // Ensure proper path format if needed
-            excludePaths = excludePaths.trim();
-            if (!excludePaths.endsWith("/**")) {
-                excludePaths += "/**";
-            }
-            command.add("-Dsonar.inclusions=" + excludePaths);
+            // Normalize inclusion paths and join them into a comma-separated string
+            String formattedPaths = excludePaths.stream()
+                    .map(path -> path.endsWith("/**") ? path : path + "/**")
+                    .collect(Collectors.joining(","));
+            command.add("-Dsonar.inclusions=" + formattedPaths);
         }
 
         command.add("-Dsonar.sources=.");
