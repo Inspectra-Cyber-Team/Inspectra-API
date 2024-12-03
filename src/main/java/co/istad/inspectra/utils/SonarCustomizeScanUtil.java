@@ -72,7 +72,7 @@ public class SonarCustomizeScanUtil {
 
     }
 
-    public void getScanLocal1(String projectName, String cloneDirectory, String fileName, List<String> issueTypes, List<String> excludePaths) throws MessagingException, IOException, InterruptedException {
+    public void getScanLocal1(String projectName, String cloneDirectory, String fileName, List<String> issueTypes, List<String> includePaths) throws MessagingException, IOException, InterruptedException {
 
         String projectPath = getProjectPath(cloneDirectory, fileName);
 
@@ -96,18 +96,16 @@ public class SonarCustomizeScanUtil {
             command.add("-Dsonar.issueTypes=" + String.join(",", issueTypes));
         }
 
-        if (excludePaths != null && !excludePaths.isEmpty()) {
+        if (includePaths != null && !includePaths.isEmpty()) {
             // Normalize inclusion paths and join them into a comma-separated string
-            String formattedPaths = excludePaths.stream()
-                    .map(path -> path.endsWith("/**") ? path : path + "/**")
+            String formattedIncludePaths = includePaths.stream()
+                    .map(path -> path.endsWith("/**") || path.contains(".") ? path : path + "/**")
                     .collect(Collectors.joining(","));
-            command.add("-Dsonar.inclusions=" + formattedPaths);
+            command.add("-Dsonar.inclusions=" + formattedIncludePaths);
         }
 
         command.add("-Dsonar.sources=.");
         command.add("-X");
-
-        System.out.println("COMMAND: " + String.join(" ", command));
 
         scanProject(command);
     }

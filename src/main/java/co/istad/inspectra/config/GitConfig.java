@@ -164,7 +164,7 @@ public class GitConfig {
         }
 
         // Add files and subdirectories to the directory tree
-//        directoryTree.put("files", files);
+        directoryTree.put("files", files);
         directoryTree.put("subdirectories", subdirectories);
 
         return directoryTree;
