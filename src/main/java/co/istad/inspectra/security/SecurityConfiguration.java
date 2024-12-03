@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,6 +33,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity
+@EnableWebSecurity
 
 public class SecurityConfiguration {
 
@@ -65,10 +67,11 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/v1/files/**").permitAll()
                                 .requestMatchers("/websocket/**").permitAll()
                                 .requestMatchers("/images/**").permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 ).csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+
                 .oauth2ResourceServer(
                         (oauth2) -> oauth2.jwt(jwtConfigurer ->
                                 jwtConfigurer.jwtAuthenticationConverter(jwtToUserConverter)))

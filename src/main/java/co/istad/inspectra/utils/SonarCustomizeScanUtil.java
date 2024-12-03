@@ -101,7 +101,7 @@ public class SonarCustomizeScanUtil {
             if (!excludePaths.endsWith("/**")) {
                 excludePaths += "/**";
             }
-            command.add("-Dsonar.exclusions=" + excludePaths);
+            command.add("-Dsonar.inclusions=" + excludePaths);
         }
 
         command.add("-Dsonar.sources=.");

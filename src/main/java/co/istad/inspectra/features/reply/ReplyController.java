@@ -24,7 +24,7 @@ public class ReplyController {
     @Operation(summary = "Create a reply")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<ReplyResponse> createReply(@Valid @RequestBody ReplyRequest request) {
 
         return BaseRestResponse.<ReplyResponse>builder()
@@ -77,7 +77,7 @@ public class ReplyController {
     @Operation(summary = "Like a reply")
     @PostMapping("/{replyUuid}/like")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<String> likeReply(@PathVariable String replyUuid) {
         return BaseRestResponse.<String>builder()
                 .status(HttpStatus.OK.value())
@@ -90,7 +90,7 @@ public class ReplyController {
     @Operation(summary = "Unlike a reply")
     @DeleteMapping("/{replyUuid}/unlike")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<String> unlikeReply(@PathVariable String replyUuid) {
         replyService.unlikeReply(replyUuid);
         return BaseRestResponse.<String>builder()
@@ -104,7 +104,7 @@ public class ReplyController {
     @Operation(summary = "Delete a reply")
     @DeleteMapping("/{replyUuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<String> deleteReply(@PathVariable String replyUuid) {
         replyService.deleteReply(replyUuid);
         return BaseRestResponse.<String>builder()
@@ -117,7 +117,7 @@ public class ReplyController {
     @Operation(summary = "Update a reply")
     @PutMapping("/{replyUuid}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<ReplyResponse> updateReply(@PathVariable String replyUuid, @RequestBody String content) {
 
         return BaseRestResponse.<ReplyResponse>builder()
