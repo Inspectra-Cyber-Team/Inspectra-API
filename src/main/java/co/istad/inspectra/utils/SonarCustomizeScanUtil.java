@@ -71,7 +71,7 @@ public class SonarCustomizeScanUtil {
 
     }
 
-    public void getScanLocal1(String projectName, String cloneDirectory, String fileName,List<String> issueTypes, String excludePaths) throws MessagingException, IOException, InterruptedException {
+    public void getScanLocal1(String projectName, String cloneDirectory, String fileName, List<String> issueTypes, String excludePaths) throws MessagingException, IOException, InterruptedException {
 
         String projectPath = getProjectPath(cloneDirectory, fileName);
 
@@ -107,7 +107,7 @@ public class SonarCustomizeScanUtil {
         command.add("-Dsonar.sources=.");
         command.add("-X");
 
-        System.out.println("COMMAND: " + command);
+        System.out.println("COMMAND: " + String.join(" ", command));
 
         scanProject(command);
     }

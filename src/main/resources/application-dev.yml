@@ -62,8 +62,8 @@ sonar:
 #  url: http://localhost:9000
 
     #server
- token: squ_1e3de797cb64c4ab682051d94c3ee7b3fc40ea33
- url: http://35.213.179.239:3389
+ token: squ_4712e2e165541f9603115c49ff9bea9db801e451 #squ_1e3de797cb64c4ab682051d94c3ee7b3fc40ea33
+ url:  http://136.228.158.126:4014 #http://35.213.179.239:3389
 
 
 my-app:

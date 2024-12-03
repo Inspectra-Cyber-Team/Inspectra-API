@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://35.213.179.239:3002/cyber-db
+    url: jdbc:postgresql://136.228.158.126:4015/inspectra-db
     username: postgres
     password: lyhou123
     driver-class-name: org.postgresql.Driver
