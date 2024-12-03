@@ -41,8 +41,8 @@ springdoc:
     path: '/'
 
 sonar:
-  token:  squ_1e3de797cb64c4ab682051d94c3ee7b3fc40ea33    #squ_fb8b910e970a8269272808486bfb0f111636083e(server)
-  url: http://35.213.179.239:3389
+  token: squ_4712e2e165541f9603115c49ff9bea9db801e451 #squ_1e3de797cb64c4ab682051d94c3ee7b3fc40ea33
+  url: http://136.228.158.126:4014
 
 
 my-app:
