@@ -78,8 +78,7 @@ public class DataInit {
         if (roleRepository.count() < 3) {
             List<String> roleNames = List.of(
                     "USER",
-                    "ADMIN",
-                    "SUPER_ADMIN"
+                    "ADMIN"
             );
 
             List<Role> roles = roleNames.stream()
