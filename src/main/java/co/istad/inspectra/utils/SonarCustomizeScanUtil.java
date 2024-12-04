@@ -27,33 +27,33 @@ public class SonarCustomizeScanUtil {
 
     private final EmailUtil emailUtil;
 
-    public void getScanLocal(String projectName, String cloneDirectory, String fileName) throws MessagingException, IOException, InterruptedException {
+//    public void getScanLocal(String projectName, String cloneDirectory, String fileName) throws MessagingException, IOException, InterruptedException {
+//
+//        String projectPath = getProjectPath(cloneDirectory, fileName);
+//
+//        List<String> command = new ArrayList<>();
+//        command.add("docker");
+//        command.add("run");
+//        command.add("--rm");
+//        command.add("-v");
+//        command.add(projectPath + ":/usr/src");
+//        command.add("--network=host");
+//        command.add("-w");
+//        command.add("/usr/src");
+//        command.add("sonarsource/sonar-scanner-cli");
+//
+//        // SonarQube properties
+//        command.add("-Dsonar.projectKey=" + projectName);
+//        command.add("-Dsonar.projectName=" + projectName);
+//        command.add("-Dsonar.host.url=" + sonarHostUrl);
+//        command.add("-Dsonar.token=" + sonarLoginToken);
+//        command.add("-Dsonar.sources=.");
+//        command.add("-X");
+//
+//        scanProject(command);
+//    }
 
-        String projectPath = getProjectPath(cloneDirectory, fileName);
-
-        List<String> command = new ArrayList<>();
-        command.add("docker");
-        command.add("run");
-        command.add("--rm");
-        command.add("-v");
-        command.add(projectPath + ":/usr/src");
-        command.add("--network=host");
-        command.add("-w");
-        command.add("/usr/src");
-        command.add("sonarsource/sonar-scanner-cli");
-
-        // SonarQube properties
-        command.add("-Dsonar.projectKey=" + projectName);
-        command.add("-Dsonar.projectName=" + projectName);
-        command.add("-Dsonar.host.url=" + sonarHostUrl);
-        command.add("-Dsonar.token=" + sonarLoginToken);
-        command.add("-Dsonar.sources=.");
-        command.add("-X");
-
-        scanProject(command);
-    }
-
-    public void getProjectScanInProduction(String projectName, String cloneDirectory, String fileName) throws MessagingException, IOException, InterruptedException {
+    public void getProjectScanInProduction(String projectName, String cloneDirectory, String fileName, List<String> issueTypes, List<String> includePaths) throws MessagingException, IOException, InterruptedException {
 
         String projectPath = getProjectPath(cloneDirectory, fileName);
 
@@ -63,8 +63,24 @@ public class SonarCustomizeScanUtil {
         command.add("-Dsonar.token=" + sonarLoginToken);
         command.add("-Dsonar.projectKey=" + projectName);
         command.add("-Dsonar.projectName=" + projectName);
+
+
+        if (issueTypes != null && !issueTypes.isEmpty()) {
+            command.add("-Dsonar.issueTypes=" + String.join(",", issueTypes));
+        }
+
+        if (includePaths != null && !includePaths.isEmpty()) {
+
+            String formattedIncludePaths = includePaths.stream()
+                    .map(path -> path.endsWith("/**") || path.contains(".") ? path : path + "/**")
+                    .collect(Collectors.joining(","));
+            command.add("-Dsonar.inclusions=" + formattedIncludePaths);
+        }
+
         command.add("-Dsonar.sources=" + projectPath);
+
         command.add("-Dsonar.verbose=true");
+
         command.add("-X");
 
 
@@ -72,7 +88,7 @@ public class SonarCustomizeScanUtil {
 
     }
 
-    public void getScanLocal1(String projectName, String cloneDirectory, String fileName, List<String> issueTypes, List<String> includePaths) throws MessagingException, IOException, InterruptedException {
+    public void getScanLocal(String projectName, String cloneDirectory, String fileName, List<String> issueTypes, List<String> includePaths) throws MessagingException, IOException, InterruptedException {
 
         String projectPath = getProjectPath(cloneDirectory, fileName);
 
@@ -97,7 +113,7 @@ public class SonarCustomizeScanUtil {
         }
 
         if (includePaths != null && !includePaths.isEmpty()) {
-            // Normalize inclusion paths and join them into a comma-separated string
+
             String formattedIncludePaths = includePaths.stream()
                     .map(path -> path.endsWith("/**") || path.contains(".") ? path : path + "/**")
                     .collect(Collectors.joining(","));
@@ -105,6 +121,7 @@ public class SonarCustomizeScanUtil {
         }
 
         command.add("-Dsonar.sources=.");
+        //see debug logs
         command.add("-X");
 
         scanProject(command);

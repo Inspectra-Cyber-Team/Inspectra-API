@@ -48,6 +48,7 @@ public class NestJsServiceImpl implements NestJsService {
     public String scanNestJs(ScanningRequestDto scanningRequestDto) {
         // Base directory for projects
         String currentProjectDir = appConfig.getProjectAbsolutePath();
+
         String cloneDirectory = currentProjectDir + clone_dir;
 
         // Clone the NestJS project repository
@@ -79,11 +80,11 @@ public class NestJsServiceImpl implements NestJsService {
             // Execute the scanning process
             if(myApp.equals("dev"))
             {
-                sonarCustomizeScanUtil.getScanLocal(project.getProjectName(), cloneDirectory, fileName);
+                sonarCustomizeScanUtil.getScanLocal(project.getProjectName(), cloneDirectory, fileName, scanningRequestDto.issueTypes(),scanningRequestDto.includePaths());
 
             } else {
 
-                sonarCustomizeScanUtil.getProjectScanInProduction(project.getProjectName(), cloneDirectory, fileName);
+                sonarCustomizeScanUtil.getProjectScanInProduction(project.getProjectName(), cloneDirectory, fileName, scanningRequestDto.issueTypes(),scanningRequestDto.includePaths());
 
             }
 

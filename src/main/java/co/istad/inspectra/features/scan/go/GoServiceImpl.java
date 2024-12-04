@@ -107,11 +107,11 @@ public class GoServiceImpl  implements  GoService{
             // Execute the SonarQube scan
             if(myApp.equals("dev")) {
 
-                sonarCustomizeScanUtil.getScanLocal(project.getProjectName(), cloneDirectory, fileName);
+                sonarCustomizeScanUtil.getScanLocal(project.getProjectName(), cloneDirectory, fileName, scanningRequestDto.issueTypes(), scanningRequestDto.includePaths());
 
             } else {
 
-                   sonarCustomizeScanUtil.getProjectScanInProduction(project.getProjectName(), cloneDirectory, fileName);
+                   sonarCustomizeScanUtil.getProjectScanInProduction(project.getProjectName(), cloneDirectory, fileName, scanningRequestDto.issueTypes(), scanningRequestDto.includePaths());
 
             }
 

@@ -3,10 +3,8 @@ package co.istad.inspectra.features.scan.next;
 import co.istad.inspectra.config.AppConfig;
 import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.domain.Project;
-import co.istad.inspectra.features.issue.IssueService;
 import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scan.next.dto.NextScanningRequest;
-import co.istad.inspectra.utils.EmailUtil;
 import co.istad.inspectra.utils.SonarCustomizeScanUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,13 +27,9 @@ public class NextServiceImpl implements NextService{
 
     private final GitConfig gitConfig;
 
-    private final EmailUtil emailUtil;
-
     private final SonarCustomizeScanUtil sonarCustomizeScanUtil;
 
     private final ProjectRepository projectRepository;
-
-    private final IssueService issueService;
 
 
 
@@ -69,11 +63,11 @@ public class NextServiceImpl implements NextService{
 
             if(myApp.equals("dev")) {
 
-                sonarCustomizeScanUtil.getScanLocal1(nextScanningRequest.projectName(), cloneDirectory, fileName, nextScanningRequest.issueTypes(), nextScanningRequest.excludePaths());
+                sonarCustomizeScanUtil.getScanLocal(nextScanningRequest.projectName(), cloneDirectory, fileName, nextScanningRequest.issueTypes(), nextScanningRequest.includePaths());
 
             } else {
 
-                sonarCustomizeScanUtil.getProjectScanInProduction(nextScanningRequest.projectName(), cloneDirectory, fileName);
+                sonarCustomizeScanUtil.getProjectScanInProduction(nextScanningRequest.projectName(), cloneDirectory, fileName, nextScanningRequest.issueTypes(), nextScanningRequest.includePaths());
 
             }
 

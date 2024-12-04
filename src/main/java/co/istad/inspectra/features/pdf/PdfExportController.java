@@ -18,20 +18,19 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("api/v1/pdf/")
 @RequiredArgsConstructor
+
 public class PdfExportController {
 
     private final PdfExportService pdfExportService;
 
     @GetMapping(value = "{projectName}", produces = MediaType.APPLICATION_PDF_VALUE)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<byte[]> generatePdf(@PathVariable String projectName) {
         try {
 
             return pdfExportService.generatePdf(projectName);
 
         } catch (IOException e) {
-
-            e.printStackTrace();
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error generating PDF", e);
 
