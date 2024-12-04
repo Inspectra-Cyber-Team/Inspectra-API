@@ -1,12 +1,14 @@
 package co.istad.inspectra.init;
 
 import co.istad.inspectra.domain.Authority;
+import co.istad.inspectra.domain.Topic;
 import co.istad.inspectra.domain.User;
 import co.istad.inspectra.domain.role.EnumRole;
 import co.istad.inspectra.domain.role.Role;
 import co.istad.inspectra.features.authority.AuthorityRepository;
 import co.istad.inspectra.features.role.RoleRepository;
 import co.istad.inspectra.features.user.UserRepository;
+import co.istad.inspectra.features.topic.TopicRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,12 +34,15 @@ public class DataInit {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final TopicRepository topicRepository;
+
     @PostConstruct
     void init()
     {
         initAuthority();
         initRole();
         initUser();
+        initTopic();
     }
 
 
@@ -74,8 +79,8 @@ public class DataInit {
     }
 
     void initRole() {
-        // auth generate role (USER,ADMIN)
-        if (roleRepository.count() < 3) {
+        // auto generate role (USER,ADMIN)
+        if (roleRepository.count() < 2) {
             List<String> roleNames = List.of(
                     "USER",
                     "ADMIN"
@@ -178,6 +183,51 @@ public class DataInit {
 
 
         }
+
+    }
+
+        void initTopic() {
+
+            if (topicRepository.count() < 5) {
+                Topic topic = new Topic();
+                topic.setName("XSS Injection");
+                topic.setUuid(UUID.randomUUID().toString());
+                topicRepository.save(topic);
+
+                Topic topic1 = new Topic();
+                topic1.setName("Programming");
+                topic1.setUuid(UUID.randomUUID().toString());
+                topicRepository.save(topic1);
+
+                Topic topic2 = new Topic();
+                topic2.setName("White Hat Hacking");
+                topic2.setUuid(UUID.randomUUID().toString());
+                topicRepository.save(topic2);
+
+                Topic topic3 = new Topic();
+                topic3.setName("Selt Improvement");
+                topic3.setUuid(UUID.randomUUID().toString());
+                topicRepository.save(topic3);
+
+                Topic topic4 = new Topic();
+                topic4.setName("CIA Triad");
+                topic4.setUuid(UUID.randomUUID().toString());
+                topicRepository.save(topic4);
+
+                Topic topic5 = new Topic();
+                topic5.setName("Chatgpt");
+                topic5.setUuid(UUID.randomUUID().toString());
+                topicRepository.save(topic5);
+
+
+                Topic topic6 = new Topic();
+                topic6.setName("Linux Command");
+                topic6.setUuid(UUID.randomUUID().toString());
+                topicRepository.save(topic6);
+
+
+
+            }
     }
 
 }

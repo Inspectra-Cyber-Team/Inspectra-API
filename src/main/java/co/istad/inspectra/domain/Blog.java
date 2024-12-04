@@ -58,6 +58,11 @@ public class Blog extends Auditable {
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Report> reports;
 
+    @ManyToOne
+    @JoinColumn(name = "topic_id", nullable = false)
+    private Topic topic;
+
+
     public int getTotalInteractions() {
         int commentsCount = (comments != null) ? comments.size() : 0;
         int repliesCount =  (comments != null) ? comments.stream().mapToInt(comment -> comment.getReplies().size()).sum() : 0;
