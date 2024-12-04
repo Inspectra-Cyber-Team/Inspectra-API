@@ -3,6 +3,7 @@ package co.istad.inspectra.features.topic;
 import co.istad.inspectra.base.BaseRestResponse;
 import co.istad.inspectra.features.topic.dto.TopicRequest;
 import co.istad.inspectra.features.topic.dto.TopicResponse;
+import co.istad.inspectra.features.topic.dto.TopicResponseDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,16 @@ public class TopicController {
     public Page<TopicResponse> getTopics(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size)
     {
         return topicService.getTopics(page, size);
+
+    }
+
+
+    @Operation(summary = "Get all topics details")
+    @GetMapping("/{topicName}")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<TopicResponseDetails> getTopicsDetails(@PathVariable String topicName, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size)
+    {
+        return topicService.findByTopicName(topicName,page, size);
 
     }
 

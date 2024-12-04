@@ -63,7 +63,7 @@ public class UserRestController {
 
 
     @DeleteMapping("/{uuid}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<ResponseUserDto> deleteUserByUuid(@PathVariable String uuid) {
 
         userService.deleteUser(uuid);

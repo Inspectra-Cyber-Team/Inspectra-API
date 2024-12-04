@@ -64,6 +64,8 @@ public class UserServiceImpl implements UserService {
 
         findUser.setIsDeleted(true);
 
+        userRepository.save(findUser);
+
     }
 
     @Override
