@@ -14,7 +14,7 @@ public interface TopicMapper {
 
     TopicResponse mapToTopicResponse(Topic topic);
 
-   // @Mapping(target = "blogs", source = "blogs", qualifiedByName = "toBlogResponseDto")
+    @Mapping(target = "blogs", source = "blogs", qualifiedByName = "toBlogResponseDto")
     TopicResponseDetails mapToTopicResponseDetails(Topic topic);
 
 

@@ -63,13 +63,11 @@ public class TopicServiceImpl  implements  TopicService {
 
         }
 
-        if (topicRepository.findByName(topicName).isEmpty()) {
+        Topic topic = topicRepository.findByName(topicName).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found"));
 
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found");
+        Sort sort = Sort.by(Sort.Direction.DESC, "blogs.viewsCount");
 
-        }
-
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        topic.getBlogs().sort((b1, b2) -> Integer.compare(b2.getViewsCount(), b1.getViewsCount()));
 
         PageRequest pageRequest = PageRequest.of(page, size, sort);
 
