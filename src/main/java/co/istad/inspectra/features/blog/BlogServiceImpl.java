@@ -1,12 +1,10 @@
 package co.istad.inspectra.features.blog;
 
-import co.istad.inspectra.domain.Blog;
-import co.istad.inspectra.domain.BlogImages;
-import co.istad.inspectra.domain.LikeBlog;
-import co.istad.inspectra.domain.User;
+import co.istad.inspectra.domain.*;
 import co.istad.inspectra.features.blog.dto.BlogRequestDto;
 import co.istad.inspectra.features.blog.dto.BlogResponseDto;
 import co.istad.inspectra.features.blog.dto.BlogUpdateRequest;
+import co.istad.inspectra.features.topic.TopicRepository;
 import co.istad.inspectra.features.user.UserRepository;
 import co.istad.inspectra.features.userlikeblog.UserLikeBlogRepository;
 
@@ -28,8 +26,6 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -52,22 +48,42 @@ public class BlogServiceImpl implements BlogService {
 
     private final EmailUtil emailUtil;
 
+    private final TopicRepository topicRepository;
+
 
 
     @Override
-    public BlogResponseDto createBlog(BlogRequestDto blogRequestDto) {
+    public BlogResponseDto createBlog(BlogRequestDto blogRequestDto, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        User user = userRepository.findUserByUuid(blogRequestDto.userUuid());
+        if(customUserDetails == null)
+        {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
+        }
+
+        String uuid = customUserDetails.getUserUuid();
+
+        User user = userRepository.findUserByUuid(uuid);
 
         if (user == null )
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
+        //handle if user doesn't want to use our exiting topics
+        Topic topic = topicRepository.findByName(blogRequestDto.topic())
+                .orElseGet(() -> {
+                    Topic newTopic = new Topic();
+                    newTopic.setUuid(UUID.randomUUID().toString());
+                    newTopic.setName(blogRequestDto.topic());
+                    return topicRepository.save(newTopic);
+                });
+
+
         Blog blog = blogMapper.toVlogRequestDto(blogRequestDto);
 
         blog.setUuid(UUID.randomUUID().toString());
         blog.setUser(user);
+        blog.setTopic(topic);
         blog.setDescription(blogRequestDto.description());
         blog.setTitle(blogRequestDto.title());
         blog.setIsVerified(false);

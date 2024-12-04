@@ -8,14 +8,12 @@ import java.util.List;
 
 @Builder
 public record BlogRequestDto(
-
-        @NotBlank(message = "User uuid is required")
-        @Size(max = 100, message = "User uuid must be less than 100 characters")
-        String userUuid,
-
         @NotBlank(message = "Title is required")
         @Size(max = 255, message = "Title must be less than 255 characters")
         String title,
+
+        @NotBlank(message = "Topic is required")
+        String topic,
 
         String description,
         List<String> thumbnail

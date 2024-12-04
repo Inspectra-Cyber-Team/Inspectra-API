@@ -46,8 +46,8 @@ public class Blog extends Auditable {
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BlogImages> blogImages;
 
-    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reply> replies ;
+//    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Reply> replies ;
 
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;

@@ -9,8 +9,7 @@ public record ReplyResponse(
         String content,
         String createdAt,
         int countLikes,
-        UserDto user,
-        Comment comment
+        UserDto user
 
 ) {
 }

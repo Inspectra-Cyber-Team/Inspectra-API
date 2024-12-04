@@ -6,7 +6,6 @@ import lombok.Builder;
 public record CommentRequest(
 
         String blogUuid,
-        String userUuid,
         String content
 
 ) {

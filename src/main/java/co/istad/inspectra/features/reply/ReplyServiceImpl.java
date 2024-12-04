@@ -6,10 +6,13 @@ import co.istad.inspectra.domain.User;
 import co.istad.inspectra.features.comment.CommentRepository;
 import co.istad.inspectra.features.reply.dto.ReplyRequest;
 import co.istad.inspectra.features.reply.dto.ReplyResponse;
+import co.istad.inspectra.features.reply.dto.ReplyUpdate;
 import co.istad.inspectra.features.user.UserRepository;
 import co.istad.inspectra.mapper.ReplyMapper;
+import co.istad.inspectra.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,9 +33,15 @@ public class ReplyServiceImpl implements ReplyService {
     private final ReplyMapper replyMapper;
 
     @Override
-    public ReplyResponse createReply(ReplyRequest request) {
+    public ReplyResponse createReply(ReplyRequest request,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        User user = userRepository.findUserByUuid(request.userUuid());
+        if (customUserDetails == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
+        }
+
+        String uuid = customUserDetails.getUserUuid();
+
+        User user = userRepository.findUserByUuid(uuid);
 
         if(user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
@@ -120,17 +129,12 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public ReplyResponse updateReply(String replyUuid, String content) {
-
-        if(content.isBlank()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Content cannot be empty");
-        }
+    public ReplyResponse updateReply(String replyUuid, ReplyUpdate replyUpdate) {
 
         Reply reply = replyRepository.findByUuid(replyUuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reply not found"));
 
-        reply.setContent(content);
+        reply.setContent(replyUpdate.content());
 
        return replyMapper.mapToReplyResponse(replyRepository.save(reply));
     }

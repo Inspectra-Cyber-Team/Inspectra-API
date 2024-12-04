@@ -3,11 +3,14 @@ package co.istad.inspectra.features.reply;
 import co.istad.inspectra.base.BaseRestResponse;
 import co.istad.inspectra.features.reply.dto.ReplyRequest;
 import co.istad.inspectra.features.reply.dto.ReplyResponse;
+import co.istad.inspectra.features.reply.dto.ReplyUpdate;
+import co.istad.inspectra.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -25,12 +28,12 @@ public class ReplyController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public BaseRestResponse<ReplyResponse> createReply(@Valid @RequestBody ReplyRequest request) {
+    public BaseRestResponse<ReplyResponse> createReply(@Valid @RequestBody ReplyRequest request, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         return BaseRestResponse.<ReplyResponse>builder()
                 .status(HttpStatus.CREATED.value())
                 .timestamp(LocalDateTime.now())
-                .data(replyService.createReply(request))
+                .data(replyService.createReply(request,customUserDetails))
                 .message("Reply created successfully")
                 .build();
 
@@ -115,16 +118,16 @@ public class ReplyController {
     }
 
     @Operation(summary = "Update a reply")
-    @PutMapping("/{replyUuid}")
+    @PutMapping("/{replyUuid}/reply")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public BaseRestResponse<ReplyResponse> updateReply(@PathVariable String replyUuid, @RequestBody String content) {
+    public BaseRestResponse<ReplyResponse> updateReply(@PathVariable String replyUuid, @Valid @RequestBody ReplyUpdate replyUpdate) {
 
         return BaseRestResponse.<ReplyResponse>builder()
                 .status(HttpStatus.OK.value())
                 .timestamp(LocalDateTime.now())
                 .message("Reply updated successfully")
-                .data( replyService.updateReply(replyUuid, content))
+                .data( replyService.updateReply(replyUuid, replyUpdate))
                 .build();
     }
 

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface BlogMapper {
 
+    @Mapping(target = "topic", ignore = true)
     Blog toVlogRequestDto(BlogRequestDto blogRequestDto);
 
 

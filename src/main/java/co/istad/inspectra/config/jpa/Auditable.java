@@ -1,9 +1,6 @@
 package co.istad.inspectra.config.jpa;
 
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +24,7 @@ public abstract class Auditable {
     private Timestamp createdAt;
 
     @CreatedBy
+    @Column(length = 100)
     private String createdBy;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -34,5 +32,6 @@ public abstract class Auditable {
     private Timestamp lastModifiedAt;
 
     @LastModifiedBy
+    @Column(length = 100)
     private String lastModifiedBy;
 }

@@ -29,12 +29,12 @@ public class BlogController {
     @Operation(summary = "Create a blog")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN,USER')")
-    public BaseRestResponse<BlogResponseDto> createBlog(@Valid @RequestBody BlogRequestDto blogRequestDto)
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public BaseRestResponse<BlogResponseDto> createBlog(@Valid @RequestBody BlogRequestDto blogRequestDto, @AuthenticationPrincipal CustomUserDetails customUserDetails)
     {
         return BaseRestResponse.<BlogResponseDto>builder()
                 .status(HttpStatus.CREATED.value())
-                .data(blogService.createBlog(blogRequestDto))
+                .data(blogService.createBlog(blogRequestDto,customUserDetails))
                 .message("Blog created successfully")
                 .build();
 
@@ -61,7 +61,7 @@ public class BlogController {
     @Operation(summary = "Unlike a blog")
     @DeleteMapping("/{blogUuid}/unlike")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<String> unlikeBlog(@PathVariable String blogUuid)
     {
         blogService.unlikeBlog(blogUuid);
@@ -102,7 +102,7 @@ public class BlogController {
     @Operation(summary = "Update a blog")
     @PutMapping("/{blogUuid}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<BlogResponseDto> updateBlog(@PathVariable String blogUuid, @Valid @RequestBody BlogUpdateRequest blogUpdateRequest)
     {
         return BaseRestResponse.<BlogResponseDto>builder()
@@ -131,7 +131,7 @@ public class BlogController {
     @Operation(summary = "Delete a blog")
     @DeleteMapping("/{blogUuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<String> deleteBlog(@PathVariable String blogUuid)
     {
         blogService.deleteBlog(blogUuid);
@@ -169,6 +169,8 @@ public class BlogController {
                 .message("Blog unverified successfully")
                 .build();
     }
+
+
 
 
 

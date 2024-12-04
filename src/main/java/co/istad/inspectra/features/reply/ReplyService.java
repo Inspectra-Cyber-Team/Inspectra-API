@@ -2,6 +2,9 @@ package co.istad.inspectra.features.reply;
 
 import co.istad.inspectra.features.reply.dto.ReplyRequest;
 import co.istad.inspectra.features.reply.dto.ReplyResponse;
+import co.istad.inspectra.features.reply.dto.ReplyUpdate;
+import co.istad.inspectra.security.CustomUserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -19,7 +22,7 @@ public interface ReplyService {
      * @param request the reply request
      * @return {@link ReplyResponse}
      */
-    ReplyResponse createReply(ReplyRequest request);
+    ReplyResponse createReply(ReplyRequest request, @AuthenticationPrincipal CustomUserDetails customUserDetails);
 
     /**
      * Get a reply by uuid
@@ -74,6 +77,6 @@ public interface ReplyService {
     void deleteReply(String replyUuid);
 
 
-    ReplyResponse updateReply(String replyUuid, String content);
+    ReplyResponse updateReply(String replyUuid, ReplyUpdate replyUpdate);
 
 }

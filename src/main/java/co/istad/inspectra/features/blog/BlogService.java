@@ -25,7 +25,7 @@ public interface BlogService {
    * @see BlogRequestDto
    * @return the blog response dto
    */
-  BlogResponseDto createBlog(BlogRequestDto blogRequestDto);
+  BlogResponseDto createBlog(BlogRequestDto blogRequestDto,@AuthenticationPrincipal CustomUserDetails customUserDetails);
 
 
     /**

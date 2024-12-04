@@ -29,9 +29,6 @@ public class Reply extends Auditable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "blog_id")
-    private Blog blog;
 
     @ManyToOne
     @JoinColumn(name = "comment_id", nullable = false)
