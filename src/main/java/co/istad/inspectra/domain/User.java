@@ -72,7 +72,7 @@ public class User extends Auditable {
 
     // relationship with role
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

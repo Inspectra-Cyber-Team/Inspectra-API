@@ -122,9 +122,7 @@ public class DataInit {
             Role role = roleRepository.findRoleByRoleName(EnumRole.ROLE_USER)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found."));
 
-            Set<Role> roles = new HashSet<>();
-            roles.add(role);
-            user.setRoles(roles);
+            user.setRoles(Set.of(role));
 
             // Fetching and assigning the Authority
             Set<Authority> authorities = new HashSet<>(authorityRepository.findAll());
@@ -160,9 +158,7 @@ public class DataInit {
             Role role1 = roleRepository.findRoleByRoleName(EnumRole.ROLE_ADMIN)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found."));
 
-            Set<Role> roles1 = new HashSet<>();
-            roles1.add(role1);
-            user1.setRoles(roles1);
+            user1.setRoles(Set.of(role1));
 
             // Fetching and assigning the Authority
             Set<Authority> authorities1 = new HashSet<>(authorityRepository.findAll());
