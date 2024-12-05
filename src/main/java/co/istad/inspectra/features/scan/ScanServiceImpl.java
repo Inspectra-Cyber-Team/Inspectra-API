@@ -8,14 +8,16 @@ import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scan.dto.ScanningRequestDto;
 import co.istad.inspectra.utils.SonarCustomizeScanSpringUtil;
 import co.istad.inspectra.utils.SonarCustomizeScanUtil;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +47,7 @@ public class ScanServiceImpl implements ScanService {
 
         // Fetch the project
         Project project = projectRepository.findByProjectName(scanningRequestDto.projectName())
+
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found"));
 
         // Ensure project is not already in use
@@ -61,11 +64,8 @@ public class ScanServiceImpl implements ScanService {
 
         String fileName = gitConfig.gitClone(scanningRequestDto.gitUrl(), scanningRequestDto.branch(), cloneDirectory, "", "project-");
 
-        // Detect the build tool
         String buildTool = detectSpringBuildTool.detect(cloneDirectory + fileName);
 
-
-        // Perform scanning based on the build tool
         if (buildTool.equalsIgnoreCase("Maven")) {
 
             sonarCustomizeScanSpringUtil.scanForMaven(cloneDirectory ,fileName, scanningRequestDto.projectName());
@@ -83,23 +83,10 @@ public class ScanServiceImpl implements ScanService {
             projectRepository.save(project);
 
         } else {
-            // Fallback if no recognized build tool is found
+
             try {
 
-                if (myApp.equals("dev")) {
-
-                    sonarCustomizeScanUtil.getScanLocal(scanningRequestDto.projectName(), cloneDirectory, fileName, scanningRequestDto.issueTypes(), scanningRequestDto.includePaths());
-
-                } else {
-
-                    sonarCustomizeScanUtil.getProjectScanInProduction(scanningRequestDto.projectName(), cloneDirectory, fileName, scanningRequestDto.issueTypes(), scanningRequestDto.includePaths());
-
-                }
-
-                project.setIsUsed(true);
-
-                projectRepository.save(project);
-
+                checkMyapp(project, cloneDirectory, fileName, myApp, sonarCustomizeScanUtil, scanningRequestDto.projectName(), scanningRequestDto.issueTypes(), scanningRequestDto.includePaths(), projectRepository);
                 // send message when scanning has completed here
 
 
@@ -111,12 +98,22 @@ public class ScanServiceImpl implements ScanService {
         return fileName;
     }
 
+    public static void checkMyapp(Project project, String cloneDirectory, String fileName, String myApp, SonarCustomizeScanUtil sonarCustomizeScanUtil, String projectName, List<String> strings, List<String> strings2, ProjectRepository projectRepository) throws MessagingException, IOException, InterruptedException {
 
-    @Override
-    public boolean checkForBuildFiles(String projectPath) {
+        if (myApp.equals("dev")) {
 
-        return !Files.exists(Paths.get(projectPath, "build.gradle")) &&
-                !Files.exists(Paths.get(projectPath, "pom.xml"));
+            sonarCustomizeScanUtil.getScanLocal(projectName, cloneDirectory, fileName, strings, strings2);
 
+        } else {
+
+            sonarCustomizeScanUtil.getProjectScanInProduction(projectName, cloneDirectory, fileName, strings, strings2);
+
+        }
+
+        project.setIsUsed(true);
+
+        projectRepository.save(project);
     }
+
+
 }

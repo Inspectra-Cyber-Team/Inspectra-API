@@ -86,7 +86,7 @@ public interface AuthService {
      *
      */
 
-    void initUserWithAuth(String email);
+    void initUserWithAuth(InitUserRequest initUserRequest);
 
 
 

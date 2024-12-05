@@ -105,11 +105,11 @@ public class AuthRestController {
 
     }
 
-    @PostMapping("/{email}")
+    @PostMapping("/init-user")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseRestResponse<ResponseUserDto> initUser(@Valid @PathVariable String email) {
+    public BaseRestResponse<ResponseUserDto> initUser(@Valid @RequestBody InitUserRequest initUserRequest) {
 
-        authService.initUserWithAuth(email);
+        authService.initUserWithAuth(initUserRequest);
 
         return BaseRestResponse.<ResponseUserDto>builder()
                 .status(HttpStatus.CREATED.value())

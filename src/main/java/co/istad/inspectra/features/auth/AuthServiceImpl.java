@@ -240,19 +240,34 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void initUserWithAuth(String email) {
+    public void initUserWithAuth(InitUserRequest initUserRequest) {
 
         //auto init user
         User user = new User();
-        user.setEmail(email+ UUID.randomUUID());
-        user.setName(email.split("@")[0]);
+
+        if (userRepository.existsByEmail(initUserRequest.email())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email " + initUserRequest.email() + " already existed");
+        }
+
+        user.setEmail(initUserRequest.email());
+        user.setFirstName("User");
+        user.setLastName("User");
+        user.setName(initUserRequest.email().split("@")[0]);
         user.setIsActive(true);
         user.setIsDeleted(false);
         user.setIsVerified(true);
         user.setIsAccountNonExpired(true);
         user.setIsAccountNonLocked(true);
         user.setIsCredentialsNonExpired(true);
-        user.setIsEnabled(true);
+
+        Role role = roleRepository.findRoleByRoleName(EnumRole.ROLE_USER)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role is not found."));
+
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+
+        user.setRoles(roles);
+        user.setIsEnabled(false);
         user.setRegisteredDate(LocalDateTime.now());
         user.setUuid(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode("123456"));

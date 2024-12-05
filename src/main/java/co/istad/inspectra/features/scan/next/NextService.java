@@ -1,10 +1,11 @@
 package co.istad.inspectra.features.scan.next;
 
-import co.istad.inspectra.features.scan.next.dto.NextScanningRequest;
+import co.istad.inspectra.features.scan.dto.ScanningRequestDto;
+
 
 public interface NextService {
 
-    String nextScanning(NextScanningRequest nextScanningRequest) throws Exception;
+    String nextScanning(ScanningRequestDto scanningRequestDto) throws Exception;
 
 
 

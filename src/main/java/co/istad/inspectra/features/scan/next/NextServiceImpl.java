@@ -4,6 +4,8 @@ import co.istad.inspectra.config.AppConfig;
 import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.domain.Project;
 import co.istad.inspectra.features.project.ProjectRepository;
+import co.istad.inspectra.features.scan.ScanServiceImpl;
+import co.istad.inspectra.features.scan.dto.ScanningRequestDto;
 import co.istad.inspectra.features.scan.next.dto.NextScanningRequest;
 import co.istad.inspectra.utils.SonarCustomizeScanUtil;
 import lombok.RequiredArgsConstructor;
@@ -34,15 +36,15 @@ public class NextServiceImpl implements NextService{
 
 
     @Override
-    public String nextScanning(NextScanningRequest nextScanningRequest) {
+    public String nextScanning(ScanningRequestDto scanningRequestDto) {
 
-        if (nextScanningRequest.gitUrl() == null || nextScanningRequest.gitUrl().isEmpty() || nextScanningRequest.projectName() == null || nextScanningRequest.projectName().isEmpty()) {
+        if (scanningRequestDto.gitUrl() == null || scanningRequestDto.gitUrl().isEmpty() || scanningRequestDto.projectName() == null || scanningRequestDto.projectName().isEmpty()) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Git URL and project name are required");
 
         }
 
-        Project project = projectRepository.findByProjectName(nextScanningRequest.projectName())
+        Project project = projectRepository.findByProjectName(scanningRequestDto.projectName())
 
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found"));
 
@@ -57,26 +59,13 @@ public class NextServiceImpl implements NextService{
         String cloneDirectory = currentProjectDir + clone_dir;
 
         // Clone the repository
-        String fileName = gitConfig.gitClone(nextScanningRequest.gitUrl(), nextScanningRequest.branch(), cloneDirectory,"", "next-");
+        String fileName = gitConfig.gitClone(scanningRequestDto.gitUrl(), scanningRequestDto.branch(), cloneDirectory,"", "next-");
 
         try {
 
-            if(myApp.equals("dev")) {
-
-                sonarCustomizeScanUtil.getScanLocal(nextScanningRequest.projectName(), cloneDirectory, fileName, nextScanningRequest.issueTypes(), nextScanningRequest.includePaths());
-
-            } else {
-
-                sonarCustomizeScanUtil.getProjectScanInProduction(nextScanningRequest.projectName(), cloneDirectory, fileName, nextScanningRequest.issueTypes(), nextScanningRequest.includePaths());
-
-            }
-
-            project.setIsUsed(true);
-
-            projectRepository.save(project);
+            ScanServiceImpl.checkMyapp(project, cloneDirectory, fileName, myApp, sonarCustomizeScanUtil, scanningRequestDto.projectName(), scanningRequestDto.issueTypes(), scanningRequestDto.includePaths(), projectRepository);
 
             //send message when scanning has done
-
 
         } catch (Exception e) {
 
