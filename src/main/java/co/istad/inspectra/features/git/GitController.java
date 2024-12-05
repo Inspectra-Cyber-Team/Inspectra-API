@@ -74,9 +74,10 @@ public class GitController {
 
 
     @Operation(summary = "Get all branches by git url")
-    @GetMapping("/branches/{gitUrl}")
-    public Flux<GitBranchResponseDto> getBranches1(@PathVariable String gitUrl)
+    @GetMapping("/branches")
+    public Flux<GitBranchResponseDto> getBranches1(@RequestParam String gitUrl)
     {
+        System.out.println("gitUrl: " + gitUrl);
         return gitService.getBranches1(gitUrl);
 
     }
