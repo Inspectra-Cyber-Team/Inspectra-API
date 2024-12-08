@@ -1,5 +1,6 @@
 package co.istad.inspectra.features.scan;
 
+import co.istad.inspectra.features.scan.dto.ScanForNonUserRequest;
 import co.istad.inspectra.features.scan.dto.ScanningRequestDto;
 
 /**
@@ -17,6 +18,8 @@ public interface ScanService {
      * @see ScanningRequestDto
      */
     String scanProject (ScanningRequestDto scanningRequestDto) throws Exception;
+
+    String scanForNonUser(ScanForNonUserRequest scanForNonUserRequest) throws Exception;
 
 
 }
