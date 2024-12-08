@@ -51,13 +51,13 @@ public class CommentController {
     @Operation(summary = "Like a comment")
     @PostMapping("/{commentUuid}/like")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public BaseRestResponse<String> likeComment(@PathVariable String commentUuid)
+    public BaseRestResponse<String> likeComment(@PathVariable String commentUuid, @AuthenticationPrincipal CustomUserDetails customUserDetails)
     {
         return BaseRestResponse.<String>
                 builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
-                .data(commentService.likeComment(commentUuid))
+                .data(commentService.likeComment(commentUuid, customUserDetails))
                 .message("Comment liked successfully")
                 .build();
     }

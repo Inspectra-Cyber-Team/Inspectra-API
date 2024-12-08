@@ -29,7 +29,7 @@ public class ReportController {
     @Operation(summary = "Create blog")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<ReportResponse> createReport(@Valid @RequestBody ReportRequest reportRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         return BaseRestResponse.<ReportResponse>builder()
@@ -43,6 +43,7 @@ public class ReportController {
 
     @Operation(summary = "get all report details")
     @GetMapping("/details")
+    @PreAuthorize("hasRole('ADMIN')")
     public Page<ReportResponseDetails> getAllReportDetails(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size) {
 
         return reportService.getAllReportDetails(page, size);
@@ -51,6 +52,7 @@ public class ReportController {
 
     @Operation(summary = "get all reports")
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Page<ReportResponse> getAllReport(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size) {
 
         return reportService.getAllReport(page, size);
@@ -60,6 +62,7 @@ public class ReportController {
     @Operation(summary = "get report by uuid")
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<ReportResponseDetails> getReportByUuid(@PathVariable String uuid) {
 
         return BaseRestResponse.<ReportResponseDetails>builder()
@@ -75,7 +78,7 @@ public class ReportController {
     @Operation(summary = "delete report by uuid")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN,USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public BaseRestResponse<ReportResponse> deleteReport(@PathVariable String uuid) {
 
         reportService.deleteReport(uuid);

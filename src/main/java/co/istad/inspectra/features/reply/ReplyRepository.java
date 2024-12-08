@@ -12,6 +12,8 @@ public interface ReplyRepository extends JpaRepository<Reply,Long> {
 
     List<Reply> findByParentCommentUuid(String commentUuid);
 
+    Optional<Reply> findByUuidAndUserUuid(String uuid, String userUuid);
+
     Optional<Reply> findByUuid(String uuid);
 
 }

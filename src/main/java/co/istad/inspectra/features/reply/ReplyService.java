@@ -58,7 +58,7 @@ public interface ReplyService {
      * @param replyUuid the reply id
      */
 
-    String likeReply(String replyUuid);
+    String likeReply(String replyUuid,@AuthenticationPrincipal CustomUserDetails customUserDetails);
 
     /**
      * Unlike a reply comment

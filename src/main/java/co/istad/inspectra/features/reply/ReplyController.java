@@ -81,11 +81,11 @@ public class ReplyController {
     @PostMapping("/{replyUuid}/like")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public BaseRestResponse<String> likeReply(@PathVariable String replyUuid) {
+    public BaseRestResponse<String> likeReply(@PathVariable String replyUuid, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return BaseRestResponse.<String>builder()
                 .status(HttpStatus.OK.value())
                 .timestamp(LocalDateTime.now())
-                .data(replyService.likeReply(replyUuid))
+                .data(replyService.likeReply(replyUuid, customUserDetails))
                 .message("Reply liked successfully")
                 .build();
     }

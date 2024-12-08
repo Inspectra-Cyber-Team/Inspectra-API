@@ -16,4 +16,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Page<Comment> findAllByBlogUuid(String blogUuid, PageRequest pageRequest);
 
+    Optional<Comment> findByUuidAndUserUuid(String uuid, String userUuid);
+
 }

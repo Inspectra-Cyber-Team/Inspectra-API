@@ -42,7 +42,7 @@ public interface CommentService {
        * @return {@link CommentResponse}
        */
 
-      String likeComment(String commentUuid);
+      String likeComment(String commentUuid,@AuthenticationPrincipal CustomUserDetails customUserDetails);
 
         /**
          * Delete a comment by uuid

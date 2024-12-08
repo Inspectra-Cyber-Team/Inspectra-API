@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -33,6 +34,7 @@ public class BlogController {
     public BaseRestResponse<BlogResponseDto> createBlog(@Valid @RequestBody BlogRequestDto blogRequestDto, @AuthenticationPrincipal CustomUserDetails customUserDetails)
     {
         return BaseRestResponse.<BlogResponseDto>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.CREATED.value())
                 .data(blogService.createBlog(blogRequestDto,customUserDetails))
                 .message("Blog created successfully")
@@ -66,6 +68,7 @@ public class BlogController {
     {
         blogService.unlikeBlog(blogUuid);
         return BaseRestResponse.<String>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND.value())
                 .message("Blog unliked successfully")
                 .build();
