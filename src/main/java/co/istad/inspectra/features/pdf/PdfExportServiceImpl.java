@@ -1,6 +1,7 @@
 package co.istad.inspectra.features.pdf;
 
 import co.istad.inspectra.features.issue.IssueService;
+import co.istad.inspectra.features.issue.dto.IssuesResponse;
 import co.istad.inspectra.features.projectanaly.ProjectAnalyzeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +16,9 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -32,11 +36,26 @@ public class PdfExportServiceImpl implements PdfExportService {
 
             var issues = issueService.getIssueByProjectNameFlux(projectName).collectList().block();
 
+            assert issues != null;
+            Map<String, Long> severityCounts = issues.stream()
+                    .collect(Collectors.groupingBy(IssuesResponse::severity, Collectors.counting()));
+
+
             var lines = projectAnalyzeService.getLines(projectName).collectList().block();
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
             Context context = new Context();
+
+            context.setVariable("blockerCount", severityCounts.getOrDefault("BLOCKER", 0L));
+            context.setVariable("criticalCount", severityCounts.getOrDefault("CRITICAL", 0L));
+            context.setVariable("majorCount", severityCounts.getOrDefault("MAJOR", 0L));
+            context.setVariable("minorCount", severityCounts.getOrDefault("MINOR", 0L));
+            context.setVariable("infoCount", severityCounts.getOrDefault("INFO", 0L));
+
+
+            context.setVariable("projectName", projectName);
+            context.setVariable("createdAt", LocalDate.now());
             context.setVariable("issues",issues );
             context.setVariable("lines",lines);
 

@@ -30,7 +30,8 @@ public class PdfExportController {
 
         } catch (IOException e) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error generating PDF", e);
+            e.printStackTrace();
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error generating PDF", e);
 
         }
     }
