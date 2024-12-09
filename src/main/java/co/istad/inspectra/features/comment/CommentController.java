@@ -62,20 +62,6 @@ public class CommentController {
                 .build();
     }
 
-    @Operation(summary = "Delete like a comment")
-    @DeleteMapping("/{commentUuid}/unlike")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public BaseRestResponse<String> deleteLikeComment(@PathVariable String commentUuid)
-    {
-        commentService.deleteLikeComment(commentUuid);
-        return BaseRestResponse.<String>
-                builder()
-                .status(HttpStatus.NO_CONTENT.value())
-                .timestamp(LocalDateTime.now())
-                .message("Comment like deleted successfully")
-                .build();
-    }
 
     @Operation(summary = "Update a comment")
     @PutMapping("/{uuid}")

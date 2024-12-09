@@ -1,6 +1,7 @@
 package co.istad.inspectra.features.reply;
 
 import co.istad.inspectra.domain.Comment;
+import co.istad.inspectra.domain.LikeReply;
 import co.istad.inspectra.domain.Reply;
 import co.istad.inspectra.domain.User;
 import co.istad.inspectra.features.comment.CommentRepository;
@@ -8,6 +9,7 @@ import co.istad.inspectra.features.reply.dto.ReplyRequest;
 import co.istad.inspectra.features.reply.dto.ReplyResponse;
 import co.istad.inspectra.features.reply.dto.ReplyUpdate;
 import co.istad.inspectra.features.user.UserRepository;
+import co.istad.inspectra.features.userlikereplycomment.UserLikeReplyCommentRepository;
 import co.istad.inspectra.mapper.ReplyMapper;
 import co.istad.inspectra.security.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +23,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static co.istad.inspectra.utils.WebSocketHandlerUtil.sessions;
@@ -37,6 +40,8 @@ public class ReplyServiceImpl implements ReplyService {
     private final UserRepository userRepository;
 
     private final ReplyMapper replyMapper;
+
+    private final UserLikeReplyCommentRepository userLikeReplyCommentRepository;
 
     @Override
     public ReplyResponse createReply(ReplyRequest request,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -120,29 +125,34 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = replyRepository.findByUuid(replyUuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reply not found"));
 
-        boolean isLiked = reply.getCountLikes() % 2 == 1;
+        Optional<LikeReply> likeReply = userLikeReplyCommentRepository.findByReplyUuidAndUserUuid(replyUuid, uuid);
 
-        reply.setCountLikes(isLiked ? reply.getCountLikes() - 1 : reply.getCountLikes() + 1);
-
-        replyRepository.save(reply);
-
-        notifyClientNewReply(reply);
-
-        return isLiked ? "Unliked" : "Liked";
-
-    }
-
-    @Override
-    public void unlikeReply(String replyUuid) {
-
-            Reply reply = replyRepository.findByUuid(replyUuid)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reply not found"));
-
+        if (likeReply.isPresent())
+        {
+            userLikeReplyCommentRepository.delete(likeReply.get());
             reply.setCountLikes(reply.getCountLikes() - 1);
 
             replyRepository.save(reply);
 
             notifyClientNewReply(reply);
+
+            return "unliked";
+        }
+        else
+        {
+            LikeReply like = new LikeReply();
+            like.setUuid(UUID.randomUUID().toString());
+            like.setReply(reply);
+            like.setUser(user);
+            userLikeReplyCommentRepository.save(like);
+
+            reply.setCountLikes(reply.getCountLikes() + 1);
+            replyRepository.save(reply);
+
+            notifyClientNewReply(reply);
+            return "liked";
+        }
+
     }
 
     @Override

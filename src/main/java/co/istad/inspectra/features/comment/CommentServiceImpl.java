@@ -2,12 +2,14 @@ package co.istad.inspectra.features.comment;
 
 import co.istad.inspectra.domain.Blog;
 import co.istad.inspectra.domain.Comment;
+import co.istad.inspectra.domain.LikeComment;
 import co.istad.inspectra.domain.User;
 import co.istad.inspectra.features.blog.BlogRepository;
 import co.istad.inspectra.features.comment.dto.CommentRequest;
 import co.istad.inspectra.features.comment.dto.CommentResponse;
 import co.istad.inspectra.features.comment.dto.UpdateComment;
 import co.istad.inspectra.features.user.UserRepository;
+import co.istad.inspectra.features.userlikecomment.UserLikeCommentRepository;
 import co.istad.inspectra.mapper.CommentMapper;
 import co.istad.inspectra.security.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +25,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 import static co.istad.inspectra.utils.WebSocketHandlerUtil.sessions;
@@ -39,6 +42,8 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
 
     private final BlogRepository blogRepository;
+
+    private final UserLikeCommentRepository userLikeCommentRepository;
 
     @Override
     public CommentResponse createComment(CommentRequest commentRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -96,52 +101,52 @@ public class CommentServiceImpl implements CommentService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
         }
 
-        String uuid =customUserDetails.getUserUuid();
+        Comment comment = commentRepository.findByUuid(commentUuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
-        User user = userRepository.findUserByUuid(uuid);
+        User user = userRepository.findUserByUuid(customUserDetails.getUserUuid());
 
         if (user == null)
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        Comment comment = commentRepository.findByUuid(commentUuid)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+        Optional<LikeComment> userLikeComment = userLikeCommentRepository.findByCommentUuidAndUserUuid(commentUuid, user.getUuid());
 
-        if (commentRepository.findByUuidAndUserUuid(commentUuid, uuid).isPresent())
+        if (userLikeComment.isPresent())
         {
+
+            userLikeCommentRepository.delete(userLikeComment.get());
+
             comment.setCountLikes(comment.getCountLikes() - 1);
+
             commentRepository.save(comment);
 
-
-            //calling websocket
             notifyClientNewComment(comment);
 
-            return "Like removed";
+            return "Comment unliked";
 
         } else {
 
+                LikeComment likeComment = new LikeComment();
+
+                likeComment.setUuid(UUID.randomUUID().toString());
+
+                likeComment.setUser(user);
+
+                likeComment.setComment(comment);
+
+                userLikeCommentRepository.save(likeComment);
+
                 comment.setCountLikes(comment.getCountLikes() + 1);
+
                 commentRepository.save(comment);
 
-                //calling websocket
                 notifyClientNewComment(comment);
-                return "Like added";
+
+                return "Comment liked";
         }
 
-
-
-    }
-
-    @Override
-    public void deleteLikeComment(String commentUuid) {
-
-        Comment comment = commentRepository.findByUuid(commentUuid)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
-
-        comment.setCountLikes(comment.getCountLikes() - 1);
-
-        commentRepository.save(comment);
 
     }
 

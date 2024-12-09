@@ -60,12 +60,6 @@ public interface ReplyService {
 
     String likeReply(String replyUuid,@AuthenticationPrincipal CustomUserDetails customUserDetails);
 
-    /**
-     * Unlike a reply comment
-     * @see ReplyServiceImpl#unlikeReply
-     * @param replyUuid the reply id
-     */
-    void unlikeReply(String replyUuid);
 
     /**
      * delete a reply comment

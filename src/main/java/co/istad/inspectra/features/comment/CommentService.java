@@ -44,14 +44,6 @@ public interface CommentService {
 
       String likeComment(String commentUuid,@AuthenticationPrincipal CustomUserDetails customUserDetails);
 
-        /**
-         * Delete a comment by uuid
-         * @see CommentServiceImpl
-         * @param commentUuid the comment uuid
-         */
-
-      void deleteLikeComment(String commentUuid);
-
 
       /**
        * Delete a comment by uuid

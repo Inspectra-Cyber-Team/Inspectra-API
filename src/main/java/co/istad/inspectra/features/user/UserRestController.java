@@ -30,6 +30,8 @@ public class UserRestController {
 
 
     @GetMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<ResponseUserDto> findUserByUuid(@PathVariable String uuid) {
 
         return BaseRestResponse
@@ -80,6 +82,7 @@ public class UserRestController {
 
     @PutMapping("/profile")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public BaseRestResponse<ResponseUserDto> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @Valid @RequestBody UpdateUserDto updateUserDto) {
 
         return BaseRestResponse
@@ -168,6 +171,7 @@ public class UserRestController {
     @Operation(summary = "Get all admin users")
     @GetMapping("/admins")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public Page<ResponseUserDto> getAllAdminUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size) {
 
         return userService.getAllAdminUsers(page, size);

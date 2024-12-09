@@ -90,19 +90,6 @@ public class ReplyController {
                 .build();
     }
 
-    @Operation(summary = "Unlike a reply")
-    @DeleteMapping("/{replyUuid}/unlike")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public BaseRestResponse<String> unlikeReply(@PathVariable String replyUuid) {
-        replyService.unlikeReply(replyUuid);
-        return BaseRestResponse.<String>builder()
-                .status(HttpStatus.OK.value())
-                .timestamp(LocalDateTime.now())
-                .message("Reply unliked successfully")
-                .build();
-    }
-
 
     @Operation(summary = "Delete a reply")
     @DeleteMapping("/{replyUuid}")
