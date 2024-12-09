@@ -119,9 +119,9 @@ public class ProjectController {
     @GetMapping("/user/{uuid}")
     @ResponseStatus(HttpStatus.OK)
 //    @PreAuthorize("hasAnyRole('ADMIN,USER')")
-    public Flux<ProjectOverview> findProjectByUserUuid(@Valid @PathVariable String uuid)  {
+    public Flux<ProjectOverview> findProjectByUserUuid(@Valid @PathVariable String uuid,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 
-        return projectService.getProjectByUserUid(uuid);
+        return projectService.getProjectByUserUid(uuid,page,size);
 
     }
 
@@ -222,7 +222,7 @@ public class ProjectController {
     @Operation(summary = "Get project overview", description = "This endpoint is used for getting project overview")
     @GetMapping("/overview/{projectName}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<ProjectOverview> getProjectOverview(@Valid @PathVariable String projectName)  {
+    public Mono<ProjectOverview> getProjectOverview(@Valid @PathVariable String projectName) {
         return projectService.getProjectOverview(projectName);
     }
 

@@ -19,6 +19,12 @@ public interface ScanService {
      */
     String scanProject (ScanningRequestDto scanningRequestDto) throws Exception;
 
+    /**
+     * Scan for non-user
+     * @param scanForNonUserRequest ScanForNonUserRequest
+     * @return String
+     * @see ScanForNonUserRequest
+     */
     String scanForNonUser(ScanForNonUserRequest scanForNonUserRequest) throws Exception;
 
 

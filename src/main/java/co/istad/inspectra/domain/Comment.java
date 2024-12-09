@@ -41,5 +41,9 @@ public class Comment extends Auditable {
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies ;
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LikeComment> likeComments;
+
+
     // Getters and Setters
 }

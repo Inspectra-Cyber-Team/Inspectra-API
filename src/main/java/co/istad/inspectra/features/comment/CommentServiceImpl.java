@@ -108,7 +108,6 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findByUuid(commentUuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
-
         if (commentRepository.findByUuidAndUserUuid(commentUuid, uuid).isPresent())
         {
             comment.setCountLikes(comment.getCountLikes() - 1);

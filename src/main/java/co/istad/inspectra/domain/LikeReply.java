@@ -6,13 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "like_blogs")
+@Table(name = "like_replies")
 @Setter
 @Getter
 @NoArgsConstructor
 
 
-public class LikeBlog {
+public class LikeReply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +21,8 @@ public class LikeBlog {
     private String uuid;
 
     @ManyToOne
-    @JoinColumn(name = "blog_id", nullable = false)
-    private Blog blog;
+    @JoinColumn(name = "reply_id", nullable = false)
+    private Reply reply;
 
 
     @ManyToOne

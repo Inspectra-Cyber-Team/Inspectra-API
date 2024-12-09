@@ -91,8 +91,6 @@ public class User extends Auditable {
     private Set<Authority> authorities;
 
 
-
-
     // relationship with feedback
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Feedback> feedbackSet = new HashSet<>();
@@ -112,6 +110,14 @@ public class User extends Auditable {
     // relationship with like blog
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<LikeBlog> likeBlogSet = new HashSet<>();
+
+    // relationship with like comment
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<LikeComment> likeCommentSet = new HashSet<>();
+
+    // relationship with like reply
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<LikeReply> likeReplySet = new HashSet<>();
 
     // relationship with report
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -86,12 +86,14 @@ public interface ProjectService {
     Flux<Object> getSecurityHotspot(String projectName);
     Flux<Object> getProjectBranch(String projectName) ;
     Flux<Object> getProjectWarning(String projectName) ;
+
+
     Mono<ProjectOverview> getProjectOverview(String projectName);
     Flux<Object> getProjectDetails(String projectName);
 
     Flux<Object> getFacets() throws Exception;
 
-    Flux<ProjectOverview> getProjectByUserUid(String userUid);
+    Flux<ProjectOverview> getProjectByUserUid(String userUid, int page, int size);
 
 
 

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "replies")
 @Setter
@@ -33,6 +35,10 @@ public class Reply extends Auditable {
     @ManyToOne
     @JoinColumn(name = "comment_id", nullable = false)
     private Comment parentComment;
+
+    @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LikeReply> likeReplies;
+
 
 
 

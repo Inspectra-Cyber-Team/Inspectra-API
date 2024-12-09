@@ -24,6 +24,7 @@ public class ProjectAnalyzeServiceImpl implements ProjectAnalyzeService {
 
     @Value("${sonar.url}")
     private String sonarUrl;
+
     @Value("${sonar.token}")
     private String sonarUserToken;
 

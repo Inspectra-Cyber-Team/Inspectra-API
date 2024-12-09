@@ -202,17 +202,6 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void unlikeBlog(String blogUuid) {
-
-            Blog blog = blogRepository.findByUuid(blogUuid)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Blog not found"));
-
-            blog.setLikesCount(blog.getLikesCount() - 1);
-
-            blogRepository.save(blog);
-    }
-
-    @Override
     public Page<BlogResponseDto> getAllBlogsVerified(int page, int size) {
 
         if (page < 0 || size < 0)

@@ -35,12 +35,7 @@ public interface BlogService {
      */
   String likeBlog(String blogUuid, @AuthenticationPrincipal CustomUserDetails customUserDetails);
 
-    /**
-     * Unlike a blog.
-     * @param blogUuid the blog uuid
-     */
 
-  void unlikeBlog(String blogUuid);
 
     /**
      * Get all blogs.

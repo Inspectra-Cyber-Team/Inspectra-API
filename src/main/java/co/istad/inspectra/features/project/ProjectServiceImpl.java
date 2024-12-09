@@ -11,6 +11,9 @@ import co.istad.inspectra.utils.SonarHeadersUtil;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +30,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+
 public class ProjectServiceImpl implements ProjectService {
 
     @Value("${sonar.url}")
@@ -103,7 +107,6 @@ public class ProjectServiceImpl implements ProjectService {
         );
 
         sonaResponse.responseFromSonarAPI(url, body, httpHeaders, HttpMethod.POST);
-
 
         return projectMapper.mapToProjectResponse(project);
 
@@ -484,9 +487,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Mono<ProjectOverview> getProjectOverview(String projectName) {
+
         // First API endpoint
         String measuresUrl = sonarUrl + "/api/measures/component?component=" + projectName +
-                "&metricKeys=ncloc,security_issues,reliability_issues,maintainability_issues,vulnerabilities,bugs,code_smells,security_hotspots,coverage,duplicated_lines_density,accepted_issues";
+                "&metricKeys=ncloc,ncloc_language_distribution,security_issues,reliability_issues,maintainability_issues,vulnerabilities,bugs,code_smells,security_hotspots,coverage,duplicated_lines_density,accepted_issues";
 
         // Second API endpoint
         String branchUrl = sonarUrl + "/api/project_branches/list?project=" + projectName;
@@ -524,13 +528,27 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public Flux<ProjectOverview> getProjectByUserUid(String userUid) {
+    public Flux<ProjectOverview> getProjectByUserUid(String userUid,int page, int size) {
+
+        if (page < 0 || size < 0) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page and size must be greater than 0");
+
+        }
+
         // Find user by UUID
         return Mono.fromCallable(() -> userRepository.findUserByUuid(userUid))
+
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")))
+
                 .flatMapMany(user -> {
                     // Find projects by user UUID
-                    List<Project> projectList = projectRepository.findByUserUuid(user.getUuid());
+
+
+                    Pageable pageable = PageRequest.of(page, size);
+
+                    // Find projects by user UUID with pagination
+                    Page<Project> projectList = projectRepository.findByUserUuid(user.getUuid(), pageable);
 
                     System.out.println("Project list: " + projectList.stream()
                             .map(Project::getProjectName)
@@ -545,9 +563,6 @@ public class ProjectServiceImpl implements ProjectService {
                             .flatMap(project -> getProjectOverview(project.getProjectName()));
                 });
     }
-
-
-
 
 
 

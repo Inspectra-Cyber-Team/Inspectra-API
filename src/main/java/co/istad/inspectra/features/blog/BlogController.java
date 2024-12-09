@@ -60,20 +60,6 @@ public class BlogController {
 
     }
 
-    @Operation(summary = "Unlike a blog")
-    @DeleteMapping("/{blogUuid}/unlike")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public BaseRestResponse<String> unlikeBlog(@PathVariable String blogUuid)
-    {
-        blogService.unlikeBlog(blogUuid);
-        return BaseRestResponse.<String>builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.NOT_FOUND.value())
-                .message("Blog unliked successfully")
-                .build();
-    }
-
 
     @Operation(summary = "Like a blog")
     @PostMapping("/{blogUuid}/like")
@@ -82,6 +68,7 @@ public class BlogController {
     public BaseRestResponse<String> likeBlog(@PathVariable String blogUuid,@AuthenticationPrincipal CustomUserDetails customUserDetails)
     {
         return BaseRestResponse.<String>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .data(blogService.likeBlog(blogUuid,customUserDetails))
                 .message("Blog liked successfully")
@@ -95,6 +82,7 @@ public class BlogController {
     public BaseRestResponse<BlogResponseDto> getBlog(@PathVariable String blogUuid)
     {
         return BaseRestResponse.<BlogResponseDto>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .data(blogService.getBlog(blogUuid))
                 .message("Blog retrieved successfully")
@@ -109,6 +97,7 @@ public class BlogController {
     public BaseRestResponse<BlogResponseDto> updateBlog(@PathVariable String blogUuid, @Valid @RequestBody BlogUpdateRequest blogUpdateRequest)
     {
         return BaseRestResponse.<BlogResponseDto>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .data(blogService.updateBlog(blogUuid, blogUpdateRequest))
                 .message("Blog updated successfully")
@@ -122,6 +111,7 @@ public class BlogController {
     public BaseRestResponse<List<BlogResponseDto>> getBlogsByUser(@PathVariable String userUuid)
     {
         return BaseRestResponse.<List<BlogResponseDto>>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .data(blogService.getBlogByUserUuid(userUuid))
                 .message("Blogs retrieved successfully")
@@ -139,6 +129,7 @@ public class BlogController {
     {
         blogService.deleteBlog(blogUuid);
         return BaseRestResponse.<String>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NO_CONTENT.value())
                 .message("Blog deleted successfully")
                 .build();
@@ -154,6 +145,7 @@ public class BlogController {
         blogService.verifyBlog(blogUuid);
 
         return BaseRestResponse.<BlogResponseDto>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .message("Blog verified successfully")
                 .build();
@@ -168,6 +160,7 @@ public class BlogController {
         blogService.unverifyBlog(blogUuid);
 
         return BaseRestResponse.<BlogResponseDto>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK.value())
                 .message("Blog unverified successfully")
                 .build();
