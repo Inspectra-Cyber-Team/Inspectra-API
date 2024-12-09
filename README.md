@@ -586,7 +586,6 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
 
 # GitController
 
