@@ -99,8 +99,17 @@ public interface UserService {
 
     UserDetailsResponse getUserDetails(String uuid);
 
+    /**
+     * Get all admin user
+     * @return {@link Page<ResponseUserDto>}
+     * @param page is page number
+     *             @param size is size of page
+     */
+
+    Page<ResponseUserDto> getAllAdminUsers(int page, int size);
 
 
 
 
 }
+

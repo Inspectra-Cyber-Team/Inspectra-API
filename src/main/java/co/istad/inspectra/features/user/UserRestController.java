@@ -23,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+
 public class UserRestController {
 
     private final UserServiceImpl userService;
@@ -161,6 +162,16 @@ public class UserRestController {
                 .data(userService.getUserDetails(uuid))
                 .message("User details found successfully.")
                 .build();
+    }
+
+
+    @Operation(summary = "Get all admin users")
+    @GetMapping("/admins")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<ResponseUserDto> getAllAdminUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size) {
+
+        return userService.getAllAdminUsers(page, size);
+
     }
 
 

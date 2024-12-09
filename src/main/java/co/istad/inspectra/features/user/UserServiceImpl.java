@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -166,6 +167,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ResponseUserDto> getUserByFilter(BaseSpecification.FilterDto filterDto) {
+
         List<BaseSpecification.SpecsDto> specsDtos = filterDto.getSpecsDto();
 
         Specification<User> specification = null;
@@ -250,6 +252,22 @@ public class UserServiceImpl implements UserService {
         }
 
         return userMapper.mapFromUserToUserDetailsResponse(findUser);
+    }
+
+    @Override
+    public Page<ResponseUserDto> getAllAdminUsers(int page, int size) {
+
+        if (page < 0 || size < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page and size must be greater than 0");
+        }
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+        Page<User> userPage = userRepository.findAllAdmin(pageRequest);
+
+        return userPage.map(userMapper::mapFromUserToUserResponseDto);
     }
 
 

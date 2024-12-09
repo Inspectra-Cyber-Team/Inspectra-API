@@ -106,7 +106,6 @@ public class AuthServiceImpl implements AuthService {
         user.setLastName(userRegisterDto.lastName());
         user.setName(userRegisterDto.userName());
         user.setEmail(userRegisterDto.email());
-        user.setIsDeleted(true);
         user.setIsVerified(true);
         user.setIsDeleted(false);
 
@@ -124,7 +123,7 @@ public class AuthServiceImpl implements AuthService {
         // set password for users
         user.setIsActive(false);
         user.setPassword(passwordEncoder.encode(userRegisterDto.password()));
-        user.setOtp("");
+        user.setOtp(otp);
         user.setOtpGeneratedTime(LocalDateTime.now());
 
         userRepository.save(user);
