@@ -74,7 +74,6 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br>
 
 </details>
 
@@ -162,7 +161,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **timestamp:** The time the response was generated (optional).
 </details>
 
-<br>
+
 
 # CodeController
 
@@ -199,7 +198,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 </details>
-<br>
+
 
 # CommentController
 
@@ -259,13 +258,14 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 </details>
-<br>
+
 
 # DocumentCategoryController
 
 The `DocumentCategoryController` is a Spring Boot REST controller that handles document category-related operations. It provides endpoints for creating, retrieving, updating, and deleting document categories.
 
 <details>
+
 ## Endpoints
 
 ### Get All Document Categories
@@ -331,7 +331,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **timestamp:** The time the response was generated (optional).
 </details>
 
-<br>
+
 
 # DocumentController
 
@@ -396,7 +396,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **timestamp:** The time the response was generated (optional).
 </details>
 
-<br>
+
 
 # FaqController
 
@@ -470,7 +470,6 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
 
 # FeedbackController
 
@@ -539,7 +538,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # FileController
 
@@ -656,7 +655,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # IssueController
 
@@ -738,7 +737,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # PdfExportController
 
@@ -767,7 +766,7 @@ All responses are wrapped in a `ResponseEntity` object which contains the follow
 
 </details>
 
-<br>
+
 
 # ProjectController
 
@@ -893,7 +892,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # ReplyController
 
@@ -961,7 +960,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # ReportController
 
@@ -1021,7 +1020,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # RoleController
 
@@ -1076,7 +1075,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # RuleController
 
@@ -1125,7 +1124,6 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
 
 # ScanController
 
@@ -1162,7 +1160,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # SourceController
 
@@ -1204,7 +1202,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # TopicController
 
@@ -1253,7 +1251,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # UserRestController
 
@@ -1350,7 +1348,7 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 </details>
 
-<br>
+
 
 # UserLikeBlogController
 
@@ -1414,7 +1412,7 @@ All responses are wrapped in a `Page` object which contains the following fields
 
 </details>
 
-<br>
+
 
 # UserLikeReplyCommentController
 
