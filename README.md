@@ -1,7 +1,9 @@
+
+
 # AuthRestController
 
 The `AuthRestController` is a Spring Boot REST controller that handles authentication-related operations. It provides endpoints for user login, registration, token refresh, account verification, OTP resending, password reset, password change, and user initialization.
-
+<details>
 ## Endpoints
 
 ### Login
@@ -74,12 +76,13 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 
 <br>
 
-Sure, here is a README file for the `BlogController`:
-
+</details>
 
 # BlogController
 
 The `BlogController` is a Spring Boot REST controller that handles blog-related operations. It provides endpoints for creating, retrieving, updating, liking, verifying, and deleting blogs.
+
+<details>
 
 ## Endpoints
 
@@ -157,12 +160,14 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **data:** The response data.
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
+</details>
 
-<br><br>
+<br>
 
 # CodeController
 
 The `CodeController` is a Spring Boot REST controller that handles code-related operations. It provides endpoints for retrieving component trees and sub-component trees of a project.
+<details>
 
 ## Endpoints
 
@@ -193,13 +198,13 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **data:** The response data.
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
-
-<br><br>
+</details>
+<br>
 
 # CommentController
 
 The `CommentController` is a Spring Boot REST controller that handles comment-related operations. It provides endpoints for creating, retrieving, updating, liking, and deleting comments.
-
+<details>
 ## Endpoints
 
 ### Create Comment
@@ -253,12 +258,14 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **data:** The response data.
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
+</details>
+<br>
 
-<br><br>
 # DocumentCategoryController
 
 The `DocumentCategoryController` is a Spring Boot REST controller that handles document category-related operations. It provides endpoints for creating, retrieving, updating, and deleting document categories.
 
+<details>
 ## Endpoints
 
 ### Get All Document Categories
@@ -322,12 +329,14 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **data:** The response data.
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
+</details>
 
-<br><br>
+<br>
+
 # DocumentController
 
 The `DocumentController` is a Spring Boot REST controller that handles document-related operations. It provides endpoints for creating, retrieving, updating, and deleting documents.
-
+<details>
 ## Endpoints
 
 ### Create Document
@@ -385,11 +394,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **data:** The response data.
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
+</details>
 
-<br><br>
+<br>
+
 # FaqController
 
 The `FaqController` is a Spring Boot REST controller that handles FAQ-related operations. It provides endpoints for creating, retrieving, updating, and deleting FAQs.
+
+<details>
 
 ## Endpoints
 
@@ -455,10 +468,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # FeedbackController
 
 The `FeedbackController` is a Spring Boot REST controller that handles feedback-related operations. It provides endpoints for creating, retrieving, updating, and deleting feedback.
+
+<details>
 
 ## Endpoints
 
@@ -519,12 +537,17 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # FileController
 
 The `FileController` is a Spring Boot REST controller that handles file-related operations. It provides endpoints for uploading, downloading, and deleting files.
 
 ## Endpoints
+
+<details>
 
 ### Upload Single File
 - **URL:** `POST /api/v1/files`
@@ -562,12 +585,18 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # GitController
 
 The `GitController` is a Spring Boot REST controller that handles Git-related operations. It provides endpoints for retrieving repositories, branches, and files from Git.
 
 ## Endpoints
+
+<details>
+
 
 ### Get All Repositories by User
 - **URL:** `GET /api/v1/gits/repos/{username}`
@@ -625,10 +654,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # IssueController
 
 The `IssueController` is a Spring Boot REST controller that handles issue-related operations. It provides endpoints for retrieving and filtering issues in a project.
+
+<details>
 
 ## Endpoints
 
@@ -702,10 +736,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # PdfExportController
 
 The `PdfExportController` is a Spring Boot REST controller that handles PDF export-related operations. It provides an endpoint for generating PDFs based on a project name.
+
+<details>
 
 ## Endpoints
 
@@ -726,12 +765,17 @@ All responses are wrapped in a `ResponseEntity` object which contains the follow
 - **body:** The response data (PDF content as byte array).
 - **headers:** HTTP headers (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # ProjectController
 
 The `ProjectController` is a Spring Boot REST controller that handles project-related operations. It provides endpoints for creating, retrieving, updating, and deleting projects, as well as other project-specific actions.
 
 ## Endpoints
+
+<details>
 
 ### Create Project
 - **URL:** `POST /api/v1/projects`
@@ -847,10 +891,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # ReplyController
 
 The `ReplyController` is a Spring Boot REST controller that handles reply-related operations. It provides endpoints for creating, retrieving, updating, and deleting replies, as well as other reply-specific actions.
+
+<details>
 
 ## Endpoints
 
@@ -910,10 +959,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # ReportController
 
 The `ReportController` is a Spring Boot REST controller that handles report-related operations. It provides endpoints for creating, retrieving, and deleting reports, as well as retrieving report details.
+
+<details>
 
 ## Endpoints
 
@@ -965,10 +1019,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # RoleController
 
 The `RoleController` is a Spring Boot REST controller that handles role-related operations. It provides endpoints for creating, retrieving, updating, and deleting roles.
+
+<details>
 
 ## Endpoints
 
@@ -1015,10 +1074,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # RuleController
 
 The `RuleController` is a Spring Boot REST controller that handles rule-related operations. It provides endpoints for retrieving rules, rule details, languages, and rule repositories.
+
+<details>
 
 ## Endpoints
 
@@ -1059,10 +1123,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # ScanController
 
 The `ScanController` is a Spring Boot REST controller that handles scan-related operations. It provides endpoints for scanning projects for both logged-in users and non-users.
+
+<details>
 
 ## Endpoints
 
@@ -1091,10 +1160,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # SourceController
 
 The `SourceController` is a Spring Boot REST controller that handles source-related operations. It provides endpoints for retrieving code snippet issues, source code, and source code lines.
+
+<details>
 
 ## Endpoints
 
@@ -1128,10 +1202,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # TopicController
 
 The `TopicController` is a Spring Boot REST controller that handles topic-related operations. It provides endpoints for creating, retrieving, and retrieving details of topics.
+
+<details>
 
 ## Endpoints
 
@@ -1172,10 +1251,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # UserRestController
 
 The `UserRestController` is a Spring Boot REST controller that handles user-related operations. It provides endpoints for creating, retrieving, updating, and deleting users, as well as blocking and unblocking users.
+
+<details>
 
 ## Endpoints
 
@@ -1264,10 +1348,15 @@ All responses are wrapped in a `BaseRestResponse` object which contains the foll
 - **message:** A message describing the result.
 - **timestamp:** The time the response was generated (optional).
 
-<br><br>
+</details>
+
+<br>
+
 # UserLikeBlogController
 
 The `UserLikeBlogController` is a Spring Boot REST controller that handles operations related to users liking blogs. It provides an endpoint for retrieving all users who liked a specific blog.
+
+<details>
 
 ## Endpoints
 
@@ -1323,10 +1412,15 @@ All responses are wrapped in a `Page` object which contains the following fields
 - **first:** Whether it is the first page.
 - **numberOfElements:** The number of elements in the current page.
 
-<br><br>
+</details>
+
+<br>
+
 # UserLikeReplyCommentController
 
 The `UserLikeReplyCommentController` is a Spring Boot REST controller that handles operations related to users liking reply comments. It provides an endpoint for retrieving all users who liked a specific reply comment.
+
+<details>
 
 ## Endpoints
 
@@ -1357,4 +1451,5 @@ All responses are wrapped in a `Page` object which contains the following fields
 - **first:** Whether it is the first page.
 - **numberOfElements:** The number of elements in the current page.
 
+</details>
 
