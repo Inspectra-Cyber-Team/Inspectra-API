@@ -4,7 +4,7 @@ services:
     container_name: 'cyber_api'
     volumes:
       - ./clone_repos:/app/clone_repos
-      - ./images:/app/images
+      - ./filestorage/images/:/app/filestorag/images
       - /var/run/docker.sock:/var/run/docker.sock
     build:
       context: .
