@@ -120,12 +120,12 @@ public class DocumentCategoryController {
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
-    public BaseRestResponse<Object> deleteDocumentCategory(@PathVariable String uuid) {
+    public BaseRestResponse<String> deleteDocumentCategory(@PathVariable String uuid) {
 
         documentCategoryService.delete(uuid);
 
         return BaseRestResponse
-                .builder()
+                .<String>builder()
                 .status(HttpStatus.NO_CONTENT.value())
                 .timestamp(LocalDateTime.now())
                 .message("Document category has been deleted successfully.")

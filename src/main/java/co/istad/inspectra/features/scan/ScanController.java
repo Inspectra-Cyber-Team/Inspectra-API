@@ -34,6 +34,7 @@ public class ScanController {
     }
 
     @PostMapping("/non-user")
+    @ResponseStatus(HttpStatus.CREATED)
     public BaseRestResponse<String> scanForNonUser(@Valid @RequestBody ScanForNonUserRequest scanForNonUserRequest) throws Exception {
 
         return BaseRestResponse.<String>builder()

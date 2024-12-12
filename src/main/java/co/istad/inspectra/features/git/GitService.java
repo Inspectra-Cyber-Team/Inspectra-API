@@ -51,6 +51,11 @@ public interface GitService {
 
     Flux<GitBranchResponseDto> getBranches(String username, String projectName);
 
+    /**
+     * get all branch from repo git
+     * @param gitUrl git url for get repo
+     *
+     */
 
     Flux<GitBranchResponseDto> getBranches1(String gitUrl);
 

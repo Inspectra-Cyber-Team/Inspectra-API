@@ -79,7 +79,14 @@ public class ScanServiceImpl implements ScanService {
         String cloneDirectory = currentProjectDir + clone_dir;
 
 
-        String fileName = gitConfig.gitClone(scanningRequestDto.gitUrl(), scanningRequestDto.branch(), cloneDirectory, "", "project-");
+        String fileName ;
+
+        if (scanningRequestDto.accessToken() == null)
+        {
+            fileName = gitConfig.gitClone(scanningRequestDto.gitUrl(), scanningRequestDto.branch(), cloneDirectory, "", "project-");
+        } else {
+            fileName = gitConfig.gitClone(scanningRequestDto.gitUrl(), scanningRequestDto.branch(), cloneDirectory, scanningRequestDto.accessToken(), "project-");
+        }
 
         String buildTool = detectSpringBuildTool.detect(cloneDirectory + fileName);
 
@@ -152,7 +159,14 @@ public class ScanServiceImpl implements ScanService {
 
         String cloneDirectory = currentProjectDir + clone_dir;
 
-        String fileName = gitConfig.gitClone(scanForNonUserRequest.gitUrl(), scanForNonUserRequest.branch(), cloneDirectory, "", "project-");
+        String fileName ;
+
+        if (scanForNonUserRequest.accessToken() == null)
+        {
+            fileName = gitConfig.gitClone(scanForNonUserRequest.gitUrl(), scanForNonUserRequest.branch(), cloneDirectory, "", "project-");
+        } else {
+            fileName = gitConfig.gitClone(scanForNonUserRequest.gitUrl(), scanForNonUserRequest.branch(), cloneDirectory, scanForNonUserRequest.accessToken(), "project-");
+        }
 
         String buildTool = detectSpringBuildTool.detect(cloneDirectory + fileName);
 

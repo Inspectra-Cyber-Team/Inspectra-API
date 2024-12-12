@@ -15,11 +15,11 @@ public class CodeController {
 
     private final CodeService codeService;
 
-    @GetMapping("/component-tree/{projectName}")
+    @GetMapping("/component-tree")
     @Operation(summary = "Get component tree")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public Flux<Object> getComponentTree(@PathVariable String projectName, @RequestParam(required = false,defaultValue = "1") String page,
+
+    public Flux<Object> getComponentTree(@RequestParam String projectName, @RequestParam(required = false,defaultValue = "1") String page,
                                          @RequestParam(required = false,defaultValue = "25") String size,
                                          @RequestParam(required = false,defaultValue = "") String query
     ) {

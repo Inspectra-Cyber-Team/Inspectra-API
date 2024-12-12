@@ -20,6 +20,8 @@ public record ScanForNonUserRequest (
         @Positive(message = "Scan count must be greater than 0")
         @NotNull(message = "Scan count is required")
         int countScan,
+
+        String accessToken,
         List<String> issueTypes,
         List<String> includePaths
 

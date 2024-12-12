@@ -107,5 +107,6 @@ COPY src/main/resources/application-prod.yml /app/config/
 # Expose the port your application will run on
 EXPOSE 8080
 
+
 # Define the command to run your application
 ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod", "app.jar", "--spring.config.location=file:/app/config/application-prod.yml"]

@@ -45,14 +45,15 @@ public class UserRestController {
 
 
     @GetMapping("")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public Page<ResponseUserDto> getAllUsersByPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size) {
 
             return userService.getAllUsersByPage(page, size);
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<List<ResponseUserDto>> getAllUsers() {
 
         return BaseRestResponse

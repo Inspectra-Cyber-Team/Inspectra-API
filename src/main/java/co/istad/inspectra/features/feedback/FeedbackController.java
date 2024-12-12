@@ -85,7 +85,7 @@ public class FeedbackController {
     @Operation(summary = "Delete feedback")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-   @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
 
     public BaseRestResponse<Void> deleteFeedback(@PathVariable String uuid) {
 

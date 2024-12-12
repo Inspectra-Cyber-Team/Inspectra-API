@@ -118,7 +118,7 @@ public class ProjectController {
     @Operation(summary = "find project by user uuid", description = "This endpoint is used for finding project by user uuid")
     @GetMapping("/user/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-//    @PreAuthorize("hasAnyRole('ADMIN,USER')")
+    @PreAuthorize("hasAnyRole('ADMIN,USER')")
     public Flux<ProjectOverview> findProjectByUserUuid(@Valid @PathVariable String uuid,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 
         return projectService.getProjectByUserUid(uuid,page,size);
@@ -171,7 +171,7 @@ public class ProjectController {
     @GetMapping("/favorite")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public Flux<Object> getProjectFavorite() throws Exception {
+    public Flux<Object> getProjectFavorite()  {
 
         return projectService.getProjectFavorite();
 
@@ -199,6 +199,7 @@ public class ProjectController {
     @Operation(summary = "Get security hotspot", description = "This endpoint is used for getting security hotspot")
     @GetMapping("/security-hotspot/{projectName}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public Flux<Object> getSecurityHotspot(@Valid @PathVariable String projectName){
         return projectService.getSecurityHotspot(projectName);
     }
@@ -207,6 +208,7 @@ public class ProjectController {
     @Operation(summary = "Get project branch", description = "This endpoint is used for getting project branch")
     @GetMapping("/branch/{projectName}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public Flux<Object> getProjectBranch(@Valid @PathVariable String projectName){
         return projectService.getProjectBranch(projectName);
     }

@@ -29,6 +29,8 @@ public record ScanningRequestDto(
         @NotBlank(message = "project name is required")
         String projectName,
 
+        String accessToken,
+
         List<String> issueTypes,
         List<String> includePaths
 

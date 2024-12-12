@@ -16,7 +16,7 @@ public interface BlogRepository extends JpaRepository<Blog,Long> {
 
    Optional<Blog> findByUuid(String uuid);
 
-   List<Blog> findByUserUuid(String userUuid);
+   Page<Blog> findByUserUuid(String userUuid,PageRequest pageRequest);
 
    Optional<Blog> findByUuidAndUserUuid(String blogUuid, String userUuid);
 

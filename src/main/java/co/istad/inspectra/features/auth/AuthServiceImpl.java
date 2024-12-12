@@ -31,6 +31,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+
 public class AuthServiceImpl implements AuthService {
 
     private static final int OTP_EXPIRATION_MINUTES = 2;

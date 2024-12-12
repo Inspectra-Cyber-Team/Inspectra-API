@@ -303,7 +303,12 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<BlogResponseDto> getBlogByUserUuid(String userUuid) {
+    public Page<BlogResponseDto> getBlogByUserUuid(String userUuid,int page,int size) {
+
+        if ( page < 0 || size < 0)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Page and Page size must be >0");
+        }
 
         User user = userRepository.findUserByUuid(userUuid);
 
@@ -312,16 +317,12 @@ public class BlogServiceImpl implements BlogService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        List<Blog> blogs = blogRepository.findByUserUuid(userUuid);
+        Sort sort = Sort.by(Sort.Direction.DESC,"createdAt");
 
-        if (blogs != null)
-        {
-            return blogs.stream()
-                    .map(blogMapper::toBlogResponseDto)
-                    .toList();
-        }else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No blogs found for the user");
-        }
+        PageRequest pageRequest = PageRequest.of(page,size,sort);
+
+        return blogRepository.findByUserUuid(userUuid,pageRequest)
+                .map(blogMapper::toBlogResponseDto);
 
     }
 

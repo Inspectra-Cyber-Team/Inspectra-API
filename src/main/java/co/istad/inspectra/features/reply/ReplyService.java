@@ -71,6 +71,13 @@ public interface ReplyService {
     void deleteReply(String replyUuid);
 
 
+    /**
+     * update a reply comment
+     * @see ReplyServiceImpl#updateReply
+     * @param replyUuid the reply id
+     * @param replyUpdate the reply update
+     * @return {@link ReplyResponse}
+     */
     ReplyResponse updateReply(String replyUuid, ReplyUpdate replyUpdate);
 
 }

@@ -68,7 +68,7 @@ public class ReplyController {
     @Operation(summary = "Get a reply by comment id")
     @GetMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<List<ReplyResponse>> getReplyByCommentId(@PathVariable String commentId) {
+    public BaseRestResponse<List<ReplyResponse>> getReplyByCommentUuid(@PathVariable String commentId) {
         return BaseRestResponse.<List<ReplyResponse>>builder()
                 .status(HttpStatus.OK.value())
                 .timestamp(LocalDateTime.now())

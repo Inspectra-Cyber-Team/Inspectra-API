@@ -65,6 +65,7 @@ public class FileController {
 
     @DeleteMapping("{fileName}")
     @Operation(summary = "Delete a file")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public String deleteFile(@PathVariable String fileName) {
 
         fileService.deleteFile(fileName);

@@ -108,14 +108,9 @@ public class BlogController {
     @Operation(summary = "Get all blogs by user")
     @GetMapping("/user/{userUuid}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<List<BlogResponseDto>> getBlogsByUser(@PathVariable String userUuid)
+    public Page<BlogResponseDto> getBlogsByUser(@PathVariable String userUuid,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "25") int size)
     {
-        return BaseRestResponse.<List<BlogResponseDto>>builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.OK.value())
-                .data(blogService.getBlogByUserUuid(userUuid))
-                .message("Blogs retrieved successfully")
-                .build();
+       return blogService.getBlogByUserUuid(userUuid,page,size);
     }
 
 

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
@@ -31,6 +32,7 @@ public class GitController {
 
     @GetMapping("/repos/{username}")
     @Operation(summary = "Get all repositories by user and only public repositories")
+    @ResponseStatus(HttpStatus.OK)
     public Flux<GitRepositoryResponse> getAllGitRepository(@PathVariable String username,
                                                            @RequestParam(required = false) String projectName)
     {
@@ -48,6 +50,7 @@ public class GitController {
     }
 
     @GetMapping("/repos/{username}/{projectName}")
+    @ResponseStatus(HttpStatus.OK)
     public Flux<GitRepositoryResponse> getGitRepository(@PathVariable String username, @PathVariable String projectName)
     {
         return gitService.getRepositories(username, projectName);
@@ -58,6 +61,7 @@ public class GitController {
 
     @GetMapping("/repos")
     @Operation(summary = "Get all repositories by user and only public repositories")
+    @ResponseStatus(HttpStatus.OK)
     public Flux<GitRepositoryResponse> getAllRepo(@RequestParam String accessToken)
     {
         return gitService.getAllRepo(accessToken);
@@ -66,6 +70,7 @@ public class GitController {
 
     @Operation(summary = "Get all branches by user and project name")
     @GetMapping("/branches/{username}/{projectName}")
+    @ResponseStatus(HttpStatus.OK)
     public Flux<GitBranchResponseDto> getBranches(@PathVariable String username, @PathVariable String projectName)
     {
         return gitService.getBranches(username, projectName);
@@ -75,9 +80,10 @@ public class GitController {
 
     @Operation(summary = "Get all branches by git url")
     @GetMapping("/branches")
-    public Flux<GitBranchResponseDto> getBranches1(@RequestParam String gitUrl)
+    @ResponseStatus(HttpStatus.OK)
+    public Flux<GitBranchResponseDto> getBranchesNameByGitUrl(@RequestParam String gitUrl)
     {
-        System.out.println("gitUrl: " + gitUrl);
+
         return gitService.getBranches1(gitUrl);
 
     }
@@ -85,6 +91,7 @@ public class GitController {
 
     @Operation(summary = "Get all file and directories by user and project name")
     @GetMapping("/list_files")
+    @ResponseStatus(HttpStatus.OK)
     public Map<String,Object> listFilesInRepository (@RequestParam String gitUrl, @RequestParam String branch) throws IOException, GitAPIException {
 
 

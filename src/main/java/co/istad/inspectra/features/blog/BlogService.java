@@ -75,7 +75,7 @@ public interface BlogService {
    * @see BlogResponseDto
    */
 
-  List<BlogResponseDto> getBlogByUserUuid(String userUuid);
+  Page<BlogResponseDto> getBlogByUserUuid(String userUuid,int page,int size);
 
 
   /**

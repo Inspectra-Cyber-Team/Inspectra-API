@@ -1,6 +1,6 @@
 package co.istad.inspectra.features.rule;
 
-import co.istad.inspectra.features.rule.dto.RuleLanguageCountResponse;
+
 import co.istad.inspectra.features.rule.dto.RulesResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/rules")
 @RequiredArgsConstructor
+
 public class RuleController {
 
     private final RuleService ruleService;
