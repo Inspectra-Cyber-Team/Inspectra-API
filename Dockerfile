@@ -104,6 +104,7 @@ RUN mkdir -p /app/config
 # Copy the application.yml file
 COPY src/main/resources/application-prod.yml /app/config/
 
+
 # Expose the port your application will run on
 EXPOSE 8080
 
