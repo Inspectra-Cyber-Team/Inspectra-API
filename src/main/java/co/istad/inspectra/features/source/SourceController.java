@@ -42,9 +42,9 @@ public class SourceController {
             summary = "Get source code",
             description = "This endpoint used component to get source code of a project"
     )
-    @GetMapping("/components/{componentKey}")
+    @GetMapping("/components")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getSourceCode(@PathVariable String componentKey) throws Exception {
+    public Flux<Object> getSourceCode(@RequestParam String componentKey) throws Exception {
         return sourceService.getSourceCode(componentKey);
     }
 
@@ -53,9 +53,9 @@ public class SourceController {
             summary = "Get source code lines",
             description = "This endpoint used componentKey to get source code lines of a project"
     )
-    @GetMapping("/lines/{componentKey}")
+    @GetMapping("/lines")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<Object> getSourceLinesCode(@PathVariable String componentKey) {
+    public Flux<Object> getSourceLinesCode(@RequestParam String componentKey) {
         return sourceService.getSourceLinesCode(componentKey);
     }
 
