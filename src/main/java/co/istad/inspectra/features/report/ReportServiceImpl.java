@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -50,8 +52,6 @@ public class ReportServiceImpl implements ReportService {
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-
-        System.out.println("reportRequest.blogUuid() = " + reportRequest.blogUuid());
 
         Blog blog = blogRepository.findByUuid(reportRequest.blogUuid()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Blog not found"));
@@ -129,5 +129,22 @@ public class ReportServiceImpl implements ReportService {
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Report not found"));
 
             reportRepository.delete(report);
+    }
+
+    @Override
+    public Page<ReportResponse> getReportByBlogUuid(String blogUuid) {
+
+
+        Blog blog = blogRepository.findByUuid(blogUuid).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Blog not found with uuid: " + blogUuid));
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        PageRequest pageRequest = PageRequest.of(0, 10, sort);
+
+        Page<Report> reports = reportRepository.findByBlogUuid(blogUuid, pageRequest);
+
+        return reports.map(reportMapper::mapToReportResponse);
+
     }
 }

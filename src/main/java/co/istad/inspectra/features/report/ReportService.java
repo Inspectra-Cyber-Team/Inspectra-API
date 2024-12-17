@@ -7,6 +7,8 @@ import co.istad.inspectra.security.CustomUserDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import java.util.List;
+
 /**
  * ReportService
  * @auth lyhou
@@ -52,6 +54,14 @@ public interface ReportService {
      * @param uuid String
      */
     void deleteReport(String uuid);
+
+
+    /**
+     * getReportByBlogUuid
+     * @param blogUuid String
+     * @return Page<ReportResponse>
+     */
+    Page<ReportResponse> getReportByBlogUuid(String blogUuid);
 
 
 

@@ -16,6 +16,7 @@ import java.util.List;
  * ProjectService is an interface that contains method to create, get all, get by project name and delete project
  * @author : Lyhou
  * @since  : 1.0 (2024)
+ * @see ProjectServiceImpl
  */
 
 public interface ProjectService {
@@ -75,27 +76,80 @@ public interface ProjectService {
     String favoriteProject(String projectName);
 
 
+    /**
+     * Get all project
+     * @return {@link ProjectOverview}
+     */
     Object getAllProject1(String projectName) throws Exception;
 
+    /**
+     * Get project favorite
+     * @return {@link ProjectOverview}
+     */
 
     Flux<Object> getProjectFavorite();
 
-
+  /**   * Remove favorite project
+     * @param projectKey is the request body
+     * @return {@link String}
+     */
     String  removeFavorite(String projectKey) ;
 
+    /**
+     * Get project security hotspot
+     * @param projectName is the request body
+     * @return {@link ProjectOverview}
+     */
     Flux<Object> getSecurityHotspot(String projectName);
+
+    /**
+     * Get project branch
+     * @param projectName is the request body
+     * @return {@link ProjectOverview}
+     */
     Flux<Object> getProjectBranch(String projectName) ;
+
+    /**
+     * Get project warning
+     * @param projectName is the request body
+     * @return {@link ProjectOverview}
+     */
     Flux<Object> getProjectWarning(String projectName) ;
 
-
+    /**
+     * Get project overview
+     * @param projectName is the request body
+     * @return {@link ProjectOverview}
+     */
     Mono<ProjectOverview> getProjectOverview(String projectName);
+
+    /**
+     * Get project by project name
+     * @return {@link ProjectResponse}
+     */
     Flux<Object> getProjectDetails(String projectName);
 
+    /**
+     * Get project by project name
+     * @return {@link ProjectResponse}
+     */
     Flux<Object> getFacets() throws Exception;
 
+    /**
+     * Get project by user uid
+     * @param userUid is the request body
+     * @param page is the request body
+     * @param size is the request body
+     * @return {@link ProjectOverview}
+     */
     Flux<ProjectOverview> getProjectByUserUid(String userUid, int page, int size);
 
 
+    /**
+     * cout all project
+     * @return int
+     */
+    int countAllProject();
 
 
 

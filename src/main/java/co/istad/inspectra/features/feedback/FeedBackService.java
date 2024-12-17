@@ -65,7 +65,19 @@ public interface FeedBackService {
 
     FeedbackResponseDetails getFeedBackDetails(String uuid);
 
+    /**
+     * get all feedbacks
+     * @return {@link List<FeedbackResponse>}
+     */
     List<FeedbackResponse> getAllFeedbacks();
+
+
+    /**
+     * count all feedbacks
+     * @return {@link int}
+     *
+     */
+    int countAllFeedbacks();
 
 
 }

@@ -5,9 +5,11 @@ import co.istad.inspectra.config.AppConfig;
 import co.istad.inspectra.config.DetectSpringBuildTool;
 import co.istad.inspectra.config.GitConfig;
 import co.istad.inspectra.domain.Project;
+import co.istad.inspectra.features.issue.IssueService;
 import co.istad.inspectra.features.project.ProjectRepository;
 import co.istad.inspectra.features.scan.dto.ScanForNonUserRequest;
 import co.istad.inspectra.features.scan.dto.ScanningRequestDto;
+import co.istad.inspectra.utils.EmailUtil;
 import co.istad.inspectra.utils.SonarCustomizeScanSpringUtil;
 import co.istad.inspectra.utils.SonarCustomizeScanUtil;
 import jakarta.mail.MessagingException;
@@ -56,6 +58,10 @@ public class ScanServiceImpl implements ScanService {
     private final SonarCustomizeScanSpringUtil sonarCustomizeScanSpringUtil;
 
     private final SonaResponse sonaResponse;
+
+    private final EmailUtil emailUtil;
+
+    private final IssueService issueService;
 
     private static final int MAX_SCAN_ATTEMPTS = 3;
 
@@ -112,6 +118,10 @@ public class ScanServiceImpl implements ScanService {
 
                 checkMyapp(project, cloneDirectory, fileName, myApp, sonarCustomizeScanUtil, scanningRequestDto.projectName(), scanningRequestDto.issueTypes(), scanningRequestDto.includePaths(), projectRepository);
                 // send message when scanning has completed here
+
+                var issue = issueService.getIssueByProjectFilter(scanningRequestDto.projectName(), 1, 10).collectList().block();
+                // send message when scanning has completed here
+                emailUtil.sendScanMessage(project.getUser().getEmail(),project.getUser().getName(),issue,project.getProjectName());
 
 
             } catch (Exception e) {
@@ -191,6 +201,7 @@ public class ScanServiceImpl implements ScanService {
             try {
 
                 checkMyapp(project, cloneDirectory, fileName, myApp, sonarCustomizeScanUtil, project.getProjectName(), scanForNonUserRequest.issueTypes(), scanForNonUserRequest.includePaths(), projectRepository);
+
 
             } catch (Exception e) {
 

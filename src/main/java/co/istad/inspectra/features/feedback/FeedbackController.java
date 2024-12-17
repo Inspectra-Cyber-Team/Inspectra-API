@@ -130,6 +130,20 @@ public class FeedbackController {
 
     }
 
+    @Operation(summary = "Count all feedbacks")
+    @GetMapping("/count")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseRestResponse<Integer> countAllFeedbacks()
+    {
+        return BaseRestResponse.<Integer>builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK.value())
+                .data(feedBackService.countAllFeedbacks())
+                .message("Counted all feedbacks successfully")
+                .build();
+    }
+
 
 
 }

@@ -256,6 +256,20 @@ public class ProjectController {
     }
 
 
+    @Operation(summary = "count all project")
+    @GetMapping("/count")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseRestResponse<Integer> countAllProject() {
+        return BaseRestResponse
+                .<Integer>builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK.value())
+                .data(projectService.countAllProject())
+                .message("Count all project")
+                .build();
+    }
+
 
 
 

@@ -180,6 +180,22 @@ public class UserRestController {
     }
 
 
+    @Operation(summary = "count all user")
+    @GetMapping("/count")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseRestResponse<Integer> countAllUser() {
+
+        return BaseRestResponse
+                .<Integer>builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK.value())
+                .data(userService.countAllUser())
+                .message("User count found successfully.")
+                .build();
+    }
+
+
 
 
 

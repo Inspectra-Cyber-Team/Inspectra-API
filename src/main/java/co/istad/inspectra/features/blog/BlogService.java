@@ -90,5 +90,11 @@ public interface BlogService {
 
   void unverifyBlog(String blogUuid);
 
+  /**
+   * count all blogs
+   * @return the int
+   */
+    int countAllBlogs();
+
 
 }

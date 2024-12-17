@@ -109,6 +109,10 @@ public interface UserService {
     Page<ResponseUserDto> getAllAdminUsers(int page, int size);
 
 
+    /**
+     * count all user
+     */
+    int countAllUser();
 
 
 }

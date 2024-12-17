@@ -27,6 +27,7 @@ public class AuthRestController {
        return BaseRestResponse.<AuthResponse>
                builder()
                .status(HttpStatus.OK.value())
+               .timestamp(LocalDateTime.now())
                .data(authService.login(authRequest))
                .message("Login successfully")
                .build();
@@ -39,6 +40,7 @@ public class AuthRestController {
     {
         return BaseRestResponse.<ResponseUserDto>builder()
                 .status(HttpStatus.CREATED.value())
+                .timestamp(LocalDateTime.now())
                 .data(authService.createUser(userRegisterDto))
                 .message("User created successfully")
                 .build();
@@ -51,6 +53,7 @@ public class AuthRestController {
 
         return BaseRestResponse.<AuthResponse>builder()
                 .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(authService.refreshToken(request))
                 .message("Token refreshed successfully")
                 .build();
@@ -63,6 +66,7 @@ public class AuthRestController {
 
         return BaseRestResponse.<String>builder()
                 .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(authService.verifyAccount(verifyAccountRequest))
                 .message("Account verified successfully")
                 .build();
@@ -75,6 +79,7 @@ public class AuthRestController {
 
         return BaseRestResponse.<String>builder()
                 .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(authService.resendOtp(email))
                 .message("OTP sent successfully")
                 .build();
@@ -87,6 +92,7 @@ public class AuthRestController {
 
         return BaseRestResponse.<String>builder()
                 .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(authService.forgotPassword(forgetPassword))
                 .message("Password reset successfully")
                 .build();
@@ -99,6 +105,7 @@ public class AuthRestController {
 
         return BaseRestResponse.<String>builder()
                 .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
                 .data(authService.changePassword(changePassword))
                 .message("Password changed successfully")
                 .build();
@@ -112,6 +119,7 @@ public class AuthRestController {
         authService.initUserWithAuth(initUserRequest);
 
         return BaseRestResponse.<ResponseUserDto>builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.CREATED.value())
                 .timestamp(LocalDateTime.now())
                 .message("User has been initialized successfully.")

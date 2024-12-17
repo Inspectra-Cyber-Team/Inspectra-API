@@ -249,10 +249,8 @@ public class ProjectServiceImpl implements ProjectService {
                       .orElseThrow(() ->
                               new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectName not found"));
 
-              project.setIsDeleted(true);
 
-              projectRepository.save(project);
-
+                projectRepository.delete(project);
 
               return response.getBody();
 
@@ -544,15 +542,10 @@ public class ProjectServiceImpl implements ProjectService {
                 .flatMapMany(user -> {
                     // Find projects by user UUID
 
-
                     Pageable pageable = PageRequest.of(page, size);
 
                     // Find projects by user UUID with pagination
                     Page<Project> projectList = projectRepository.findByUserUuid(user.getUuid(), pageable);
-
-                    System.out.println("Project list: " + projectList.stream()
-                            .map(Project::getProjectName)
-                            .toList());
 
                     if (projectList.isEmpty()) {
                         return Flux.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Project list is empty"));
@@ -564,6 +557,17 @@ public class ProjectServiceImpl implements ProjectService {
                 });
     }
 
+    @Override
+    public int countAllProject() {
+
+        if(projectRepository.findAll().isEmpty()){
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project is empty");
+
+        }
+
+        return projectRepository.findAll().size();
+    }
 
 
 }

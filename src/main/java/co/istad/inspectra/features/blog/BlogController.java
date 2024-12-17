@@ -161,6 +161,20 @@ public class BlogController {
                 .build();
     }
 
+    @Operation(summary = "Count all blogs")
+    @GetMapping("/count")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseRestResponse<Integer> countAllBlogs()
+    {
+        return BaseRestResponse.<Integer>builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK.value())
+                .data(blogService.countAllBlogs())
+                .message("Counted all blogs successfully")
+                .build();
+    }
+
 
 
 

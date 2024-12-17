@@ -122,7 +122,7 @@
             padding: 15px;
             border-radius: 8px 8px 0 0;
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1rem;
             font-weight: bold;
         }
 
@@ -155,7 +155,6 @@
         }
 
         .btn-primary {
-            background-color: #B9FF66;
             border-color: #007bff;
             padding: 10px 20px;
             border-radius: 5px;
@@ -251,13 +250,13 @@
         <!-- User Information & Scan Date -->
         <div class="my-3">
             <p>User: <strong th:text="${userName}">User:</strong></p> <!-- Replace with the actual user name -->
-            <p>Scan date:<strong th:text="${dates}">Scan Date:</strong></p> <!-- Replace with the actual scan date -->
+            <p>Scan date: <strong th:text="${#temporals.format(dates, 'yyyy-MM-dd HH:mm:ss')}">Scan Date</strong></p><!-- Replace with the actual scan date -->
             <p>Project: <strong th:text="${project}">Project:</strong></p> <!-- Replace with the actual project name -->
         </div>
 
         <!-- Total Issues Found -->
         <div class="alert alert-warning" role="alert">
-            <strong>Total Issues Found:</strong> 5
+            <strong>Total Issues Found:</strong> <span th:text="${issues.size()}">0</span>
         </div>
 
         <!-- Files Scanned Table -->
@@ -285,11 +284,12 @@
         </table>
 
         <!-- Next Steps Button -->
-        <div class="container-view">
-            <a style="color: black" href="http://yourapp.com/scans/details" class="btn btn-primary ">View Scan Details</a>
-        </div>
+
     </div>
 
+<!--    <div class="container-view">-->
+<!--        <a style="color: black" href="http://yourapp.com/scans/details" class="btn btn-primary ">View Scan Details</a>-->
+<!--    </div>-->
     <!-- Footer -->
     <div class="footer">
         <p>&copy; 2024 Inspetra. All rights reserved.</p>

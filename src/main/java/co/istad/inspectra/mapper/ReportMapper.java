@@ -5,6 +5,7 @@ import co.istad.inspectra.features.report.dto.ReportRequest;
 import co.istad.inspectra.features.report.dto.ReportResponse;
 import co.istad.inspectra.features.report.dto.ReportResponseDetails;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 
@@ -14,6 +15,7 @@ public interface ReportMapper {
 
     ReportResponse mapToReportResponse(Report report);
 
+    @Mapping(target = "blogUuid", source = "blog.uuid")
     ReportResponseDetails mapToReportResponseDetails(Report report);
 
 

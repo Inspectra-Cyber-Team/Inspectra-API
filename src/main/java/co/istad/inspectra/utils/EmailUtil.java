@@ -11,6 +11,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -54,7 +55,7 @@ public class EmailUtil {
     Context context = new Context();
     context.setVariable("email", email);
     context.setVariable("userName", username);
-    context.setVariable("dates", LocalDate.now());
+    context.setVariable("dates", LocalDateTime.now());
     context.setVariable("issues", issues);
     context.setVariable("project", project);
     context.setVariable("totalIssues", 1);

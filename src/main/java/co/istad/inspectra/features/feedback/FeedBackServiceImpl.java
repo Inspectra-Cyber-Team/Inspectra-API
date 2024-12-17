@@ -127,6 +127,19 @@ public class FeedBackServiceImpl implements FeedBackService{
 
     }
 
+    @Override
+    public int countAllFeedbacks() {
+
+        if (feedbackRepository.findAll().isEmpty())
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Feedback is empty");
+        }
+
+        return feedbackRepository.findAll().size();
+
+
+    }
+
 
     private Feedback findProjectByUuid(String uuid){
 

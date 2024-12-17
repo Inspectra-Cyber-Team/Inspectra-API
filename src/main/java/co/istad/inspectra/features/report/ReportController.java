@@ -92,4 +92,15 @@ public class ReportController {
     }
 
 
+    @Operation(summary = "get report by blog uuid")
+    @GetMapping("/blog/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<ReportResponse> getReportByBlogUuid(@PathVariable String uuid) {
+
+        return reportService.getReportByBlogUuid(uuid);
+
+    }
+
+
 }

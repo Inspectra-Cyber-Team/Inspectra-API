@@ -150,7 +150,7 @@ public class AuthServiceImpl implements AuthService {
             return "OTP verified you can login";
         }
 
-        return "Please regenerate otp and try again";
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid OTP or OTP expired please try again");
     }
 
     @Override

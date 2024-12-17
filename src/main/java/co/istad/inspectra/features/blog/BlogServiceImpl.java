@@ -363,5 +363,17 @@ public class BlogServiceImpl implements BlogService {
             blogRepository.save(blog);
     }
 
+    @Override
+    public int countAllBlogs() {
+
+        if (blogRepository.findAll().isEmpty())
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No blogs found");
+        }
+
+        return blogRepository.findAll().size();
+
+    }
+
 
 }

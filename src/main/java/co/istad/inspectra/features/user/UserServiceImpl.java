@@ -270,5 +270,17 @@ public class UserServiceImpl implements UserService {
         return userPage.map(userMapper::mapFromUserToUserResponseDto);
     }
 
+    @Override
+    public int countAllUser() {
+
+        if (userRepository.findAll().isEmpty()) {
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User is empty");
+
+        }
+
+        return userRepository.findAll().size();
+    }
+
 
 }

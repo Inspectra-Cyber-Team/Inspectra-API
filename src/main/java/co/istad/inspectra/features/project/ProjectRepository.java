@@ -22,7 +22,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     @Query("SELECT p FROM Project p WHERE p.user.uuid = :userUuid AND p.isDeleted = false")
     List<Project> findByUserUuid(String userUuid);
 
-    @Query("SELECT p FROM Project p WHERE p.user.uuid = :userUuid AND p.isDeleted = false")
+
     Page<Project> findByUserUuid(String userUuid, Pageable pageable);
 
 
