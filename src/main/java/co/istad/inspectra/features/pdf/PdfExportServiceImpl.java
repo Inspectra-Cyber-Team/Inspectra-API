@@ -17,6 +17,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,7 @@ public class PdfExportServiceImpl implements PdfExportService {
 
 
             context.setVariable("projectName", projectName);
-            context.setVariable("createdAt", LocalDate.now());
+            context.setVariable("createdAt", LocalDateTime.now());
             context.setVariable("issues",issues );
             context.setVariable("lines",lines);
 
