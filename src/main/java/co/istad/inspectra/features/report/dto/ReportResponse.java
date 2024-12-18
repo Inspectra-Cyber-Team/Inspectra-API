@@ -6,6 +6,7 @@ import lombok.Builder;
 public record ReportResponse(
         String uuid,
         String message,
+        String name,
         String createdAt
 ) {
 }

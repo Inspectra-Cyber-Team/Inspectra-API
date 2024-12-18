@@ -10,6 +10,7 @@ import co.istad.inspectra.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -268,6 +269,17 @@ public class ProjectController {
                 .data(projectService.countAllProject())
                 .message("Count all project")
                 .build();
+    }
+
+
+    @Operation(summary = "Get all project by admin")
+    @GetMapping("/admin")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<ProjectResponse> getAllProjectByAdmin(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "25") int size) {
+
+        return projectService.getAllProjectByAdmin(page,size);
+
     }
 
 

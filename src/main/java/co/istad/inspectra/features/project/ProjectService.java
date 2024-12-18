@@ -5,6 +5,7 @@ import co.istad.inspectra.features.project.dto.ProjectRequest;
 import co.istad.inspectra.features.project.dto.ProjectResponse;
 import co.istad.inspectra.features.project.dto.ProjectUpdateDto;
 import co.istad.inspectra.security.CustomUserDetails;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -146,10 +147,13 @@ public interface ProjectService {
 
 
     /**
-     * cout all project
+     * count all project
      * @return int
      */
     int countAllProject();
+
+
+    Page<ProjectResponse> getAllProjectByAdmin(int page,int size);
 
 
 

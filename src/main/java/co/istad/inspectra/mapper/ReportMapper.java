@@ -13,6 +13,7 @@ public interface ReportMapper {
 
     Report mapToReport(ReportRequest reportRequest);
 
+    @Mapping(target = "name", source = "user.name")
     ReportResponse mapToReportResponse(Report report);
 
     @Mapping(target = "blogUuid", source = "blog.uuid")

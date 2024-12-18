@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -567,6 +568,25 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectRepository.findAll().size();
+    }
+
+    @Override
+    public Page<ProjectResponse> getAllProjectByAdmin(int page, int size) {
+
+        if (page < 0 || size < 0) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page and size must be greater than 0");
+
+        }
+
+        Sort sort = Sort.by(Sort.Order.desc("createdAt"));
+
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+        Page<Project> projectPage = projectRepository.findAll(pageRequest);
+
+        return projectPage.map(projectMapper::mapToProjectResponse);
+
     }
 
 
