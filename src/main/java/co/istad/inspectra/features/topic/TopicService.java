@@ -19,6 +19,10 @@ public interface TopicService {
 
     Page<TopicResponseDetails> findByTopicName(String topicName ,int page, int size);
 
+    TopicResponse updateTopic(String uuid, String topicName);
+
+    void deleteTopic(String uuid);
+
 
 
 }

@@ -20,6 +20,7 @@ public record ResponseUserDto(
 
         String lastModifiedAt,
         Boolean isVerified,
+        Boolean isEnabled,
         Boolean isDeleted,
         Set<RoleResponse> roles
 ) {

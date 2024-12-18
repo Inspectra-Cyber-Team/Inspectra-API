@@ -60,4 +60,27 @@ public class TopicController {
 
     }
 
+    @Operation(summary = "Update a topic")
+    @PutMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseRestResponse<TopicResponse> updateTopic(@PathVariable String uuid, @RequestParam String topicName)
+    {
+        return BaseRestResponse.<TopicResponse>builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK.value())
+                .data(topicService.updateTopic(uuid, topicName))
+                .message("Topic updated successfully")
+                .build();
+    }
+
+    @Operation(summary = "Delete a topic")
+    @DeleteMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteTopic(@PathVariable String uuid)
+    {
+        topicService.deleteTopic(uuid);
+    }
+
 }

@@ -15,6 +15,8 @@ public interface TopicRepository extends JpaRepository<Topic,Long> {
 
     Optional<Topic> findByName(String name);
 
+    Optional<Topic> findByUuid(String uuid);
+
     Page<Topic> findByName(String name, PageRequest pageRequest);
 
 

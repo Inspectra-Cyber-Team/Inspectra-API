@@ -75,4 +75,32 @@ public class TopicServiceImpl  implements  TopicService {
         return topicRepository.findByName(topicName, pageRequest).map(topicMapper::mapToTopicResponseDetails);
 
     }
+
+    @Override
+    public TopicResponse updateTopic(String uuid, String topicName) {
+
+        if (topicRepository.existsByName(topicName)) {
+
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Topic already exists");
+
+        }
+
+        Topic topic = topicRepository.findByUuid(uuid).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found with uuid: " + uuid));
+
+        topic.setName(topicName);
+
+        return topicMapper.mapToTopicResponse(topicRepository.save(topic));
+
+    }
+
+    @Override
+    public void deleteTopic(String uuid) {
+
+        Topic topic = topicRepository.findByUuid(uuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found with uuid: " + uuid));
+
+        topicRepository.delete(topic);
+
+    }
 }
