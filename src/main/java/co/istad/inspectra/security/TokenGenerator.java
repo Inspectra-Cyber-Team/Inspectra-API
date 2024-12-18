@@ -2,6 +2,7 @@ package co.istad.inspectra.security;
 
 
 
+import co.istad.inspectra.domain.role.Role;
 import co.istad.inspectra.features.auth.dto.AuthResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class TokenGenerator {
@@ -31,6 +34,13 @@ public class TokenGenerator {
 
     private String createAccessToken(Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        Set<Role> roles = userDetails.getUser().getRoles();
+
+        Set<String> roleName = roles.stream()
+                .map(role -> role.getRoleName().name()) // Extract roleName
+                .collect(Collectors.toSet());
+
         Instant now = Instant.now();
         //  we can also create scope for the token from the userDetails object here !
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -38,19 +48,29 @@ public class TokenGenerator {
                 .expiresAt(now.plus(20, ChronoUnit.MINUTES))
                 .subject(userDetails.getUsername())
                 .issuer("cyber.cstad.io")
+                .claim("role",roleName)
                 .build();
         return jwtAccessTokenEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
     // expire after 7 days
     private String createRefreshToken(Authentication authentication) {
+
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        Set<Role> roles = userDetails.getUser().getRoles();
+
+        Set<String> roleName = roles.stream()
+                .map(role -> role.getRoleName().name()) // Extract roleName
+                .collect(Collectors.toSet());
+
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(now.plus(7, ChronoUnit.DAYS))
                 .subject(userDetails.getUsername())
                 .issuer("cyber.cstad.io")
+                .claim("role", roleName)
                 .build();
         return jwtRefreshTokenEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

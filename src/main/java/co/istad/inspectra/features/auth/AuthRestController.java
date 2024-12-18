@@ -5,9 +5,12 @@ import co.istad.inspectra.features.auth.dto.*;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UserRegisterDto;
 import co.istad.inspectra.base.BaseRestResponse;
+import co.istad.inspectra.security.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -101,12 +104,13 @@ public class AuthRestController {
 
     @PutMapping("/change-password")
     @ResponseStatus(HttpStatus.OK)
-    public BaseRestResponse<String> changePassword(@Valid @RequestBody ChangePassword changePassword) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public BaseRestResponse<String> changePassword(@Valid @RequestBody ChangePassword changePassword, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         return BaseRestResponse.<String>builder()
                 .status(HttpStatus.OK.value())
                 .timestamp(LocalDateTime.now())
-                .data(authService.changePassword(changePassword))
+                .data(authService.changePassword(changePassword, customUserDetails))
                 .message("Password changed successfully")
                 .build();
 

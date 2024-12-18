@@ -9,6 +9,7 @@ import co.istad.inspectra.mapper.UserMapper;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UserRegisterDto;
 import co.istad.inspectra.features.user.UserRepository;
+import co.istad.inspectra.security.CustomUserDetails;
 import co.istad.inspectra.security.TokenGenerator;
 import co.istad.inspectra.utils.EmailUtil;
 import co.istad.inspectra.utils.OtpUtil;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
@@ -221,9 +223,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String changePassword(ChangePassword changePassword) {
+    public String changePassword(ChangePassword changePassword, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        User usr = findUserByEmail(changePassword.email());
+        if (customUserDetails == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User Unauthorized");
+        }
+
+        String email = customUserDetails.getUsername();
+
+        User usr = findUserByEmail(email);
 
         if(passwordEncoder.matches(changePassword.oldPassword(), usr.getPassword())){
 

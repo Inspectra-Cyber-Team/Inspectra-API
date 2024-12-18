@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.socket.TextMessage;
@@ -255,6 +256,17 @@ public class BlogServiceImpl implements BlogService {
 
         Blog blog = blogRepository.findByUuid(blogUuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Blog not found"));
+
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin && !currentUser.equals(blog.getUser().getEmail())) {
+
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to update this blog");
+
+        }
 
         // Fetch existing images from the blog
         List<BlogImages> existingImages = blog.getBlogImages();

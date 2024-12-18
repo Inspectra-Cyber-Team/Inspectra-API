@@ -4,6 +4,8 @@ package co.istad.inspectra.features.auth;
 import co.istad.inspectra.features.auth.dto.*;
 import co.istad.inspectra.features.user.dto.ResponseUserDto;
 import co.istad.inspectra.features.user.dto.UserRegisterDto;
+import co.istad.inspectra.security.CustomUserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 /**
  * AuthService
@@ -79,7 +81,7 @@ public interface AuthService {
      * @param changePassword is the request object
      * @author : @lyhou
      */
-    String changePassword(ChangePassword changePassword);
+    String changePassword(ChangePassword changePassword, @AuthenticationPrincipal CustomUserDetails customUserDetails);
 
     /**
      * handle user login with auth from front-end
