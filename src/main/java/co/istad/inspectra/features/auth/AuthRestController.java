@@ -89,6 +89,20 @@ public class AuthRestController {
 
     }
 
+
+    @PutMapping("/request-reset-password")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseRestResponse<String> requestForgotPassword(@RequestParam String email) {
+
+        return BaseRestResponse.<String>builder()
+                .status(HttpStatus.OK.value())
+                .timestamp(LocalDateTime.now())
+                .data(authService.RequestforgotPassword(email))
+                .message("Password reset request sent successfully")
+                .build();
+
+    }
+
     @PutMapping("/reset-password")
     @ResponseStatus(HttpStatus.OK)
     public BaseRestResponse<String> forgotPassword(@Valid @RequestBody ForgetPassword forgetPassword) {

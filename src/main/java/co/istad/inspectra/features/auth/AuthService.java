@@ -67,7 +67,7 @@ public interface AuthService {
      * author : @lyhou
      *
      */
-     String forgotPassword(String email);
+     String RequestforgotPassword(String email);
 
     /**
      * Reset password

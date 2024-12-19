@@ -149,7 +149,7 @@ public class AuthServiceImpl implements AuthService {
 
             userRepository.save(user);
 
-            return "OTP verified you can login";
+            return "OTP verified ";
         }
 
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid OTP or OTP expired please try again");
@@ -179,7 +179,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String forgotPassword(String email) {
+    public String RequestforgotPassword(String email) {
 
         User user = findUserByEmail(email);
 
@@ -197,7 +197,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
 
-        return "Email sent... please verify account within 2 minutes";
+        return "OTP sent to your email. Please verify and reset your password within 2 minutes.";
     }
 
     @Override
@@ -208,13 +208,21 @@ public class AuthServiceImpl implements AuthService {
 
         // Check if the OTP is valid and not expired
         if (isOtpValid(user, forgetPassword.otp())) {
+
+            if (!forgetPassword.newPassword().equals(forgetPassword.confirmPassword())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password and confirm password do not match");
+            }
+
             user.setPassword(passwordEncoder.encode(forgetPassword.newPassword()));
+
             user.setOtp(null);  // Clear OTP after a successful password reset
-            user.setOtpGeneratedTime(null);  // Clear OTP timestamp
+
+            user.setOtpGeneratedTime(null);
 
             userRepository.save(user);
 
             return "Password reset successful.";
+
         } else {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid or expired OTP.");
