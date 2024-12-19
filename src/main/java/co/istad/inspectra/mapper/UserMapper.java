@@ -22,7 +22,6 @@ public interface UserMapper {
 
 @Mapping(target = "id", ignore = true)
 @Mapping(target = "uuid", ignore = true)
-@Mapping(target = "email", ignore = true)
 @Mapping(target = "password", ignore = true)
 @Mapping(target = "registeredDate", ignore = true)
 @Mapping(target = "updatedDate", ignore = true)

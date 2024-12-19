@@ -233,7 +233,17 @@ public class AuthServiceImpl implements AuthService {
 
         User usr = findUserByEmail(email);
 
+        if (usr == null)
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with this email: " + email);
+        }
+
         if(passwordEncoder.matches(changePassword.oldPassword(), usr.getPassword())){
+
+            if (!changePassword.newPassword().equals(changePassword.confirmPassword()))
+            {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password and confirm password do not match");
+            }
 
             usr.setPassword(passwordEncoder.encode(changePassword.newPassword()));
 
@@ -241,6 +251,7 @@ public class AuthServiceImpl implements AuthService {
 
             return "Password changed successfully";
         }
+
         else {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password is incorrect");
