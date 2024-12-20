@@ -47,19 +47,24 @@ public class DocumentServiceImpl implements DocumentService {
 
         documentRepository.save(document);
 
-         List<DocumentImages> images = documentRequest.documentImagesRequest().stream()
-                .map(image -> {
-                    var documentImage = new DocumentImages();
-                    documentImage.setUuid(UUID.randomUUID().toString());
-                    documentImage.setDocument(document);
-                    documentImage.setThumbnail(image);
+        List<String> imagesRequest = documentRequest.documentImagesRequest();
 
-                    documentImageRepository.save(documentImage);
+        if (imagesRequest!=null) {
 
-                    return documentImage;
-                }).toList();
+            List<DocumentImages> images = documentRequest.documentImagesRequest().stream()
+                    .map(image -> {
+                        var documentImage = new DocumentImages();
+                        documentImage.setUuid(UUID.randomUUID().toString());
+                        documentImage.setDocument(document);
+                        documentImage.setThumbnail(image);
 
-        document.setImages(images);
+                        documentImageRepository.save(documentImage);
+
+                        return documentImage;
+                    }).toList();
+
+            document.setImages(images);
+        }
 
 //        List<Keyword> keywords = documentRequest.documentKeywordRequest().stream()
 //                .map(keyword -> {

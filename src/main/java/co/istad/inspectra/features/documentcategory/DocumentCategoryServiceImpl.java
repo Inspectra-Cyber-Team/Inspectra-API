@@ -44,19 +44,24 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
 
         documentCategoryRepository.save(category);
 
-        List<DocumentImages> images = documentCategoryRequest.documentImagesRequest().stream()
-                .map(image -> {
-                    DocumentImages documentImage = new DocumentImages();
-                    documentImage.setUuid(UUID.randomUUID().toString());
-                    documentImage.setThumbnail(image);
-                    documentImage.setCategory(category);
+        List<String> imagesRequest = documentCategoryRequest.documentImagesRequest();
 
-                    documentImageRepository.save(documentImage);
+        if (imagesRequest!=null) {
 
-                    return documentImage;
-                }).toList();
+            List<DocumentImages> images = documentCategoryRequest.documentImagesRequest().stream()
+                    .map(image -> {
+                        DocumentImages documentImage = new DocumentImages();
+                        documentImage.setUuid(UUID.randomUUID().toString());
+                        documentImage.setThumbnail(image);
+                        documentImage.setCategory(category);
 
-        category.setImages(images);
+                        documentImageRepository.save(documentImage);
+
+                        return documentImage;
+                    }).toList();
+
+            category.setImages(images);
+        }
 
         return documentCategoryMapper.mapToDocumentCategoryResponse(category);
     }
